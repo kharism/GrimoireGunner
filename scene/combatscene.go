@@ -1,9 +1,11 @@
 package scene
 
 import (
-	mycomponent "github.com/kharism/mmbn_clone/scene/component"
-	"github.com/kharism/mmbn_clone/scene/layers"
-	"github.com/kharism/mmbn_clone/scene/system"
+	"github.com/kharism/grimoiregunner/scene/archetype"
+	"github.com/kharism/grimoiregunner/scene/assets"
+	mycomponent "github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/layers"
+	"github.com/kharism/grimoiregunner/scene/system"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -28,6 +30,39 @@ func (c *CombatScene) Update() error {
 func (c *CombatScene) Draw(screen *ebiten.Image) {
 	screen.Clear()
 	c.ecs.DrawLayer(layers.LayerBackground, screen)
+	c.ecs.DrawLayer(layers.LayerGrid, screen)
+	c.ecs.DrawLayer(layers.LayerCharacter, screen)
+}
+func LoadGrid(world donburi.World) {
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 8; j++ {
+			idx := world.Create(mycomponent.ScreenPos, mycomponent.GridPos, mycomponent.TileTag)
+			entId := world.Entry(idx)
+			mycomponent.GridPos.Set(entId, &mycomponent.GridPosComponentData{Col: j, Row: i})
+
+		}
+	}
+}
+func LoadPlayer(world donburi.World) *donburi.Entity {
+	return archetype.NewPlayer(world, assets.Player1Stand)
+}
+
+type BoulderParam struct {
+	Col, Row int
+}
+
+func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
+	entity := world.Create(
+		mycomponent.Health,
+		mycomponent.GridPos,
+		mycomponent.ScreenPos,
+		mycomponent.Sprite,
+	)
+	entry := world.Entry(entity)
+	mycomponent.Sprite.Set(entry, &mycomponent.SpriteData{Image: assets.Boulder})
+	mycomponent.Health.Set(entry, &mycomponent.HealthData{HP: 200})
+	mycomponent.GridPos.Set(entry, &mycomponent.GridPosComponentData{Col: param.Col, Row: param.Row})
+	return &entity
 }
 func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[SceneData]) {
 	// your load code
@@ -35,12 +70,17 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	s.entitygrid = [4][8]int64{}
 	s.ecs = ecs.NewECS(s.world)
 	//add tiles entity
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 8; j++ {
-			s.world.Create(mycomponent.ScreenPos, mycomponent.GridPos)
-		}
-	}
-	s.ecs.AddRenderer(layers.LayerBackground, system.DrawGrid)
+	LoadGrid(s.world)
+	LoadBoulder(s.world, BoulderParam{
+		Col: 6,
+		Row: 1,
+	})
+	playerEntity := LoadPlayer(s.world)
+	s.ecs.
+		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
+		AddRenderer(layers.LayerBackground, system.DrawBg).
+		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
+		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
 }

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github/kharism/mmbn_clone/scene"
 	"log"
+
+	"github.com/kharism/grimoiregunner/scene"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
