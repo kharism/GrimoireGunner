@@ -1,7 +1,11 @@
 package system
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/kharism/grimoiregunner/scene/assets"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -13,7 +17,7 @@ type hpRenderer struct {
 	// orderedQuery *donburi.OrderedQuery[component.PositionData]
 }
 
-var NPCRenderer = &hpRenderer{
+var HPRenderer = &hpRenderer{
 	query: donburi.NewQuery(
 		filter.Contains(mycomponent.Health),
 	),
@@ -27,14 +31,26 @@ func (r *hpRenderer) DrawHP(ecs *ecs.ECS, screen *ebiten.Image) {
 			screenPos.X = TileStartX + float64(gridPos.Col)*float64(tileWidth)
 			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(tileHeight)
 		}
-		sprite := mycomponent.Sprite.Get(e).Image
-		bound := sprite.Bounds()
 		translate := ebiten.GeoM{}
-		translate.Translate(-float64(bound.Dx())/2, -float64(bound.Dy()))
 		translate.Translate(screenPos.X, screenPos.Y)
-		drawOption := &ebiten.DrawImageOptions{
-			GeoM: translate,
+		op := &text.DrawOptions{
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign: text.AlignCenter,
+			},
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM: translate,
+			},
 		}
-		screen.DrawImage(sprite, drawOption)
+		hp := mycomponent.Health.Get(e).HP
+		text.Draw(screen, fmt.Sprintf("%d", hp), assets.FontFace, op)
+		// sprite := mycomponent.Sprite.Get(e).Image
+		// bound := sprite.Bounds()
+		// translate := ebiten.GeoM{}
+		// translate.Translate(-float64(bound.Dx())/2, -float64(bound.Dy()))
+		// translate.Translate(screenPos.X, screenPos.Y)
+		// drawOption := &ebiten.DrawImageOptions{
+		// 	GeoM: translate,
+		// }
+		// screen.DrawImage(sprite, drawOption)
 	})
 }

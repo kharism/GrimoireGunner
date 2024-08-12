@@ -32,6 +32,7 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 	c.ecs.DrawLayer(layers.LayerBackground, screen)
 	c.ecs.DrawLayer(layers.LayerGrid, screen)
 	c.ecs.DrawLayer(layers.LayerCharacter, screen)
+	c.ecs.DrawLayer(layers.LayerHP, screen)
 }
 func LoadGrid(world donburi.World) {
 	for i := 0; i < 4; i++ {
@@ -80,7 +81,8 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
-		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter)
+		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
+		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
 }
