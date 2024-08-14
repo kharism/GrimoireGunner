@@ -76,9 +76,13 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Col: 6,
 		Row: 1,
 	})
+	assets.Bg = state.Bg
 	playerEntity := LoadPlayer(s.world)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
+		AddSystem(system.NPMoveSystem.Update).
+		AddSystem(system.DamageSystem.Update).
+		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).

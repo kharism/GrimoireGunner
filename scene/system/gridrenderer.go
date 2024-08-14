@@ -29,7 +29,7 @@ var tileWidth int
 var tileHeight int
 
 var TileStartX = float64(165.0)
-var TileStartY = float64(320.0)
+var TileStartY = float64(360.0)
 
 // return col,row
 func GridCoord2Screen(Row, Col int) (float64, float64) {

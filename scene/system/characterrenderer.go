@@ -12,10 +12,12 @@ type characterRenderer struct {
 	query *donburi.Query
 }
 
+// Render anything that has sprite and grid position
 var CharacterRenderer = &characterRenderer{
 	query: donburi.NewQuery(
 		filter.Contains(
 			mycomponent.Sprite,
+			mycomponent.GridPos,
 		),
 	),
 }

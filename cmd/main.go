@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/kharism/grimoiregunner/scene"
+	"github.com/kharism/grimoiregunner/scene/assets"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -30,7 +31,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
-	state := scene.SceneData{}
+	state := scene.SceneData{
+		Bg: assets.BgForrest,
+	}
 	combatScene := &scene.CombatScene{}
 	ruleSet := map[stagehand.Scene[scene.SceneData]][]stagehand.Directive[scene.SceneData]{}
 	manager := stagehand.NewSceneDirector[scene.SceneData](combatScene, state, ruleSet)
