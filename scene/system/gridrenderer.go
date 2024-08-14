@@ -13,6 +13,7 @@ import (
 type gridRenderer struct {
 	query *donburi.Query
 	// orderedQuery *donburi.OrderedQuery[component.PositionData]
+	queryDamage *donburi.Query
 }
 
 // This renderer will render floor tile
@@ -22,6 +23,12 @@ var GridRenderer = &gridRenderer{
 			myComponent.TileTag,
 			myComponent.GridPos,
 			myComponent.ScreenPos,
+		),
+	),
+	queryDamage: donburi.NewQuery(
+		filter.Contains(
+			myComponent.Damage,
+			myComponent.GridPos,
 		),
 	),
 }
@@ -67,5 +74,15 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: translate,
 		}
 		screen.DrawImage(sprite, drawOption)
+	})
+	r.queryDamage.Each(ecs.World, func(e *donburi.Entry) {
+		gridPos := myComponent.GridPos.Get(e)
+		translate := ebiten.GeoM{}
+		translate.Translate(-float64(tileWidth)/2, -float64(tileHeight))
+		translate.Translate(TileStartX+float64(gridPos.Col)*float64(tileWidth), TileStartY+float64(gridPos.Row)*float64(tileHeight))
+		drawOption := &ebiten.DrawImageOptions{
+			GeoM: translate,
+		}
+		screen.DrawImage(asset.DamageGrid, drawOption)
 	})
 }
