@@ -4,6 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	csg "github.com/kharism/golang-csg/core"
+	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -81,7 +82,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		i.Vy = 0
 		p.isAnim = false
 		component.Speed.Set(playerEntry, i)
-		if tileHeight > 0 {
+		if assets.TileHeight > 0 {
 			col, row := Coord2Grid(targetLoc.Tx, targetLoc.Ty)
 			comp := component.GridPos.Get(playerEntry)
 			comp.Col = col

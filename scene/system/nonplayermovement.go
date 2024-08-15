@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
+	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
@@ -37,8 +38,8 @@ func (s *npMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := mycomponent.GridPos.Get(e)
 		screenPos := mycomponent.ScreenPos.Get(e)
 		if screenPos.X == 0 && screenPos.Y == 0 {
-			screenPos.X = TileStartX + float64(gridPos.Col)*float64(tileWidth)
-			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(tileHeight)
+			screenPos.X = TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 		}
 		screenPos.X += v.Vx
 		screenPos.Y += v.Vy

@@ -6,6 +6,7 @@ import (
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
 
+	"github.com/kharism/grimoiregunner/scene/assets"
 	asset "github.com/kharism/grimoiregunner/scene/assets"
 	myComponent "github.com/kharism/grimoiregunner/scene/component"
 )
@@ -32,22 +33,20 @@ var GridRenderer = &gridRenderer{
 		),
 	),
 }
-var tileWidth int
-var tileHeight int
 
 var TileStartX = float64(165.0)
 var TileStartY = float64(360.0)
 
 // return col,row
 func GridCoord2Screen(Row, Col int) (float64, float64) {
-	return TileStartX + float64(Col)*float64(tileWidth), TileStartY + float64(Row)*float64(tileHeight)
+	return TileStartX + float64(Col)*float64(assets.TileWidth), TileStartY + float64(Row)*float64(assets.TileHeight)
 }
 
 // param screen X,Y coords
 // return col,row
 func Coord2Grid(X, Y float64) (int, int) {
-	col := int(X-TileStartX) / tileWidth
-	row := int(Y-TileStartY) / tileHeight
+	col := int(X-TileStartX) / assets.TileWidth
+	row := int(Y-TileStartY) / assets.TileHeight
 	return col, row
 }
 func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
@@ -61,15 +60,10 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 		} else {
 			sprite = asset.RedTile
 		}
-		if tileWidth == 0 {
-			rect := sprite.Bounds()
-			tileWidth = rect.Dx()
-			tileHeight = rect.Dy()
-		}
 
 		translate := ebiten.GeoM{}
-		translate.Translate(-float64(tileWidth)/2, -float64(tileHeight))
-		translate.Translate(TileStartX+float64(gridPos.Col)*float64(tileWidth), TileStartY+float64(gridPos.Row)*float64(tileHeight))
+		translate.Translate(-float64(assets.TileWidth)/2, -float64(assets.TileHeight))
+		translate.Translate(TileStartX+float64(gridPos.Col)*float64(assets.TileWidth), TileStartY+float64(gridPos.Row)*float64(assets.TileHeight))
 		drawOption := &ebiten.DrawImageOptions{
 			GeoM: translate,
 		}
@@ -78,8 +72,8 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 	r.queryDamage.Each(ecs.World, func(e *donburi.Entry) {
 		gridPos := myComponent.GridPos.Get(e)
 		translate := ebiten.GeoM{}
-		translate.Translate(-float64(tileWidth)/2, -float64(tileHeight))
-		translate.Translate(TileStartX+float64(gridPos.Col)*float64(tileWidth), TileStartY+float64(gridPos.Row)*float64(tileHeight))
+		translate.Translate(-float64(assets.TileWidth)/2, -float64(assets.TileHeight))
+		translate.Translate(TileStartX+float64(gridPos.Col)*float64(assets.TileWidth), TileStartY+float64(gridPos.Row)*float64(assets.TileHeight))
 		drawOption := &ebiten.DrawImageOptions{
 			GeoM: translate,
 		}

@@ -39,8 +39,14 @@ var PixelFontTTF []byte
 //go:embed images/bg_forest/bg.png
 var bg_forest []byte
 
+//go:embed images/pyro-eyes.png
+var pyro_eyes []byte
+
 //go:embed images/fx/longsword.png
 var sword_fx []byte
+
+//go:embed images/fx/explosion.png
+var explosion_fx []byte
 
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
@@ -51,10 +57,15 @@ var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Boulder *ebiten.Image
+var PyroEyes *ebiten.Image
 var PixelFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
+var ExplosionRaw *ebiten.Image
+
+var TileWidth int
+var TileHeight int
 
 func init() {
 	s, err := text.NewGoTextFaceSource(bytes.NewReader(PixelFontTTF))
@@ -73,6 +84,11 @@ func init() {
 	if RedTile == nil {
 		imgReader := bytes.NewReader(redTilePng)
 		RedTile, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if TileWidth == 0 {
+		rect := RedTile.Bounds()
+		TileWidth = rect.Dx()
+		TileHeight = rect.Dy()
 	}
 
 	if Player1Stand == nil {
@@ -99,6 +115,14 @@ func init() {
 		imgReader := bytes.NewReader(tileDmgPng)
 		DamageGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if PyroEyes == nil {
+		imgReader := bytes.NewReader(pyro_eyes)
+		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ExplosionRaw == nil {
+		imgReader := bytes.NewReader(explosion_fx)
+		ExplosionRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)
 		SwordAtkRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -120,6 +144,21 @@ type SpriteParam struct {
 	Done             func()
 }
 
+func NewExplosionAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(ExplosionRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  75,
+		SubImageHeight: 75,
+		Modulo:         param.Modulo,
+		FrameCount:     11,
+		Done:           param.Done,
+	}
+}
 func NewSwordAtkAnim(param SpriteParam) *core.AnimatedImage {
 	return &core.AnimatedImage{
 		MovableImage: core.NewMovableImage(SwordAtkRaw,

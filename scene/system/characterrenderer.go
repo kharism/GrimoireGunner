@@ -1,7 +1,11 @@
 package system
 
 import (
+	"sort"
+
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/assets"
+	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -9,12 +13,12 @@ import (
 )
 
 type characterRenderer struct {
-	query *donburi.Query
+	query *donburi.OrderedQuery[component.GridPosComponentData]
 }
 
 // Render anything that has sprite and grid position
 var CharacterRenderer = &characterRenderer{
-	query: donburi.NewQuery(
+	query: donburi.NewOrderedQuery[component.GridPosComponentData](
 		filter.Contains(
 			mycomponent.Sprite,
 			mycomponent.GridPos,
@@ -23,12 +27,23 @@ var CharacterRenderer = &characterRenderer{
 }
 
 func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
+	entries := []*donburi.Entry{}
 	r.query.Each(ecs.World, func(e *donburi.Entry) {
+		entries = append(entries, e)
+	})
+	sort.Slice(entries, func(i, j int) bool {
+		gridPosI := mycomponent.GridPos.Get(entries[i])
+		gridPosJ := mycomponent.GridPos.Get(entries[j])
+		return gridPosI.Order() < gridPosJ.Order()
+	})
+	for _, e := range entries {
 		gridPos := mycomponent.GridPos.Get(e)
+
+		// fmt.Println(e.Entity(), gridPos.Col, gridPos.Order(), component.Health.Get(e).Name)
 		screenPos := mycomponent.ScreenPos.Get(e)
 		if screenPos.X == 0 && screenPos.Y == 0 {
-			screenPos.X = TileStartX + float64(gridPos.Col)*float64(tileWidth)
-			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(tileHeight)
+			screenPos.X = TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 		}
 		sprite := mycomponent.Sprite.Get(e).Image
 		bound := sprite.Bounds()
@@ -39,5 +54,5 @@ func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: translate,
 		}
 		screen.DrawImage(sprite, drawOption)
-	})
+	}
 }

@@ -3,9 +3,11 @@ package scene
 import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
+	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/attack"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -46,7 +48,12 @@ func LoadGrid(world donburi.World) {
 	}
 }
 func LoadPlayer(world donburi.World) *donburi.Entity {
-	return archetype.NewPlayer(world, assets.Player1Stand)
+	playerEntity := archetype.NewPlayer(world, assets.Player1Stand)
+	gridPos := component.GridPos.Get(world.Entry(*playerEntity))
+	screenPos := component.ScreenPos.Get(world.Entry(*playerEntity))
+	screenPos.X = system.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+	screenPos.Y = system.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
+	return playerEntity
 }
 
 type BoulderParam struct {
@@ -62,7 +69,7 @@ func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
 	)
 	entry := world.Entry(entity)
 	mycomponent.Sprite.Set(entry, &mycomponent.SpriteData{Image: assets.Boulder})
-	mycomponent.Health.Set(entry, &mycomponent.HealthData{HP: 200})
+	mycomponent.Health.Set(entry, &mycomponent.HealthData{HP: 200, Name: "Boulder"})
 	mycomponent.GridPos.Set(entry, &mycomponent.GridPosComponentData{Col: param.Col, Row: param.Row})
 	return &entity
 }
@@ -77,14 +84,22 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Col: 5,
 		Row: 1,
 	})
-	assets.Bg = state.Bg
 	playerEntity := LoadPlayer(s.world)
+	LoadBoulder(s.world, BoulderParam{
+		Col: 2,
+		Row: 2,
+	})
+	// enemies.NewPyroEyes(s.ecs, 6, 3)
+	assets.Bg = state.Bg
+
+	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
-		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.DamageSystem.Update).
+		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddSystem(system.UpdateFx).
+		AddSystem(system.EnemyAI.Update).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
