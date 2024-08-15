@@ -6,5 +6,7 @@ const (
 	LayerBackground ecs.LayerID = iota
 	LayerGrid
 	LayerCharacter
+	LayerFx
 	LayerHP
+	LayerUI
 )

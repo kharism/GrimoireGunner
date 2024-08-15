@@ -32,6 +32,7 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 	c.ecs.DrawLayer(layers.LayerBackground, screen)
 	c.ecs.DrawLayer(layers.LayerGrid, screen)
 	c.ecs.DrawLayer(layers.LayerCharacter, screen)
+	c.ecs.DrawLayer(layers.LayerFx, screen)
 	c.ecs.DrawLayer(layers.LayerHP, screen)
 }
 func LoadGrid(world donburi.World) {
@@ -73,7 +74,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	//add tiles entity
 	LoadGrid(s.world)
 	LoadBoulder(s.world, BoulderParam{
-		Col: 6,
+		Col: 5,
 		Row: 1,
 	})
 	assets.Bg = state.Bg
@@ -83,9 +84,11 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.DamageSystem.Update).
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
+		AddSystem(system.UpdateFx).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
+		AddRenderer(layers.LayerFx, system.RenderFx).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important

@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/kharism/hanashi/core"
 )
 
 //go:embed images/tile_blue.png
@@ -16,6 +17,9 @@ var blueTilePng []byte
 
 //go:embed images/tile_red.png
 var redTilePng []byte
+
+//go:embed images/dmggrid.png
+var tileDmgPng []byte
 
 //go:embed images/basicsprite.png
 var player1Stand []byte
@@ -35,8 +39,12 @@ var PixelFontTTF []byte
 //go:embed images/bg_forest/bg.png
 var bg_forest []byte
 
+//go:embed images/fx/longsword.png
+var sword_fx []byte
+
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
+var DamageGrid *ebiten.Image
 var Bg *ebiten.Image
 var BgForrest *ebiten.Image
 var Player1Stand *ebiten.Image
@@ -45,6 +53,8 @@ var Projectile1 *ebiten.Image
 var Boulder *ebiten.Image
 var PixelFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
+
+var SwordAtkRaw *ebiten.Image
 
 func init() {
 	s, err := text.NewGoTextFaceSource(bytes.NewReader(PixelFontTTF))
@@ -84,5 +94,44 @@ func init() {
 	if BgForrest == nil {
 		imgReader := bytes.NewReader(bg_forest)
 		BgForrest, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DamageGrid == nil {
+		imgReader := bytes.NewReader(tileDmgPng)
+		DamageGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SwordAtkRaw == nil {
+		imgReader := bytes.NewReader(sword_fx)
+		SwordAtkRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+		// SwordAtkAnim = &core.AnimatedImage{
+		// 	MovableImage:   core.NewMovableImage(atkAnim, core.NewMovableImageParams()),
+		// 	SubImageWidth:  200,
+		// 	SubImageHeight: 50,
+		// 	SubImageStartX: 0,
+		// 	SubImageStartY: 0,
+		// 	Modulo:         6,
+		// }
+
+	}
+}
+
+type SpriteParam struct {
+	ScreenX, ScreenY float64
+	Modulo           int
+	Done             func()
+}
+
+func NewSwordAtkAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(SwordAtkRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  200,
+		SubImageHeight: 50,
+		Modulo:         param.Modulo,
+		FrameCount:     6,
+		Done:           param.Done,
 	}
 }
