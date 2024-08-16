@@ -48,6 +48,9 @@ var sword_fx []byte
 //go:embed images/fx/explosion.png
 var explosion_fx []byte
 
+//go:embed images/fx/hit.png
+var hit_fx []byte
+
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
 var DamageGrid *ebiten.Image
@@ -63,9 +66,26 @@ var FontFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
 var ExplosionRaw *ebiten.Image
+var HitRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
+
+var TileStartX = float64(165.0)
+var TileStartY = float64(360.0)
+
+// return col,row
+func GridCoord2Screen(Row, Col int) (float64, float64) {
+	return TileStartX + float64(Col)*float64(TileWidth), TileStartY + float64(Row)*float64(TileHeight)
+}
+
+// param screen X,Y coords
+// return col,row
+func Coord2Grid(X, Y float64) (int, int) {
+	col := int(X-TileStartX) / TileWidth
+	row := int(Y-TileStartY) / TileHeight
+	return col, row
+}
 
 func init() {
 	s, err := text.NewGoTextFaceSource(bytes.NewReader(PixelFontTTF))
@@ -123,6 +143,10 @@ func init() {
 		imgReader := bytes.NewReader(explosion_fx)
 		ExplosionRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if HitRaw == nil {
+		imgReader := bytes.NewReader(hit_fx)
+		HitRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)
 		SwordAtkRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -156,6 +180,21 @@ func NewExplosionAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageHeight: 75,
 		Modulo:         param.Modulo,
 		FrameCount:     11,
+		Done:           param.Done,
+	}
+}
+func NewHitAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(HitRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  128,
+		SubImageHeight: 128,
+		Modulo:         param.Modulo,
+		FrameCount:     6,
 		Done:           param.Done,
 	}
 }

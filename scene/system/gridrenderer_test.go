@@ -10,7 +10,7 @@ func TestCoordTrans(t *testing.T) {
 	X, Y := 265.0, 320.0
 	assets.TileHeight = 50.0
 	assets.TileWidth = 100
-	col, row := Coord2Grid(X, Y)
+	col, row := assets.Coord2Grid(X, Y)
 	if col != 1 {
 		t.Fail()
 	}

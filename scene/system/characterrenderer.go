@@ -42,8 +42,8 @@ func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
 		// fmt.Println(e.Entity(), gridPos.Col, gridPos.Order(), component.Health.Get(e).Name)
 		screenPos := mycomponent.ScreenPos.Get(e)
 		if screenPos.X == 0 && screenPos.Y == 0 {
-			screenPos.X = TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
-			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
+			screenPos.X = assets.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+			screenPos.Y = assets.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 		}
 		sprite := mycomponent.Sprite.Get(e).Image
 		bound := sprite.Bounds()

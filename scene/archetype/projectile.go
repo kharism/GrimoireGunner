@@ -23,6 +23,7 @@ func NewProjectile(world donburi.World, param ProjectileParam) *donburi.Entity {
 		mycomponent.ScreenPos,
 		mycomponent.Speed,
 		mycomponent.Damage,
+		mycomponent.TargetLocation,
 		mycomponent.OnHit,
 		mycomponent.Sprite, ProjectileTag)
 	entId := world.Entry(entity)

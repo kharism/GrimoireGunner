@@ -12,6 +12,7 @@ type EnemyRoutineFunc func(ecs *ecs.ECS, self *donburi.Entry)
 
 type EnemyRoutineData struct {
 	Routine EnemyRoutineFunc
+	Memory  map[string]any
 }
 
 var EnemyRoutine = donburi.NewComponentType[EnemyRoutineData]()

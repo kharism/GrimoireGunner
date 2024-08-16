@@ -22,6 +22,7 @@ var NPMoveSystem = &npMoveSystem{
 				mycomponent.GridPos,
 				mycomponent.ScreenPos,
 				mycomponent.Sprite,
+				mycomponent.TargetLocation,
 			),
 			filter.Not(
 				filter.Contains(
@@ -38,13 +39,18 @@ func (s *npMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := mycomponent.GridPos.Get(e)
 		screenPos := mycomponent.ScreenPos.Get(e)
 		if screenPos.X == 0 && screenPos.Y == 0 {
-			screenPos.X = TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
-			screenPos.Y = TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
+			screenPos.X = assets.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+			screenPos.Y = assets.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 		}
 		screenPos.X += v.Vx
 		screenPos.Y += v.Vy
+		targetPos := mycomponent.TargetLocation.Get(e)
+		if screenPos.X == targetPos.Tx && screenPos.Y == targetPos.Ty {
+			v.Vx = 0
+			v.Vy = 0
+		}
 		mycomponent.ScreenPos.Set(e, screenPos)
-		col, row := Coord2Grid(screenPos.X, screenPos.Y)
+		col, row := assets.Coord2Grid(screenPos.X, screenPos.Y)
 		comp := component.GridPos.Get(e)
 		comp.Col = col
 		comp.Row = row

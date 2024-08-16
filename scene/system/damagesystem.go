@@ -31,6 +31,22 @@ var DamageSystem = &damageSystem{
 	),
 }
 
+// add hit animation to damagedEntity. Assuming the hit animation is 128x128
+func AddHitAnim(ecs *ecs.ECS, damagedEntity donburi.Entity) {
+	entry := ecs.World.Entry(damagedEntity)
+	screenPos := component.ScreenPos.Get(entry)
+	hitfx := assets.NewHitAnim(assets.SpriteParam{
+		Modulo:  2,
+		ScreenX: screenPos.X - 64,
+		ScreenY: screenPos.Y - 100,
+	})
+	entityFx := ecs.World.Create(component.Fx)
+	entryFx := ecs.World.Entry(entityFx)
+	component.Fx.Set(entryFx, &hitfx)
+	hitfx.Done = func() {
+		ecs.World.Remove(entityFx)
+	}
+}
 func (s *damageSystem) Update(ecs *ecs.ECS) {
 	gridMap := [4][8]*donburi.Entry{}
 	s.DamagableQuery.Each(ecs.World, func(e *donburi.Entry) {
@@ -47,6 +63,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			// damage := mycomponent.Damage.Get(e).Damage
 			onhit := mycomponent.OnHit.GetValue(e)
 			onhit(ecs, e, damageableEntity)
+			AddHitAnim(ecs, damageableEntity.Entity())
 			if component.Health.Get(damageableEntity).HP <= 0 {
 				scrPos := mycomponent.ScreenPos.GetValue(damageableEntity)
 				ecs.World.Remove(damageableEntity.Entity())

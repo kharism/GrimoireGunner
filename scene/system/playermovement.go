@@ -29,7 +29,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Row > 0 {
 			// gridPos.Row -= 1
-			targetX, targetY = GridCoord2Screen(gridPos.Row-1, gridPos.Col)
+			targetX, targetY = assets.GridCoord2Screen(gridPos.Row-1, gridPos.Col)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
 	}
@@ -37,7 +37,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Row < 3 {
 			// gridPos.Row += 1
-			targetX, targetY = GridCoord2Screen(gridPos.Row+1, gridPos.Col)
+			targetX, targetY = assets.GridCoord2Screen(gridPos.Row+1, gridPos.Col)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
 	}
@@ -45,7 +45,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Col > 0 {
 			// gridPos.Row += 1
-			targetX, targetY = GridCoord2Screen(gridPos.Row, gridPos.Col-1)
+			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col-1)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
 	}
@@ -53,7 +53,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Col < 3 {
 			// gridPos.Row += 1
-			targetX, targetY = GridCoord2Screen(gridPos.Row, gridPos.Col+1)
+			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
 	}
@@ -83,7 +83,7 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		p.isAnim = false
 		component.Speed.Set(playerEntry, i)
 		if assets.TileHeight > 0 {
-			col, row := Coord2Grid(targetLoc.Tx, targetLoc.Ty)
+			col, row := assets.Coord2Grid(targetLoc.Tx, targetLoc.Ty)
 			comp := component.GridPos.Get(playerEntry)
 			comp.Col = col
 			comp.Row = row

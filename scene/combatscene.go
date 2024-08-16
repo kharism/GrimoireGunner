@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/grimoiregunner/scene/system/enemies"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -51,8 +52,8 @@ func LoadPlayer(world donburi.World) *donburi.Entity {
 	playerEntity := archetype.NewPlayer(world, assets.Player1Stand)
 	gridPos := component.GridPos.Get(world.Entry(*playerEntity))
 	screenPos := component.ScreenPos.Get(world.Entry(*playerEntity))
-	screenPos.X = system.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
-	screenPos.Y = system.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
+	screenPos.X = assets.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
+	screenPos.Y = assets.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 	return playerEntity
 }
 
@@ -89,7 +90,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Col: 2,
 		Row: 2,
 	})
-	// enemies.NewPyroEyes(s.ecs, 6, 3)
+	enemies.NewPyroEyes(s.ecs, 6, 3)
 	assets.Bg = state.Bg
 
 	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
