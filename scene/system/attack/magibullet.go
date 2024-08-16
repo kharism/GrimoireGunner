@@ -8,9 +8,9 @@ import (
 	"github.com/yohamta/donburi/ecs"
 )
 
-func GenerateMagibullet(ecs *ecs.ECS, row, col int, xspeed float64) {
+func GenerateMagibullet(ecs *ecs.ECS, row, col int, xspeed float64) *donburi.Entity {
 
-	archetype.NewProjectile(ecs.World, archetype.ProjectileParam{
+	return archetype.NewProjectile(ecs.World, archetype.ProjectileParam{
 		Vx:     xspeed,
 		Vy:     0,
 		Col:    col,

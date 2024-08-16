@@ -14,24 +14,21 @@ import (
 	"github.com/yohamta/donburi/ecs"
 )
 
-func NewPyroEyes(ecs *ecs.ECS, col, row int) {
-	entity := archetype.NewNPC(ecs.World, assets.PyroEyes)
+func NewCannoneer(ecs *ecs.ECS, col, row int) {
+	entity := archetype.NewNPC(ecs.World, assets.Cannoneer)
 	entry := ecs.World.Entry(*entity)
-	component.Health.Set(entry, &component.HealthData{HP: 200, Name: "Pyro-Eyes"})
+	component.Health.Set(entry, &component.HealthData{HP: 200, Name: "Cannoneer"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
 	data := map[string]any{}
 	data[ALREADY_FIRED] = false
 	data[IS_MOVING] = false
-	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: PyroEyesRoutine, Memory: data})
+	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: CannoneerRoutine, Memory: data})
 }
-
-const ALREADY_FIRED = "already_fired" //
-const IS_MOVING = "is_moving"
 
 // this enemy will move up-down and if it's on the same row as player
 // will attack
-func PyroEyesRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
+func CannoneerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	player, _ := archetype.PlayerTag.First(ecs.World)
 	playerGridPos := component.GridPos.Get(player)
 	// playerScreenPos := component.ScreenPos.Get(player)

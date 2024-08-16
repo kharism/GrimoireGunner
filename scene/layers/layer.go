@@ -8,5 +8,6 @@ const (
 	LayerCharacter
 	LayerFx
 	LayerHP
+	LayerDebug
 	LayerUI
 )

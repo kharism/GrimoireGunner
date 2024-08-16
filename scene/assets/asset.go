@@ -42,6 +42,9 @@ var bg_forest []byte
 //go:embed images/pyro-eyes.png
 var pyro_eyes []byte
 
+//go:embed images/cannoneer.png
+var cannoneer []byte
+
 //go:embed images/fx/longsword.png
 var sword_fx []byte
 
@@ -61,6 +64,7 @@ var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Boulder *ebiten.Image
 var PyroEyes *ebiten.Image
+var Cannoneer *ebiten.Image
 var PixelFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
 
@@ -82,8 +86,8 @@ func GridCoord2Screen(Row, Col int) (float64, float64) {
 // param screen X,Y coords
 // return col,row
 func Coord2Grid(X, Y float64) (int, int) {
-	col := int(X-TileStartX) / TileWidth
-	row := int(Y-TileStartY) / TileHeight
+	col := int(X+float64(TileWidth/2)-TileStartX) / TileWidth
+	row := int(Y+float64(TileHeight/2)-TileStartY) / TileHeight
 	return col, row
 }
 
@@ -138,6 +142,10 @@ func init() {
 	if PyroEyes == nil {
 		imgReader := bytes.NewReader(pyro_eyes)
 		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Cannoneer == nil {
+		imgReader := bytes.NewReader(cannoneer)
+		Cannoneer, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ExplosionRaw == nil {
 		imgReader := bytes.NewReader(explosion_fx)

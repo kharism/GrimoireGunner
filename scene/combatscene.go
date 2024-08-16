@@ -37,6 +37,7 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 	c.ecs.DrawLayer(layers.LayerCharacter, screen)
 	c.ecs.DrawLayer(layers.LayerFx, screen)
 	c.ecs.DrawLayer(layers.LayerHP, screen)
+	c.ecs.DrawLayer(layers.LayerDebug, screen)
 }
 func LoadGrid(world donburi.World) {
 	for i := 0; i < 4; i++ {
@@ -90,7 +91,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Col: 2,
 		Row: 2,
 	})
-	enemies.NewPyroEyes(s.ecs, 6, 3)
+	enemies.NewCannoneer(s.ecs, 6, 3)
 	assets.Bg = state.Bg
 
 	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
@@ -105,6 +106,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
 		AddRenderer(layers.LayerFx, system.RenderFx).
+		AddRenderer(layers.LayerDebug, system.DebugRenderer.DrawDebug).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
