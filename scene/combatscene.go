@@ -91,7 +91,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Col: 2,
 		Row: 2,
 	})
-	enemies.NewCannoneer(s.ecs, 6, 3)
+	enemies.NewBloombomber(s.ecs, 6, 1)
 	assets.Bg = state.Bg
 
 	attack.GenerateMagibullet(s.ecs, 1, 5, -15)

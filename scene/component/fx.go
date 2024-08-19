@@ -1,8 +1,16 @@
 package component
 
 import (
-	"github.com/kharism/hanashi/core"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 )
 
-var Fx = donburi.NewComponentType[*core.AnimatedImage]()
+type FxData struct {
+	Animation Animation
+}
+type Animation interface {
+	Draw(screen *ebiten.Image)
+	Update()
+}
+
+var Fx = donburi.NewComponentType[FxData]()

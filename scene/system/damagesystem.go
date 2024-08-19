@@ -42,7 +42,7 @@ func AddHitAnim(ecs *ecs.ECS, damagedEntity donburi.Entity) {
 	})
 	entityFx := ecs.World.Create(component.Fx)
 	entryFx := ecs.World.Entry(entityFx)
-	component.Fx.Set(entryFx, &hitfx)
+	component.Fx.Set(entryFx, &component.FxData{hitfx})
 	hitfx.Done = func() {
 		ecs.World.Remove(entityFx)
 	}
@@ -77,7 +77,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 				explosionAnim.Done = func() {
 					ecs.World.Remove(entity)
 				}
-				component.Fx.Set(entry, &explosionAnim)
+				component.Fx.Set(entry, &component.FxData{explosionAnim})
 			}
 			// mycomponent.Health.Get(damageableEntity).HP -= damage
 		}

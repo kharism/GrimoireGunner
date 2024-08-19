@@ -53,5 +53,5 @@ func NonProjectileAtk(ecs *ecs.ECS, param DamageGridParam) {
 		ecs.World.Remove(removeList[1])
 		ecs.World.Remove(entity)
 	}
-	component.Fx.Set(entry, &param.Fx)
+	component.Fx.Set(entry, &component.FxData{param.Fx})
 }

@@ -10,13 +10,13 @@ import (
 func UpdateFx(ecs *ecs.ECS) {
 	component.Fx.Each(ecs.World, func(e *donburi.Entry) {
 		fx := component.Fx.GetValue(e)
-		fx.Update()
+		fx.Animation.Update()
 	})
 }
 
 func RenderFx(ecs *ecs.ECS, screen *ebiten.Image) {
 	component.Fx.Each(ecs.World, func(e *donburi.Entry) {
 		fx := component.Fx.GetValue(e)
-		fx.Draw(screen)
+		fx.Animation.Draw(screen)
 	})
 }

@@ -36,6 +36,7 @@ func CannoneerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	entityScreenPos := component.ScreenPos.Get(entity)
 	v := component.Speed.Get(entity)
 	memory := component.EnemyRoutine.Get(entity).Memory
+	sprite := component.Sprite.Get(entity)
 	if entityScreenPos == nil {
 		return
 	}
@@ -67,6 +68,7 @@ func CannoneerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			return
 		}
 		memory[ALREADY_FIRED] = true
+		sprite.Image = assets.CannoneerAtk
 		// timer := time.NewTimer(1500 * time.Millisecond)
 		go func() {
 			// <-timer.C
@@ -77,6 +79,7 @@ func CannoneerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			// time.Sleep(1 * time.Second)
 			memory[ALREADY_FIRED] = false
 			memory[IS_MOVING] = false
+			sprite.Image = assets.Cannoneer
 		}()
 
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/filter"
 )
 
 type PlayerMoveSystem struct {
@@ -21,7 +22,25 @@ func NewPlayerMoveSystem(player *donburi.Entity) *PlayerMoveSystem {
 
 // make this multiple of 5
 var DefaultSpeed = 5.0
+var QueryHP = donburi.NewQuery(
+	filter.Contains(
+		component.Health,
+		component.GridPos,
+	),
+)
 
+// check whether there are obstacle on row-col grid
+// for now it checks another character
+func ValidMove(ecs *ecs.ECS, row, col int) bool {
+	ObstacleExist := false
+	QueryHP.Each(ecs.World, func(e *donburi.Entry) {
+		pos := component.GridPos.Get(e)
+		if pos.Col == col && pos.Row == row {
+			ObstacleExist = true
+		}
+	})
+	return !ObstacleExist
+}
 func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 	playerEntry := ecs.World.Entry(*p.PlayerIndex)
 	var targetX, targetY float64
@@ -29,6 +48,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Row > 0 {
 			// gridPos.Row -= 1
+			if !ValidMove(ecs, gridPos.Row-1, gridPos.Col) {
+				return
+			}
 			targetX, targetY = assets.GridCoord2Screen(gridPos.Row-1, gridPos.Col)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
@@ -37,6 +59,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Row < 3 {
 			// gridPos.Row += 1
+			if !ValidMove(ecs, gridPos.Row+1, gridPos.Col) {
+				return
+			}
 			targetX, targetY = assets.GridCoord2Screen(gridPos.Row+1, gridPos.Col)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
@@ -45,6 +70,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Col > 0 {
 			// gridPos.Row += 1
+			if !ValidMove(ecs, gridPos.Row, gridPos.Col-1) {
+				return
+			}
 			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col-1)
 		}
 		component.GridPos.Set(playerEntry, gridPos)
@@ -53,6 +81,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerEntry)
 		if gridPos.Col < 3 {
 			// gridPos.Row += 1
+			if !ValidMove(ecs, gridPos.Row, gridPos.Col+1) {
+				return
+			}
 			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		}
 		component.GridPos.Set(playerEntry, gridPos)

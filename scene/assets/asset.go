@@ -18,10 +18,13 @@ var blueTilePng []byte
 //go:embed images/tile_red.png
 var redTilePng []byte
 
+//go:embed images/grid_targetted.png
+var grid_targetted []byte
+
 //go:embed images/dmggrid.png
 var tileDmgPng []byte
 
-//go:embed images/basicsprite.png
+//go:embed images/basicsprite2.png
 var player1Stand []byte
 
 //go:embed images/attacksprite.png
@@ -29,6 +32,9 @@ var player1attack []byte
 
 //go:embed images/magibullet.png
 var projectile1 []byte
+
+//go:embed images/bomb1.png
+var bomb1 []byte
 
 //go:embed images/boulder.png
 var boulder []byte
@@ -45,6 +51,15 @@ var pyro_eyes []byte
 //go:embed images/cannoneer.png
 var cannoneer []byte
 
+//go:embed images/cannoneer_atk.png
+var cannoneer_atk []byte
+
+//go:embed images/bloombomber.png
+var bloombomber []byte
+
+//go:embed images/bloombomber_atk.png
+var bloombomber_atk []byte
+
 //go:embed images/fx/longsword.png
 var sword_fx []byte
 
@@ -57,6 +72,8 @@ var hit_fx []byte
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
 var DamageGrid *ebiten.Image
+var TargetedGrid *ebiten.Image
+var Bomb1 *ebiten.Image
 var Bg *ebiten.Image
 var BgForrest *ebiten.Image
 var Player1Stand *ebiten.Image
@@ -65,6 +82,10 @@ var Projectile1 *ebiten.Image
 var Boulder *ebiten.Image
 var PyroEyes *ebiten.Image
 var Cannoneer *ebiten.Image
+var CannoneerAtk *ebiten.Image
+var BloombomberAtk *ebiten.Image
+var Bloombomber *ebiten.Image
+
 var PixelFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
 
@@ -114,7 +135,10 @@ func init() {
 		TileWidth = rect.Dx()
 		TileHeight = rect.Dy()
 	}
-
+	if TargetedGrid == nil {
+		imgReader := bytes.NewReader(grid_targetted)
+		TargetedGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Player1Stand == nil {
 		imgReader := bytes.NewReader(player1Stand)
 		Player1Stand, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -122,6 +146,10 @@ func init() {
 	if Player1Attack == nil {
 		imgReader := bytes.NewReader(player1attack)
 		Player1Attack, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Bomb1 == nil {
+		imgReader := bytes.NewReader(bomb1)
+		Bomb1, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Projectile1 == nil {
 		imgReader := bytes.NewReader(projectile1)
@@ -146,6 +174,18 @@ func init() {
 	if Cannoneer == nil {
 		imgReader := bytes.NewReader(cannoneer)
 		Cannoneer, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if CannoneerAtk == nil {
+		imgReader := bytes.NewReader(cannoneer_atk)
+		CannoneerAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Bloombomber == nil {
+		imgReader := bytes.NewReader(bloombomber)
+		Bloombomber, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BloombomberAtk == nil {
+		imgReader := bytes.NewReader(bloombomber_atk)
+		BloombomberAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ExplosionRaw == nil {
 		imgReader := bytes.NewReader(explosion_fx)

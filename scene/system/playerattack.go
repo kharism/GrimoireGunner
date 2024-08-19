@@ -17,11 +17,17 @@ func NewPlayerAttackSystem(player *donburi.Entity) *PlayerAttackSystem {
 	return &PlayerAttackSystem{PlayerIndex: player}
 }
 
+// var timerDelay = time.Now()
+
 func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
-	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
+	if inpututil.IsKeyJustReleased(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
+		// if time.Now().Sub(timerDelay) > 500*time.Millisecond {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
 		gridPos := component.GridPos.Get(playerId)
 		attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 15)
+		// timerDelay = time.Now()
+		// }
+
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
