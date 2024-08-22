@@ -39,6 +39,9 @@ var bomb1 []byte
 //go:embed images/boulder.png
 var boulder []byte
 
+//go:embed images/lightning_bolt.png
+var lightningbolt []byte
+
 //go:embed fonts/PixelOperator8-bold.ttf
 var PixelFontTTF []byte
 
@@ -79,6 +82,7 @@ var BgForrest *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
+var LightningBolt *ebiten.Image
 var Boulder *ebiten.Image
 var PyroEyes *ebiten.Image
 var Cannoneer *ebiten.Image
@@ -99,7 +103,7 @@ var TileHeight int
 var TileStartX = float64(165.0)
 var TileStartY = float64(360.0)
 
-// return col,row
+// return x,y screen coordinate
 func GridCoord2Screen(Row, Col int) (float64, float64) {
 	return TileStartX + float64(Col)*float64(TileWidth), TileStartY + float64(Row)*float64(TileHeight)
 }
@@ -154,6 +158,10 @@ func init() {
 	if Projectile1 == nil {
 		imgReader := bytes.NewReader(projectile1)
 		Projectile1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningBolt == nil {
+		imgReader := bytes.NewReader(lightningbolt)
+		LightningBolt, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Boulder == nil {
 		imgReader := bytes.NewReader(boulder)

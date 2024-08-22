@@ -41,7 +41,7 @@ func NonProjectileAtk(ecs *ecs.ECS, param DamageGridParam) {
 		)
 		entry := ecs.World.Entry(entity)
 		removeList = append(removeList, entity)
-		component.Damage.Set(entry, &component.DamageData{param.Damage[idx]})
+		component.Damage.Set(entry, &component.DamageData{Damage: param.Damage[idx]})
 		component.GridPos.Set(entry, l)
 		component.OnHit.Set(entry, &param.OnHit)
 	}

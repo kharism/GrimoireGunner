@@ -1,12 +1,14 @@
 package component
 
 import (
+	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
 type DamageData struct {
-	Damage int
+	Damage    int
+	OnHitAnim *core.AnimatedImage
 }
 type OnAtkHit func(ecs *ecs.ECS, projectile, receiver *donburi.Entry)
 

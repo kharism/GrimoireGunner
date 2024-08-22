@@ -35,4 +35,14 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 		scrPos := component.ScreenPos.Get(playerId)
 		attack.NewLongSwordAttack(ecs, *scrPos, *gridPos)
 	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		playerId := ecs.World.Entry(*s.PlayerIndex)
+		gridPos := component.GridPos.Get(playerId)
+		attack.NewLigtningAttack(ecs, attack.LightnigAtkParam{
+			StartRow:  gridPos.Row,
+			StartCol:  gridPos.Col + 1,
+			Direction: 1,
+			Actor:     playerId,
+		})
+	}
 }

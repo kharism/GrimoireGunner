@@ -100,6 +100,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.DamageSystem.Update).
 		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
+		AddSystem(system.NewTransientSystem().Update).
 		AddSystem(system.UpdateFx).
 		AddSystem(system.EnemyAI.Update).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
