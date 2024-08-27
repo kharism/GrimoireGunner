@@ -2,6 +2,7 @@ package system
 
 import (
 	"sort"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
@@ -13,7 +14,8 @@ import (
 )
 
 type characterRenderer struct {
-	query *donburi.OrderedQuery[component.GridPosComponentData]
+	query   *donburi.OrderedQuery[component.GridPosComponentData]
+	counter uint // this to help with blinking function
 }
 
 // Render anything that has sprite and grid position
@@ -28,6 +30,7 @@ var CharacterRenderer = &characterRenderer{
 
 func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
 	entries := []*donburi.Entry{}
+	r.counter += 1
 	r.query.Each(ecs.World, func(e *donburi.Entry) {
 		entries = append(entries, e)
 	})
@@ -44,6 +47,17 @@ func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
 		if screenPos.X == 0 && screenPos.Y == 0 {
 			screenPos.X = assets.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
 			screenPos.Y = assets.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
+		}
+		blink := false
+		if e.HasComponent(component.Health) {
+			health := component.Health.Get(e)
+			invisTime := health.InvisTime
+			if !invisTime.IsZero() && invisTime.After(time.Now()) && r.counter%20 == 0 {
+				blink = true
+			}
+		}
+		if blink {
+			return
 		}
 		sprite := mycomponent.Sprite.Get(e).Image
 		bound := sprite.Bounds()
