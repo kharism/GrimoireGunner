@@ -27,7 +27,7 @@ var tileDmgPng []byte
 //go:embed images/basicsprite2.png
 var player1Stand []byte
 
-//go:embed images/attacksprite.png
+//go:embed images/attacksprite2.png
 var player1attack []byte
 
 //go:embed images/magibullet.png

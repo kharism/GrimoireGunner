@@ -41,7 +41,7 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 		scrPos := component.ScreenPos.Get(playerId)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
-		attack.NewLongSwordAttack(ecs, *scrPos, *gridPos)
+		attack.NewLongSwordAttack(EnergySystem, ecs, *scrPos, *gridPos)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
