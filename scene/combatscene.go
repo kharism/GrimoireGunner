@@ -38,6 +38,7 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 	c.ecs.DrawLayer(layers.LayerFx, screen)
 	c.ecs.DrawLayer(layers.LayerHP, screen)
 	c.ecs.DrawLayer(layers.LayerDebug, screen)
+	c.ecs.DrawLayer(layers.LayerUI, screen)
 }
 func LoadGrid(world donburi.World) {
 	for i := 0; i < 4; i++ {
@@ -94,6 +95,8 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	enemies.NewCannoneer(s.ecs, 6, 1)
 	assets.Bg = state.Bg
 
+	Ensystemrenderer := system.EnergySystem
+
 	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
@@ -102,12 +105,14 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddSystem(system.NewTransientSystem().Update).
 		AddSystem(system.UpdateFx).
+		AddSystem(Ensystemrenderer.Update).
 		AddSystem(system.EnemyAI.Update).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
 		AddRenderer(layers.LayerFx, system.RenderFx).
 		AddRenderer(layers.LayerDebug, system.DebugRenderer.DrawDebug).
+		AddRenderer(layers.LayerUI, Ensystemrenderer.DrawEnBar).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
