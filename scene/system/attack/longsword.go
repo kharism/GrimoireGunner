@@ -8,12 +8,12 @@ import (
 	"github.com/yohamta/donburi/ecs"
 )
 
-func NewLongSwordAttack(ecs *ecs.ECS, playerScrLoc component.ScreenPosComponentData, playerGridLoc component.GridPosComponentData) {
+func newLongSwordAttack(ecs *ecs.ECS, playerScrLoc component.ScreenPosComponentData, playerGridLoc component.GridPosComponentData, damage int) {
 	param := DamageGridParam{}
 	loc1 := &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1}
 	loc2 := &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 2}
 	param.Locations = []*component.GridPosComponentData{loc1, loc2}
-	param.Damage = []int{20, 20}
+	param.Damage = []int{damage, damage}
 	param.OnHit = SingleHitProjectile
 
 	param.Fx = assets.NewSwordAtkAnim(assets.SpriteParam{
