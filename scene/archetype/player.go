@@ -18,7 +18,7 @@ func NewPlayer(world donburi.World, sprite *ebiten.Image) *donburi.Entity {
 		mycomponent.Sprite, PlayerTag)
 	entId := world.Entry(entity)
 	mycomponent.Sprite.Set(entId, &mycomponent.SpriteData{Image: sprite})
-	mycomponent.Health.Set(entId, &mycomponent.HealthData{HP: 1000, Name: "Player"})
+	mycomponent.Health.Set(entId, &mycomponent.HealthData{HP: 1000, Name: "Player", OnTakeDamage: mycomponent.AddIFrame})
 	gridPos := &mycomponent.GridPosComponentData{Row: 0, Col: 0}
 	mycomponent.GridPos.Set(entId, gridPos)
 	mycomponent.ScreenPos.Set(entId, &mycomponent.ScreenPosComponentData{X: 0, Y: 0})

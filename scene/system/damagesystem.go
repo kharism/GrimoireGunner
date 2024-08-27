@@ -1,6 +1,8 @@
 package system
 
 import (
+	"time"
+
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
@@ -62,8 +64,18 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			damageableEntity := gridMap[gridPos.Row][gridPos.Col]
 			// damage := mycomponent.Damage.Get(e).Damage
 			onhit := mycomponent.OnHit.GetValue(e)
-			onhit(ecs, e, damageableEntity)
-			AddHitAnim(ecs, damageableEntity.Entity())
+			invisTime := component.Health.Get(damageableEntity).InvisTime
+			isZero := invisTime.IsZero()
+			before := (!isZero && invisTime.Before(time.Now()))
+			if isZero || before {
+				onhit(ecs, e, damageableEntity)
+				AddHitAnim(ecs, damageableEntity.Entity())
+				if component.Health.Get(damageableEntity).OnTakeDamage != nil {
+					damageParam := component.DamageDetail{}
+					component.Health.Get(damageableEntity).OnTakeDamage(ecs, damageableEntity, damageParam)
+				}
+			}
+
 			if component.Health.Get(damageableEntity).HP <= 0 {
 				scrPos := mycomponent.ScreenPos.GetValue(damageableEntity)
 				ecs.World.Remove(damageableEntity.Entity())
