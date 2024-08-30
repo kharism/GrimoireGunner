@@ -20,6 +20,7 @@ type debugRenderer struct {
 var DebugRenderer = &debugRenderer{
 	query: donburi.NewQuery(
 		filter.Contains(mycomponent.Health),
+		// filter.Contains(component.Fx),
 	),
 }
 
@@ -42,6 +43,9 @@ func (r *debugRenderer) DrawDebug(ecs *ecs.ECS, screen *ebiten.Image) {
 			},
 		}
 		// hp := mycomponent.Health.Get(e).HP
+		// if animImage, ok := component.Fx.Get(e).Animation.(*core.AnimatedImage); ok {
+		// animImage.CurrMove.(*core.MoveAnimation)
+		// }
 		text.Draw(screen, fmt.Sprintf("Col=%d Row=%d", gridPos.Col, gridPos.Row), assets.FontFace, op)
 		// sprite := mycomponent.Sprite.Get(e).Image
 		// bound := sprite.Bounds()

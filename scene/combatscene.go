@@ -11,21 +11,30 @@ import (
 	"github.com/kharism/grimoiregunner/scene/system/enemies"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/joelschutz/stagehand"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
 type CombatScene struct {
-	data  SceneData
-	sm    *stagehand.SceneDirector[SceneData]
-	world donburi.World
-	ecs   *ecs.ECS
+	data       SceneData
+	sm         *stagehand.SceneDirector[SceneData]
+	world      donburi.World
+	ecs        *ecs.ECS
+	debugPause bool
 	// grid store entity id or 0 if no entity occupy the cell
 	entitygrid [4][8]int64
 }
 
 func (c *CombatScene) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		c.debugPause = !c.debugPause
+	}
+
+	if c.debugPause {
+		return nil
+	}
 	c.ecs.Update()
 	return nil
 }
@@ -69,6 +78,7 @@ func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
 		mycomponent.GridPos,
 		mycomponent.ScreenPos,
 		mycomponent.Sprite,
+		archetype.ConstructTag,
 	)
 	entry := world.Entry(entity)
 	mycomponent.Sprite.Set(entry, &mycomponent.SpriteData{Image: assets.Boulder})
@@ -81,6 +91,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	s.world = donburi.NewWorld()
 	s.entitygrid = [4][8]int64{}
 	s.ecs = ecs.NewECS(s.world)
+	s.debugPause = false
 	//add tiles entity
 	LoadGrid(s.world)
 	LoadBoulder(s.world, BoulderParam{
@@ -94,6 +105,8 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	})
 	enemies.NewCannoneer(s.ecs, 6, 1)
 	assets.Bg = state.Bg
+	system.CurLoadOut[0] = attack.NewLightningBolCaster()
+	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()
 
 	Ensystemrenderer := system.EnergySystem
 
@@ -113,6 +126,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddRenderer(layers.LayerFx, system.RenderFx).
 		AddRenderer(layers.LayerDebug, system.DebugRenderer.DrawDebug).
 		AddRenderer(layers.LayerUI, Ensystemrenderer.DrawEnBar).
+		AddRenderer(layers.LayerUI, system.RenderLoadOut).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important

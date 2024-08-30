@@ -3,11 +3,14 @@ package attack
 import (
 	"time"
 
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/filter"
 )
 
 type LightnigAtkParam struct {
@@ -50,4 +53,49 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 		})
 		component.OnHit.SetValue(entry, LightningBoltOnHitfunc)
 	}
+}
+
+// cost 3 EN and cast lightning bolt
+type LightingBoltCaster struct {
+	Cost         int
+	nextCooldown time.Time
+}
+
+func NewLightningBolCaster() *LightingBoltCaster {
+	return &LightingBoltCaster{Cost: 300, nextCooldown: time.Now()}
+}
+
+func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+	en := ensource.GetEn()
+	if en >= 300 {
+		ensource.SetEn(en - l.Cost)
+		query := donburi.NewQuery(
+			filter.Contains(
+				archetype.PlayerTag,
+			),
+		)
+
+		playerId, ok := query.First(ecs.World)
+		if !ok {
+			return
+		}
+		gridPos := component.GridPos.Get(playerId)
+		param := LightnigAtkParam{
+			StartRow:  gridPos.Row,
+			StartCol:  gridPos.Col + 1,
+			Direction: 1,
+			Actor:     playerId,
+		}
+		NewLigtningAttack(ecs, param)
+		l.nextCooldown = time.Now().Add(5 * time.Second)
+	}
+}
+func (l *LightingBoltCaster) GetCost() int {
+	return l.Cost
+}
+func (l *LightingBoltCaster) GetIcon() *ebiten.Image {
+	return assets.LightningIcon
+}
+func (l *LightingBoltCaster) GetCooldown() time.Time {
+	return l.nextCooldown
 }

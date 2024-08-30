@@ -21,7 +21,7 @@ var NPMoveSystem = &npMoveSystem{
 				mycomponent.Speed,
 				mycomponent.GridPos,
 				mycomponent.ScreenPos,
-				mycomponent.Sprite,
+				// mycomponent.Sprite,
 				mycomponent.TargetLocation,
 			),
 			filter.Not(
