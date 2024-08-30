@@ -69,8 +69,23 @@ var sword_fx []byte
 //go:embed images/fx/explosion.png
 var explosion_fx []byte
 
+//go:embed images/fx/shockwave.png
+var shockwave_fx []byte
+
 //go:embed images/fx/hit.png
 var hit_fx []byte
+
+//go:embed images/icon_longsword.png
+var longsword_icon []byte
+
+//go:embed images/icon_lightning.png
+var lightning_icon []byte
+
+//go:embed images/icon_shockwave.png
+var shockwave_icon []byte
+
+//go:embed shader/dakka.kage
+var dakkaShader []byte
 
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
@@ -90,12 +105,19 @@ var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
 var Bloombomber *ebiten.Image
 
+var LightningIcon *ebiten.Image
+var LongSwordIcon *ebiten.Image
+var ShockwaveIcon *ebiten.Image
+
+var DakkaShader *ebiten.Shader
+
 var PixelFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
 var ExplosionRaw *ebiten.Image
 var HitRaw *ebiten.Image
+var ShockWaveFxRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -195,6 +217,22 @@ func init() {
 		imgReader := bytes.NewReader(bloombomber_atk)
 		BloombomberAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if LongSwordIcon == nil {
+		imgReader := bytes.NewReader(longsword_icon)
+		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningIcon == nil {
+		imgReader := bytes.NewReader(lightning_icon)
+		LightningIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ShockwaveIcon == nil {
+		imgReader := bytes.NewReader(shockwave_icon)
+		ShockwaveIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DakkaShader == nil {
+		DakkaShader, _ = ebiten.NewShader(dakkaShader)
+	}
+
 	if ExplosionRaw == nil {
 		imgReader := bytes.NewReader(explosion_fx)
 		ExplosionRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -202,6 +240,10 @@ func init() {
 	if HitRaw == nil {
 		imgReader := bytes.NewReader(hit_fx)
 		HitRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ShockWaveFxRaw == nil {
+		imgReader := bytes.NewReader(shockwave_fx)
+		ShockWaveFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)
@@ -224,6 +266,21 @@ type SpriteParam struct {
 	Done             func()
 }
 
+func NewShockwaveAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(ShockWaveFxRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 100,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
 func NewExplosionAnim(param SpriteParam) *core.AnimatedImage {
 	return &core.AnimatedImage{
 		MovableImage: core.NewMovableImage(ExplosionRaw,

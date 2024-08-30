@@ -52,12 +52,12 @@ func (r *characterRenderer) DrawCharacter(ecs *ecs.ECS, screen *ebiten.Image) {
 		if e.HasComponent(component.Health) {
 			health := component.Health.Get(e)
 			invisTime := health.InvisTime
-			if !invisTime.IsZero() && invisTime.After(time.Now()) && r.counter%20 == 0 {
+			if !invisTime.IsZero() && invisTime.After(time.Now()) && r.counter%20 >= 15 && r.counter%20 <= 19 {
 				blink = true
 			}
 		}
 		if blink {
-			return
+			continue
 		}
 		sprite := mycomponent.Sprite.Get(e).Image
 		bound := sprite.Bounds()
