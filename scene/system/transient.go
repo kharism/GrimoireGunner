@@ -27,6 +27,9 @@ func (t *TransientSystem) Update(ecs *ecs.ECS) {
 		transientData := component.Transient.Get(e)
 		now := time.Now()
 		if now.After(transientData.Start.Add(transientData.Duration)) {
+			if transientData.OnRemoveCallback != nil {
+				transientData.OnRemoveCallback(ecs, e)
+			}
 			ecs.World.Remove(e.Entity())
 		}
 	})

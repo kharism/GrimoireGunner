@@ -54,6 +54,12 @@ var pyro_eyes []byte
 //go:embed images/cannoneer.png
 var cannoneer []byte
 
+//go:embed images/gatlingghoul.png
+var gatlingghoul []byte
+
+//go:embed images/gatlingghoul_atk.png
+var gatlingghoul_atk []byte
+
 //go:embed images/cannoneer_atk.png
 var cannoneer_atk []byte
 
@@ -68,6 +74,9 @@ var sword_fx []byte
 
 //go:embed images/fx/explosion.png
 var explosion_fx []byte
+
+//go:embed images/fx/dust.png
+var dust_fx []byte
 
 //go:embed images/fx/shockwave.png
 var shockwave_fx []byte
@@ -104,6 +113,8 @@ var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
 var Bloombomber *ebiten.Image
+var GatlingghoulAtk *ebiten.Image
+var Gatlingghoul *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -118,6 +129,7 @@ var SwordAtkRaw *ebiten.Image
 var ExplosionRaw *ebiten.Image
 var HitRaw *ebiten.Image
 var ShockWaveFxRaw *ebiten.Image
+var DustFxRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -245,6 +257,18 @@ func init() {
 		imgReader := bytes.NewReader(shockwave_fx)
 		ShockWaveFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if DustFxRaw == nil {
+		imgReader := bytes.NewReader(dust_fx)
+		DustFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Gatlingghoul == nil {
+		imgReader := bytes.NewReader(gatlingghoul)
+		Gatlingghoul, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if GatlingghoulAtk == nil {
+		imgReader := bytes.NewReader(gatlingghoul_atk)
+		GatlingghoulAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)
 		SwordAtkRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -293,6 +317,21 @@ func NewExplosionAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageHeight: 75,
 		Modulo:         param.Modulo,
 		FrameCount:     11,
+		Done:           param.Done,
+	}
+}
+func NewDustAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(DustFxRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 50,
+		Modulo:         param.Modulo,
+		FrameCount:     4,
 		Done:           param.Done,
 	}
 }
