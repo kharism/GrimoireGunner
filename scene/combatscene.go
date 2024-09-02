@@ -104,7 +104,8 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		Row: 2,
 	})
 	// enemies.NewCannoneer(s.ecs, 6, 1)
-	enemies.NewGatlingGhoul(s.ecs, 4, 1)
+	// enemies.NewGatlingGhoul(s.ecs, 4, 1)
+	enemies.NewReaper(s.ecs, 4, 1)
 	assets.Bg = state.Bg
 	system.CurLoadOut[0] = attack.NewLightningBolCaster()
 	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()

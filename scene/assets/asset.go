@@ -69,6 +69,18 @@ var bloombomber []byte
 //go:embed images/bloombomber_atk.png
 var bloombomber_atk []byte
 
+//go:embed images/reaper1.png
+var reaper []byte
+
+//go:embed images/reaper2.png
+var reaper_warmup []byte
+
+//go:embed images/reaper3.png
+var reaper_cooldown []byte
+
+//go:embed images/wideslash.png
+var wideslash_fx []byte
+
 //go:embed images/fx/longsword.png
 var sword_fx []byte
 
@@ -115,6 +127,9 @@ var BloombomberAtk *ebiten.Image
 var Bloombomber *ebiten.Image
 var GatlingghoulAtk *ebiten.Image
 var Gatlingghoul *ebiten.Image
+var Reaper *ebiten.Image
+var ReaperWarmup *ebiten.Image
+var ReaperCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -130,6 +145,7 @@ var ExplosionRaw *ebiten.Image
 var HitRaw *ebiten.Image
 var ShockWaveFxRaw *ebiten.Image
 var DustFxRaw *ebiten.Image
+var WideslashRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -229,6 +245,18 @@ func init() {
 		imgReader := bytes.NewReader(bloombomber_atk)
 		BloombomberAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Reaper == nil {
+		imgReader := bytes.NewReader(reaper)
+		Reaper, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ReaperWarmup == nil {
+		imgReader := bytes.NewReader(reaper_warmup)
+		ReaperWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ReaperCooldown == nil {
+		imgReader := bytes.NewReader(reaper_cooldown)
+		ReaperCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -260,6 +288,10 @@ func init() {
 	if DustFxRaw == nil {
 		imgReader := bytes.NewReader(dust_fx)
 		DustFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if WideslashRaw == nil {
+		imgReader := bytes.NewReader(wideslash_fx)
+		WideslashRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Gatlingghoul == nil {
 		imgReader := bytes.NewReader(gatlingghoul)
@@ -347,6 +379,21 @@ func NewHitAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageHeight: 128,
 		Modulo:         param.Modulo,
 		FrameCount:     6,
+		Done:           param.Done,
+	}
+}
+func NewWideSlashAtkAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(WideslashRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 150,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
 		Done:           param.Done,
 	}
 }
