@@ -21,7 +21,7 @@ func NewPlayerMoveSystem(player *donburi.Entity) *PlayerMoveSystem {
 }
 
 // make this multiple of 5
-var DefaultSpeed = 5.0
+var DefaultSpeed = 10.0
 var QueryHP = donburi.NewQuery(
 	filter.Contains(
 		component.Health,

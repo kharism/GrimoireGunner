@@ -31,7 +31,7 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(playerId)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
-		attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 15)
+		attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 25)
 		// timerDelay = time.Now()
 		// }
 

@@ -20,8 +20,14 @@ var EnemyAI = &enemyAI{
 }
 
 func (e *enemyAI) Update(ecs *ecs.ECS) {
+	enemyEntries := []*donburi.Entry{}
 	e.NPCQuery.Each(ecs.World, func(entry *donburi.Entry) {
-		routine := component.EnemyRoutine.Get(entry)
-		routine.Routine(ecs, entry)
+		// routine := component.EnemyRoutine.Get(entry)
+		// routine.Routine(ecs, entry)
+		enemyEntries = append(enemyEntries, entry)
 	})
+	for _, e := range enemyEntries {
+		routine := component.EnemyRoutine.Get(e)
+		routine.Routine(ecs, e)
+	}
 }

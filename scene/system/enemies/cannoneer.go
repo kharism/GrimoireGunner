@@ -12,6 +12,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/filter"
 )
 
 func NewCannoneer(ecs *ecs.ECS, col, row int) {
@@ -31,6 +32,28 @@ func NewCannoneer(ecs *ecs.ECS, col, row int) {
 
 var CURRENT_STRATEGY = "CurrMove"
 var WARM_UP = "WarmUp"
+
+// check whether there are obstacle on row-col grid
+// for now it checks another character
+func validMove(ecs *ecs.ECS, row, col int) bool {
+	if row < 0 || row > 3 || col < 0 || col > 7 {
+		return false
+	}
+	ObstacleExist := false
+	var QueryHP = donburi.NewQuery(
+		filter.Contains(
+			component.Health,
+			component.GridPos,
+		),
+	)
+	QueryHP.Each(ecs.World, func(e *donburi.Entry) {
+		pos := component.GridPos.Get(e)
+		if pos.Col == col && pos.Row == row {
+			ObstacleExist = true
+		}
+	})
+	return !ObstacleExist
+}
 
 // this enemy will move up-down and if it's on the same row as player
 // will attack
@@ -59,17 +82,20 @@ func CannoneerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			targetGridRowDirection := playerGridPos.Row - entityGridPos.Row
 			distance := float64(targetGridRowDirection) / math.Abs(float64(targetGridRowDirection))
 			targetRow := entityGridPos.Row + int(distance)
-			targetData := component.MoveTargetData{}
-			targetData.Tx, targetData.Ty = assets.GridCoord2Screen(targetRow, entityGridPos.Col)
-			pp, yy := assets.Coord2Grid(targetData.Tx, targetData.Ty)
-			fmt.Println(pp, yy)
-			component.TargetLocation.Set(entity, &targetData)
-			Vy := (targetData.Ty - entityScreenPos.Y)
-			Vx := 0.0
-			speedVector := csg.NewVector(Vx, Vy, 0)
-			speedVector = speedVector.Normalize().MultiplyScalar(1)
-			component.Speed.Set(entity, &component.SpeedData{Vx: 0, Vy: speedVector.Y})
-			memory[IS_MOVING] = true
+			if validMove(ecs, targetRow, entityGridPos.Col) {
+				targetData := component.MoveTargetData{}
+				targetData.Tx, targetData.Ty = assets.GridCoord2Screen(targetRow, entityGridPos.Col)
+				pp, yy := assets.Coord2Grid(targetData.Tx, targetData.Ty)
+				fmt.Println(pp, yy)
+				component.TargetLocation.Set(entity, &targetData)
+				Vy := (targetData.Ty - entityScreenPos.Y)
+				Vx := 0.0
+				speedVector := csg.NewVector(Vx, Vy, 0)
+				speedVector = speedVector.Normalize().MultiplyScalar(1)
+				component.Speed.Set(entity, &component.SpeedData{Vx: 0, Vy: speedVector.Y})
+				memory[IS_MOVING] = true
+			}
+
 			// memory[CURRENT_STRATEGY] = ""
 		} else if fired, ok := memory[ALREADY_FIRED]; !(!ok || fired.(bool)) {
 
