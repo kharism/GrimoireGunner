@@ -9,8 +9,11 @@ import (
 
 func UpdateFx(ecs *ecs.ECS) {
 	component.Fx.Each(ecs.World, func(e *donburi.Entry) {
-		fx := component.Fx.GetValue(e)
-		fx.Animation.Update()
+		if e.HasComponent(component.Fx) {
+			fx := component.Fx.GetValue(e)
+			fx.Animation.Update()
+		}
+
 	})
 }
 

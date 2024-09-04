@@ -59,10 +59,11 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 type LightingBoltCaster struct {
 	Cost         int
 	nextCooldown time.Time
+	CoolDown     time.Duration
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
-	return &LightingBoltCaster{Cost: 300, nextCooldown: time.Now()}
+	return &LightingBoltCaster{Cost: 300, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
 
 func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
@@ -87,7 +88,7 @@ func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			Actor:     playerId,
 		}
 		NewLigtningAttack(ecs, param)
-		l.nextCooldown = time.Now().Add(5 * time.Second)
+		l.nextCooldown = time.Now().Add(l.CoolDown)
 	}
 }
 func (l *LightingBoltCaster) GetCost() int {

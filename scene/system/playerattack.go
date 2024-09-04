@@ -24,6 +24,9 @@ func NewPlayerAttackSystem(player *donburi.Entity) *PlayerAttackSystem {
 // var timerDelay = time.Now()
 var CurLoadOut = [2]Caster{}
 
+var SubLoadOut1 = [2]Caster{}
+var SubLoadOut2 = [2]Caster{}
+
 func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 	if inpututil.IsKeyJustReleased(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
 		// if time.Now().Sub(timerDelay) > 500*time.Millisecond {
@@ -67,6 +70,11 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 				CurLoadOut[0].Cast(EnergySystem, ecs)
 			}
 		}
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		temp := CurLoadOut
+		CurLoadOut = SubLoadOut1
+		SubLoadOut1 = temp
 	}
 	if time.Now().After(s.returnToStandby) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)

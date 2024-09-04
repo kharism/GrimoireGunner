@@ -28,7 +28,7 @@ type CombatScene struct {
 }
 
 func (c *CombatScene) Update() error {
-	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		c.debugPause = !c.debugPause
 	}
 
@@ -110,6 +110,9 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	system.CurLoadOut[0] = attack.NewLightningBolCaster()
 	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()
 
+	system.SubLoadOut1[0] = attack.NewLongSwordCaster()
+	system.SubLoadOut1[1] = attack.NewBuckshotCaster()
+
 	Ensystemrenderer := system.EnergySystem
 
 	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
@@ -119,9 +122,9 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddSystem(system.NewTransientSystem().Update).
-		AddSystem(system.UpdateFx).
 		AddSystem(Ensystemrenderer.Update).
 		AddSystem(system.EnemyAI.Update).
+		AddSystem(system.UpdateFx).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
