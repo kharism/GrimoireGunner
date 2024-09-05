@@ -202,4 +202,72 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 		}
 	}
+	if SubLoadOut2[0] != nil {
+		icon := SubLoadOut2[0].GetIcon()
+		transformation := ebiten.GeoM{}
+		transformation.Scale(2, 2)
+		iconBound := icon.Bounds()
+		transformation.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2), float64(LoadOutIconStartY))
+		DrawOp := ebiten.DrawImageOptions{
+			GeoM: transformation,
+		}
+		now := time.Now()
+		if SubLoadOut2[0].GetCooldown().After(now) {
+			opts2 := &ebiten.DrawRectShaderOptions{
+				GeoM: transformation,
+			}
+			opts2.Images[0] = icon
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
+			dist := SubLoadOut2[0].GetCooldown().Sub(now)
+			textTranslate := ebiten.GeoM{}
+			textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+
+			textDrawOpt := text.DrawOptions{
+				LayoutOptions: text.LayoutOptions{
+					PrimaryAlign: text.AlignCenter,
+				},
+				DrawImageOptions: ebiten.DrawImageOptions{
+					GeoM: textTranslate,
+				},
+			}
+
+			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+		} else {
+			screen.DrawImage(icon, &DrawOp)
+		}
+	}
+	if SubLoadOut2[1] != nil {
+		icon := SubLoadOut2[1].GetIcon()
+		transformation := ebiten.GeoM{}
+		transformation.Scale(2, 2)
+		iconBound := icon.Bounds()
+		transformation.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2), float64(LoadOutIconStartY))
+		DrawOp := ebiten.DrawImageOptions{
+			GeoM: transformation,
+		}
+		now := time.Now()
+		if SubLoadOut2[1].GetCooldown().After(now) {
+			opts2 := &ebiten.DrawRectShaderOptions{
+				GeoM: transformation,
+			}
+			opts2.Images[0] = icon
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
+			dist := SubLoadOut2[1].GetCooldown().Sub(now)
+			textTranslate := ebiten.GeoM{}
+			textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+
+			textDrawOpt := text.DrawOptions{
+				LayoutOptions: text.LayoutOptions{
+					PrimaryAlign: text.AlignCenter,
+				},
+				DrawImageOptions: ebiten.DrawImageOptions{
+					GeoM: textTranslate,
+				},
+			}
+
+			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+		} else {
+			screen.DrawImage(icon, &DrawOp)
+		}
+	}
 }

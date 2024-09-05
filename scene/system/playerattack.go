@@ -74,7 +74,8 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		temp := CurLoadOut
 		CurLoadOut = SubLoadOut1
-		SubLoadOut1 = temp
+		SubLoadOut1 = SubLoadOut2
+		SubLoadOut2 = temp
 	}
 	if time.Now().After(s.returnToStandby) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)

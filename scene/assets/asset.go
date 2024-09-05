@@ -99,6 +99,9 @@ var shockwave_fx []byte
 //go:embed images/fx/buckshot.png
 var buckshot_fx []byte
 
+//go:embed images/fx/flametower.png
+var flametower_fx []byte
+
 //go:embed images/fx/hit.png
 var hit_fx []byte
 
@@ -113,6 +116,9 @@ var lightning_icon []byte
 
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
+
+//go:embed images/icon_firewall.png
+var firewall_icon []byte
 
 //go:embed shader/dakka.kage
 var dakkaShader []byte
@@ -144,6 +150,7 @@ var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
 var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
+var FirewallIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 
@@ -158,6 +165,7 @@ var ShockWaveFxRaw *ebiten.Image
 var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
+var FlametowerRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -291,6 +299,10 @@ func init() {
 		imgReader := bytes.NewReader(shockwave_icon)
 		ShockwaveIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if FirewallIcon == nil {
+		imgReader := bytes.NewReader(firewall_icon)
+		FirewallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)
 	}
@@ -298,6 +310,10 @@ func init() {
 	if ExplosionRaw == nil {
 		imgReader := bytes.NewReader(explosion_fx)
 		ExplosionRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if FlametowerRaw == nil {
+		imgReader := bytes.NewReader(flametower_fx)
+		FlametowerRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if HitRaw == nil {
 		imgReader := bytes.NewReader(hit_fx)
