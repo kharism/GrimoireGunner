@@ -24,6 +24,9 @@ type BuckshotCaster struct {
 func NewBuckshotCaster() *BuckshotCaster {
 	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second}
 }
+func (l *BuckshotCaster) GetDamage() int {
+	return l.Damage
+}
 func (l *BuckshotCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= 200 {

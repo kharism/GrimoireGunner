@@ -109,7 +109,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	system.CurLoadOut[0] = attack.NewLightningBolCaster()
 	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()
 
-	system.SubLoadOut1[0] = attack.NewLongSwordCaster()
+	system.SubLoadOut1[0] = attack.NewWideSwordCaster() //attack.NewLongSwordCaster()
 	system.SubLoadOut1[1] = attack.NewBuckshotCaster()
 	system.SubLoadOut2[0] = attack.NewFirewallCaster()
 

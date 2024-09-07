@@ -14,7 +14,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 )
 
-func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol int) {
+func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int) {
 	sourceScrX, sourceSrcY := assets.GridCoord2Screen(sourceRow, sourceCol)
 	fmt.Println(sourceRow, sourceCol, sourceScrX, sourceSrcY)
 	sourceScrX -= 50
@@ -33,7 +33,7 @@ func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol int) {
 			ecs.World.Remove(fx)
 			entity := ecs.World.Create(component.Damage, component.GridPos, component.Transient, component.OnHit, component.Fx)
 			entry := ecs.World.Entry(entity)
-			component.Damage.Set(entry, &component.DamageData{Damage: 10})
+			component.Damage.Set(entry, &component.DamageData{Damage: damage})
 			component.GridPos.Set(entry, &component.GridPosComponentData{Col: sourceCol + 4, Row: row})
 			component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 5 * time.Second})
 			component.OnHit.SetValue(entry, OnTowerHit)
@@ -53,12 +53,16 @@ func OnTowerHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 
 type FirewallCaster struct {
 	Cost         int
+	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
 }
 
 func NewFirewallCaster() *FirewallCaster {
 	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second}
+}
+func (f *FirewallCaster) GetDamage() int {
+	return f.Damage
 }
 func (f *FirewallCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
@@ -76,7 +80,7 @@ func (f *FirewallCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			return
 		}
 		gridPos := component.GridPos.Get(playerId)
-		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col)
+		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage)
 	}
 }
 func (f *FirewallCaster) GetCost() int {

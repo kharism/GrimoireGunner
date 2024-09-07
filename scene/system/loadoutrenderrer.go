@@ -67,7 +67,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := CurLoadOut[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(LoadOutIconStartX), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(LoadOutIconStartX)+10, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{
@@ -114,7 +114,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := CurLoadOut[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{
@@ -152,7 +152,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := SubLoadOut1[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+2*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(Sub1StartIconX+2*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{
@@ -186,7 +186,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := SubLoadOut1[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+3*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(Sub1StartIconX+3*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{
@@ -220,7 +220,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := SubLoadOut2[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{
@@ -254,7 +254,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
 			dist := SubLoadOut2[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
 			textDrawOpt := text.DrawOptions{
 				LayoutOptions: text.LayoutOptions{

@@ -15,4 +15,5 @@ type Caster interface {
 	GetCost() int
 	GetIcon() *ebiten.Image
 	GetCooldown() time.Time
+	GetDamage() int
 }

@@ -55,6 +55,9 @@ func (e *energySystem) SetEn(val int) {
 func (e *energySystem) GetEn() int {
 	return e.CurrentEN
 }
+func (e *energySystem) GetMaxEn() int {
+	return e.MaxEN
+}
 
 func (e *energySystem) DrawEnBar(ecs *ecs.ECS, screen *ebiten.Image) {
 	textMes := fmt.Sprintf("%d/%d", e.CurrentEN/100, e.MaxEN/100)
