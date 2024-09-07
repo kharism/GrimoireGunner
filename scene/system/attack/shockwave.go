@@ -15,11 +15,12 @@ import (
 
 type ShockWaveCaster struct {
 	Cost         int
+	Damage       int
 	nextCooldown time.Time
 }
 
 func NewShockwaveCaster() *ShockWaveCaster {
-	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now()}
+	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40}
 }
 
 var queryHP = donburi.NewQuery(
@@ -65,6 +66,9 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 		scrPos.X += 100
 	}
 }
+func (l *ShockWaveCaster) GetDamage() int {
+	return l.Damage
+}
 
 // cost 2 EN and inflict 40 DMG, slow moving projectile. Push back on enemy when hit
 // cooldown for 2sec
@@ -107,7 +111,7 @@ func (c *ShockWaveCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 		component.OnHit.SetValue(shockwaveEntry, shockWaveOnAtkHit)
 		SPEED := 5.0
 		component.Speed.Set(shockwaveEntry, &component.SpeedData{Vx: SPEED, Vy: 0})
-		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: 40})
+		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: c.Damage})
 		screenX, screenY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		screenX = screenX - 50
 		screenY = screenY - 100

@@ -22,12 +22,16 @@ import (
 
 type LongSwordCaster struct {
 	Cost         int
+	Damage       int
 	nextCooldown time.Time
 }
 
 // cost 2 EN to execute. 80 dmg 2 tiles in front
 func NewLongSwordCaster() *LongSwordCaster {
-	return &LongSwordCaster{Cost: 200, nextCooldown: time.Now()}
+	return &LongSwordCaster{Cost: 200, Damage: 80, nextCooldown: time.Now()}
+}
+func (l *LongSwordCaster) GetDamage() int {
+	return l.Damage
 }
 func (l *LongSwordCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
@@ -45,7 +49,7 @@ func (l *LongSwordCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 		}
 		playerScrLoc := component.ScreenPos.GetValue(playerEntry)
 		playerGridLoc := component.GridPos.GetValue(playerEntry)
-		newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, 80)
+		newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.Damage)
 		l.nextCooldown = time.Now().Add(750 * time.Millisecond)
 	}
 }

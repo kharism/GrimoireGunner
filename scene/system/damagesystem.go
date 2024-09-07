@@ -78,6 +78,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 
 			if component.Health.Get(damageableEntity).HP <= 0 {
 				scrPos := mycomponent.ScreenPos.GetValue(damageableEntity)
+				gridMap[gridPos.Row][gridPos.Col] = nil
 				ecs.World.Remove(damageableEntity.Entity())
 				explosionAnim := assets.NewExplosionAnim(assets.SpriteParam{
 					ScreenX: scrPos.X - float64(assets.TileWidth)/2,

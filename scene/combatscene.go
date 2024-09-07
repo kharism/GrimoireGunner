@@ -8,7 +8,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
-	"github.com/kharism/grimoiregunner/scene/system/enemies"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -28,7 +27,7 @@ type CombatScene struct {
 }
 
 func (c *CombatScene) Update() error {
-	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		c.debugPause = !c.debugPause
 	}
 
@@ -105,23 +104,27 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	})
 	// enemies.NewCannoneer(s.ecs, 6, 1)
 	// enemies.NewGatlingGhoul(s.ecs, 4, 1)
-	enemies.NewReaper(s.ecs, 4, 1)
+	// enemies.NewReaper(s.ecs, 4, 1)
 	assets.Bg = state.Bg
 	system.CurLoadOut[0] = attack.NewLightningBolCaster()
 	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()
 
+	system.SubLoadOut1[0] = attack.NewWideSwordCaster() //attack.NewLongSwordCaster()
+	system.SubLoadOut1[1] = attack.NewBuckshotCaster()
+	system.SubLoadOut2[0] = attack.NewFirewallCaster()
+
 	Ensystemrenderer := system.EnergySystem
 
-	attack.GenerateMagibullet(s.ecs, 1, 5, -15)
+	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
 		AddSystem(system.DamageSystem.Update).
 		AddSystem(system.NPMoveSystem.Update).
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddSystem(system.NewTransientSystem().Update).
-		AddSystem(system.UpdateFx).
 		AddSystem(Ensystemrenderer.Update).
 		AddSystem(system.EnemyAI.Update).
+		AddSystem(system.UpdateFx).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).

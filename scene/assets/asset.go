@@ -45,6 +45,9 @@ var lightningbolt []byte
 //go:embed fonts/PixelOperator8-bold.ttf
 var PixelFontTTF []byte
 
+//go:embed fonts/monogram.ttf
+var MonogramTTF []byte
+
 //go:embed images/bg_forest/bg.png
 var bg_forest []byte
 
@@ -93,17 +96,29 @@ var dust_fx []byte
 //go:embed images/fx/shockwave.png
 var shockwave_fx []byte
 
+//go:embed images/fx/buckshot.png
+var buckshot_fx []byte
+
+//go:embed images/fx/flametower.png
+var flametower_fx []byte
+
 //go:embed images/fx/hit.png
 var hit_fx []byte
 
 //go:embed images/icon_longsword.png
 var longsword_icon []byte
 
+//go:embed images/icon_buckshot.png
+var buckshot_icon []byte
+
 //go:embed images/icon_lightning.png
 var lightning_icon []byte
 
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
+
+//go:embed images/icon_firewall.png
+var firewall_icon []byte
 
 //go:embed shader/dakka.kage
 var dakkaShader []byte
@@ -134,10 +149,13 @@ var ReaperCooldown *ebiten.Image
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
 var ShockwaveIcon *ebiten.Image
+var BuckshotIcon *ebiten.Image
+var FirewallIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
+var MonogramFont *text.GoTextFaceSource
 var FontFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
@@ -146,6 +164,8 @@ var HitRaw *ebiten.Image
 var ShockWaveFxRaw *ebiten.Image
 var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
+var BuckShotRaw *ebiten.Image
+var FlametowerRaw *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -176,6 +196,12 @@ func init() {
 		Source: PixelFont,
 		Size:   15,
 	}
+	s2, err := text.NewGoTextFaceSource(bytes.NewReader(MonogramTTF))
+	if err != nil {
+		log.Fatal(err)
+	}
+	MonogramFont = s2
+	PixelFont = s
 	if BlueTile == nil {
 		imgReader := bytes.NewReader(blueTilePng)
 		BlueTile, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -265,9 +291,17 @@ func init() {
 		imgReader := bytes.NewReader(lightning_icon)
 		LightningIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BuckshotIcon == nil {
+		imgReader := bytes.NewReader(buckshot_icon)
+		BuckshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if ShockwaveIcon == nil {
 		imgReader := bytes.NewReader(shockwave_icon)
 		ShockwaveIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if FirewallIcon == nil {
+		imgReader := bytes.NewReader(firewall_icon)
+		FirewallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)
@@ -277,9 +311,17 @@ func init() {
 		imgReader := bytes.NewReader(explosion_fx)
 		ExplosionRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if FlametowerRaw == nil {
+		imgReader := bytes.NewReader(flametower_fx)
+		FlametowerRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if HitRaw == nil {
 		imgReader := bytes.NewReader(hit_fx)
 		HitRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BuckShotRaw == nil {
+		imgReader := bytes.NewReader(buckshot_fx)
+		BuckShotRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShockWaveFxRaw == nil {
 		imgReader := bytes.NewReader(shockwave_fx)
@@ -394,6 +436,21 @@ func NewWideSlashAtkAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageHeight: 150,
 		Modulo:         param.Modulo,
 		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
+func NewBuckshotAtkAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(BuckShotRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  200,
+		SubImageHeight: 150,
+		Modulo:         param.Modulo,
+		FrameCount:     3,
 		Done:           param.Done,
 	}
 }

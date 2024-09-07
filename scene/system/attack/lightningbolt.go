@@ -17,6 +17,7 @@ type LightnigAtkParam struct {
 	StartRow, StartCol int
 	//+1 to create lightning on right of starting point, and -1 to create on left
 	Direction int
+	Damage    int
 	Actor     *donburi.Entry
 }
 
@@ -28,7 +29,7 @@ func LightningBoltOnHitfunc(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 	startCol := param.StartCol
-	damage := 60
+
 	for i := startCol; i >= 0 && i <= 7; i += param.Direction {
 		entity := ecs.World.Create(
 			component.Damage,
@@ -38,7 +39,7 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 			component.Fx,
 		)
 		entry := ecs.World.Entry(entity)
-		component.Damage.Set(entry, &component.DamageData{Damage: damage})
+		component.Damage.Set(entry, &component.DamageData{Damage: param.Damage})
 		component.GridPos.Set(entry, &component.GridPosComponentData{Row: param.StartRow, Col: i})
 		scrX, scrY := assets.GridCoord2Screen(param.StartRow, i)
 		fxHeight := assets.LightningBolt.Bounds().Dy()
@@ -59,10 +60,12 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 type LightingBoltCaster struct {
 	Cost         int
 	nextCooldown time.Time
+	CoolDown     time.Duration
+	Damage       int
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
-	return &LightingBoltCaster{Cost: 300, nextCooldown: time.Now()}
+	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
 
 func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
@@ -85,11 +88,16 @@ func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			StartCol:  gridPos.Col + 1,
 			Direction: 1,
 			Actor:     playerId,
+			Damage:    l.Damage,
 		}
 		NewLigtningAttack(ecs, param)
-		l.nextCooldown = time.Now().Add(5 * time.Second)
+		l.nextCooldown = time.Now().Add(l.CoolDown)
 	}
 }
+func (l *LightingBoltCaster) GetDamage() int {
+	return l.Damage
+}
+
 func (l *LightingBoltCaster) GetCost() int {
 	return l.Cost
 }
