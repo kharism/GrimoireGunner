@@ -7,7 +7,6 @@ import (
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
-	"github.com/kharism/grimoiregunner/scene/system/attack"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -58,33 +57,21 @@ func LoadGrid(world donburi.World) {
 		}
 	}
 }
-func LoadPlayer(world donburi.World) *donburi.Entity {
+func LoadPlayer(world donburi.World, state *SceneData) *donburi.Entity {
 	playerEntity := archetype.NewPlayer(world, assets.Player1Stand)
 	gridPos := component.GridPos.Get(world.Entry(*playerEntity))
+	gridPos.Col = state.PlayerCol
+	gridPos.Row = state.PlayerRow
+	component.Health.Get(world.Entry(*playerEntity)).HP = state.PlayerHP
+	system.EnergySystem.SetEn(state.PlayerCurrEn)
+	system.EnergySystem.MaxEN = state.PlayerMaxEn
+	system.EnergySystem.ENRegen = state.PlayerEnRegen
 	screenPos := component.ScreenPos.Get(world.Entry(*playerEntity))
 	screenPos.X = assets.TileStartX + float64(gridPos.Col)*float64(assets.TileWidth)
 	screenPos.Y = assets.TileStartY + float64(gridPos.Row)*float64(assets.TileHeight)
 	return playerEntity
 }
 
-type BoulderParam struct {
-	Col, Row int
-}
-
-func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
-	entity := world.Create(
-		mycomponent.Health,
-		mycomponent.GridPos,
-		mycomponent.ScreenPos,
-		mycomponent.Sprite,
-		archetype.ConstructTag,
-	)
-	entry := world.Entry(entity)
-	mycomponent.Sprite.Set(entry, &mycomponent.SpriteData{Image: assets.Boulder})
-	mycomponent.Health.Set(entry, &mycomponent.HealthData{HP: 200, Name: "Boulder"})
-	mycomponent.GridPos.Set(entry, &mycomponent.GridPosComponentData{Col: param.Col, Row: param.Row})
-	return &entity
-}
 func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[SceneData]) {
 	// your load code
 	s.world = donburi.NewWorld()
@@ -93,27 +80,28 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	s.debugPause = false
 	//add tiles entity
 	LoadGrid(s.world)
-	LoadBoulder(s.world, BoulderParam{
-		Col: 5,
-		Row: 1,
-	})
-	playerEntity := LoadPlayer(s.world)
-	LoadBoulder(s.world, BoulderParam{
-		Col: 2,
-		Row: 2,
-	})
+	// LoadBoulder(s.world, BoulderParam{
+	// 	Col: 5,
+	// 	Row: 1,
+	// })
+	playerEntity := LoadPlayer(s.world, &state)
+	// LoadBoulder(s.world, BoulderParam{
+	// 	Col: 2,
+	// 	Row: 2,
+	// })
 	// enemies.NewCannoneer(s.ecs, 6, 1)
 	// enemies.NewGatlingGhoul(s.ecs, 4, 1)
 	// enemies.NewReaper(s.ecs, 4, 1)
 	assets.Bg = state.Bg
-	system.CurLoadOut[0] = attack.NewLightningBolCaster()
-	system.CurLoadOut[1] = attack.NewShockwaveCaster() //attack.NewLongSwordCaster()
 
-	system.SubLoadOut1[0] = attack.NewWideSwordCaster() //attack.NewLongSwordCaster()
-	system.SubLoadOut1[1] = attack.NewBuckshotCaster()
-	system.SubLoadOut2[0] = attack.NewFirewallCaster()
-	system.SubLoadOut2[1] = attack.NewGatlingCastor()
+	system.CurLoadOut[0] = state.MainLoadout[0]
+	system.CurLoadOut[1] = state.MainLoadout[1] //attack.NewLongSwordCaster()
 
+	system.SubLoadOut1[0] = state.SubLoadout1[0]
+	system.SubLoadOut1[1] = state.SubLoadout1[1]
+	system.SubLoadOut2[0] = state.SubLoadout2[0]
+	system.SubLoadOut2[1] = state.SubLoadout1[1]
+	state.SceneDecor(s.ecs)
 	Ensystemrenderer := system.EnergySystem
 	eq := system.EventQueueSystem{}
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
