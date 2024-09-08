@@ -108,6 +108,9 @@ var hit_fx []byte
 //go:embed images/icon_longsword.png
 var longsword_icon []byte
 
+//go:embed images/icon_gatling.png
+var gatling_icon []byte
+
 //go:embed images/icon_buckshot.png
 var buckshot_icon []byte
 
@@ -151,6 +154,7 @@ var LongSwordIcon *ebiten.Image
 var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
 var FirewallIcon *ebiten.Image
+var GatlingIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 
@@ -302,6 +306,10 @@ func init() {
 	if FirewallIcon == nil {
 		imgReader := bytes.NewReader(firewall_icon)
 		FirewallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if GatlingIcon == nil {
+		imgReader := bytes.NewReader(gatling_icon)
+		GatlingIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)

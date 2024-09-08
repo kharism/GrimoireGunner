@@ -112,9 +112,10 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	system.SubLoadOut1[0] = attack.NewWideSwordCaster() //attack.NewLongSwordCaster()
 	system.SubLoadOut1[1] = attack.NewBuckshotCaster()
 	system.SubLoadOut2[0] = attack.NewFirewallCaster()
+	system.SubLoadOut2[1] = attack.NewGatlingCastor()
 
 	Ensystemrenderer := system.EnergySystem
-
+	eq := system.EventQueueSystem{}
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
@@ -123,6 +124,7 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
 		AddSystem(system.NewTransientSystem().Update).
 		AddSystem(Ensystemrenderer.Update).
+		AddSystem(eq.Update).
 		AddSystem(system.EnemyAI.Update).
 		AddSystem(system.UpdateFx).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
