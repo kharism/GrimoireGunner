@@ -13,25 +13,31 @@ import (
 )
 
 type GatlingCaster struct {
-	Cost         int
-	Damage       int
-	ShotAmount   int
-	nextCooldown time.Time
+	Cost             int
+	Damage           int
+	ShotAmount       int
+	nextCooldown     time.Time
+	CooldownDuration time.Duration
 }
 
 func NewGatlingCastor() *GatlingCaster {
-	return &GatlingCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now()}
+	return &GatlingCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second}
 }
 func (l *GatlingCaster) GetDamage() int {
 	return l.Damage
 }
 func (l *GatlingCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
-
-	now := time.Now()
-	for i := 0; i < l.ShotAmount; i++ {
-		ev := &addGatlingShot{Damage: l.Damage, Time: now.Add(time.Duration(100*i) * time.Millisecond)}
-		component.EventQueue.Queue = append(component.EventQueue.Queue, ev)
+	en := ensource.GetEn()
+	if en >= l.Cost {
+		ensource.SetEn(en - l.Cost)
+		l.nextCooldown = time.Now().Add(l.CooldownDuration)
+		now := time.Now()
+		for i := 0; i < l.ShotAmount; i++ {
+			ev := &addGatlingShot{Damage: l.Damage, Time: now.Add(time.Duration(100*i) * time.Millisecond)}
+			component.EventQueue.Queue = append(component.EventQueue.Queue, ev)
+		}
 	}
+
 }
 
 type addGatlingShot struct {
