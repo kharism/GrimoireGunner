@@ -126,6 +126,9 @@ var firewall_icon []byte
 //go:embed shader/dakka.kage
 var dakkaShader []byte
 
+//go:embed images/stageclear.png
+var stageclear []byte
+
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
 var DamageGrid *ebiten.Image
@@ -170,6 +173,8 @@ var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
+
+var StageClear *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -350,6 +355,10 @@ func init() {
 	if GatlingghoulAtk == nil {
 		imgReader := bytes.NewReader(gatlingghoul_atk)
 		GatlingghoulAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if StageClear == nil {
+		imgReader := bytes.NewReader(stageclear)
+		StageClear, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)

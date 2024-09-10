@@ -7,7 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 
 	"github.com/kharism/grimoiregunner/scene/assets"
-	asset "github.com/kharism/grimoiregunner/scene/assets"
+	// asset "github.com/kharism/grimoiregunner/scene/assets"
 	myComponent "github.com/kharism/grimoiregunner/scene/component"
 )
 
@@ -47,9 +47,9 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 		// screenPos := myComponent.GridPos.Get(e)
 		var sprite *ebiten.Image
 		if gridPos.Col < 4 {
-			sprite = asset.BlueTile
+			sprite = assets.BlueTile
 		} else {
-			sprite = asset.RedTile
+			sprite = assets.RedTile
 		}
 
 		translate := ebiten.GeoM{}
@@ -68,7 +68,7 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 		drawOption := &ebiten.DrawImageOptions{
 			GeoM: translate,
 		}
-		screen.DrawImage(asset.DamageGrid, drawOption)
+		screen.DrawImage(assets.DamageGrid, drawOption)
 	})
 	r.queryTarget.Each(ecs.World, func(e *donburi.Entry) {
 		gridPos := myComponent.GridPos.Get(e)
@@ -78,6 +78,6 @@ func (r *gridRenderer) DrawGrid(ecs *ecs.ECS, screen *ebiten.Image) {
 		drawOption := &ebiten.DrawImageOptions{
 			GeoM: translate,
 		}
-		screen.DrawImage(asset.TargetedGrid, drawOption)
+		screen.DrawImage(assets.TargetedGrid, drawOption)
 	})
 }

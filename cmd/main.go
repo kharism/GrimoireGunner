@@ -30,6 +30,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
 }
+
+const (
+	TriggerToReward stagehand.SceneTransitionTrigger = iota
+)
+
 func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
@@ -52,7 +57,12 @@ func main() {
 		SubLoadout2: []system.Caster{nil, nil},
 	}
 	combatScene := &scene.CombatScene{}
-	ruleSet := map[stagehand.Scene[scene.SceneData]][]stagehand.Directive[scene.SceneData]{}
+	// rewardScene := &scene.RewardScene{}
+	ruleSet := map[stagehand.Scene[scene.SceneData]][]stagehand.Directive[scene.SceneData]{
+		combatScene: {
+			stagehand.Directive[scene.SceneData]{Dest: scene.RewardSceneInstance, Trigger: TriggerToReward},
+		},
+	}
 	manager := stagehand.NewSceneDirector[scene.SceneData](combatScene, state, ruleSet)
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)

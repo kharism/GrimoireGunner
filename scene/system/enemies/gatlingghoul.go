@@ -13,6 +13,7 @@ import (
 func NewGatlingGhoul(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Gatlingghoul)
 	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
 	component.Health.Set(entry, &component.HealthData{HP: 800, Name: "Gatlinghoul"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
@@ -88,7 +89,10 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 					memory[CURRENT_STRATEGY] = ""
 					memory["CurTarget"] = 0
 					component.Transient.Get(entry).OnRemoveCallback = func(ecs *ecs.ECS, L *donburi.Entry) {
-						component.Sprite.Get(entity).Image = assets.Gatlingghoul
+						if entity.HasComponent(component.Sprite) {
+							component.Sprite.Get(entity).Image = assets.Gatlingghoul
+						}
+
 					}
 
 				}

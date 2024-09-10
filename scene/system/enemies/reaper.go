@@ -14,6 +14,7 @@ import (
 func NewReaper(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Reaper)
 	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
 	component.Health.Set(entry, &component.HealthData{HP: 400, Name: "Reaper"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})

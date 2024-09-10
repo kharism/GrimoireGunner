@@ -5,6 +5,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/events"
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
 
@@ -74,9 +75,13 @@ func LoadPlayer(world donburi.World, state *SceneData) *donburi.Entity {
 
 func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[SceneData]) {
 	// your load code
+	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
 	s.world = donburi.NewWorld()
 	s.entitygrid = [4][8]int64{}
 	s.ecs = ecs.NewECS(s.world)
+	events.CombatClearEvent.Subscribe(s.world, func(w donburi.World, event events.CombatClearData) {
+		s.sm.SceneManager.SwitchTo(RewardSceneInstance)
+	})
 	s.debugPause = false
 	//add tiles entity
 	LoadGrid(s.world)
@@ -104,12 +109,13 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 	state.SceneDecor(s.ecs)
 	Ensystemrenderer := system.EnergySystem
 	eq := system.EventQueueSystem{}
+	system.PlayerAttackSystem.PlayerIndex = playerEntity
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
 		AddSystem(system.DamageSystem.Update).
 		AddSystem(system.NPMoveSystem.Update).
-		AddSystem(system.NewPlayerAttackSystem(playerEntity).Update).
+		AddSystem(system.PlayerAttackSystem.Update).
 		AddSystem(system.NewTransientSystem().Update).
 		AddSystem(Ensystemrenderer.Update).
 		AddSystem(eq.Update).
@@ -124,7 +130,9 @@ func (s *CombatScene) Load(state SceneData, manager stagehand.SceneController[Sc
 		AddRenderer(layers.LayerUI, system.RenderLoadOut).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
-	s.sm = manager.(*stagehand.SceneDirector[SceneData]) // This type assertion is important
+}
+func OnCombatClear(w donburi.World, event events.CombatClearData) {
+
 }
 func (s *CombatScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
