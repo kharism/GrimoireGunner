@@ -24,6 +24,12 @@ type BuckshotCaster struct {
 func NewBuckshotCaster() *BuckshotCaster {
 	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second}
 }
+func (l *BuckshotCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\n%d Damage in T-shaped cone in front. Hit the target in front 3 times\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+}
+func (l *BuckshotCaster) GetName() string {
+	return "BuckShot"
+}
 func (l *BuckshotCaster) GetDamage() int {
 	return l.Damage
 }
@@ -111,4 +117,7 @@ func (l *BuckshotCaster) GetIcon() *ebiten.Image {
 }
 func (l *BuckshotCaster) GetCooldown() time.Time {
 	return l.nextCooldown
+}
+func (l *BuckshotCaster) GetCooldownDuration() time.Duration {
+	return l.CoolDown
 }

@@ -1,6 +1,7 @@
 package attack
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -23,6 +24,12 @@ func NewWideSwordCaster() *WideSwordCaster {
 }
 func (l *WideSwordCaster) GetDamage() int {
 	return l.Damage
+}
+func (l *WideSwordCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nHit 1 column in front, up, down for %d damage.\nNo cooldown", l.Cost/100, l.Damage)
+}
+func (l *WideSwordCaster) GetName() string {
+	return "WideSwordCaster"
 }
 func (l *WideSwordCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
@@ -103,4 +110,7 @@ func (l *WideSwordCaster) GetIcon() *ebiten.Image {
 }
 func (l *WideSwordCaster) GetCooldown() time.Time {
 	return l.nextCooldown
+}
+func (l *WideSwordCaster) GetCooldownDuration() time.Duration {
+	return 0
 }

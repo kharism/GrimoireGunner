@@ -1,6 +1,7 @@
 package attack
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -25,6 +26,12 @@ func NewGatlingCastor() *GatlingCaster {
 }
 func (l *GatlingCaster) GetDamage() int {
 	return l.Damage
+}
+func (l *GatlingCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nShoots %d damage bullet %d times.\nCooldown %.1fs", l.Cost/100, l.Damage, l.ShotAmount, l.CooldownDuration.Seconds())
+}
+func (l *GatlingCaster) GetName() string {
+	return "Gatling"
 }
 func (l *GatlingCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
@@ -79,4 +86,7 @@ func (l *GatlingCaster) GetIcon() *ebiten.Image {
 }
 func (l *GatlingCaster) GetCooldown() time.Time {
 	return l.nextCooldown
+}
+func (l *GatlingCaster) GetCooldownDuration() time.Duration {
+	return l.CooldownDuration
 }

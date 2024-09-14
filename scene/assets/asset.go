@@ -24,6 +24,12 @@ var grid_targetted []byte
 //go:embed images/dmggrid.png
 var tileDmgPng []byte
 
+//go:embed images/cardtemplate.png
+var cardTemplate []byte
+
+//go:embed images/cardpick.png
+var cardPick []byte
+
 //go:embed images/basicsprite2.png
 var player1Stand []byte
 
@@ -117,6 +123,9 @@ var buckshot_icon []byte
 //go:embed images/icon_lightning.png
 var lightning_icon []byte
 
+//go:embed images/icon_na.png
+var na_icon []byte
+
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
 
@@ -158,12 +167,15 @@ var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
 var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
+var NAIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
+
 var FontFace *text.GoTextFace
+var MonogramFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
 var ExplosionRaw *ebiten.Image
@@ -175,6 +187,8 @@ var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
 
 var StageClear *ebiten.Image
+var CardTemplate *ebiten.Image
+var CardPick *ebiten.Image
 
 var TileWidth int
 var TileHeight int
@@ -316,6 +330,10 @@ func init() {
 		imgReader := bytes.NewReader(gatling_icon)
 		GatlingIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if NAIcon == nil {
+		imgReader := bytes.NewReader(na_icon)
+		NAIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)
 	}
@@ -359,6 +377,14 @@ func init() {
 	if StageClear == nil {
 		imgReader := bytes.NewReader(stageclear)
 		StageClear, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if CardTemplate == nil {
+		imgReader := bytes.NewReader(cardTemplate)
+		CardTemplate, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if CardPick == nil {
+		imgReader := bytes.NewReader(cardPick)
+		CardPick, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)

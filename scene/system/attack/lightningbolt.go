@@ -1,6 +1,7 @@
 package attack
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -97,7 +98,12 @@ func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 func (l *LightingBoltCaster) GetDamage() int {
 	return l.Damage
 }
-
+func (l *LightingBoltCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nShoots %d damage Lightning bolt instantly.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+}
+func (l *LightingBoltCaster) GetName() string {
+	return "LightningBolt"
+}
 func (l *LightingBoltCaster) GetCost() int {
 	return l.Cost
 }
@@ -106,4 +112,7 @@ func (l *LightingBoltCaster) GetIcon() *ebiten.Image {
 }
 func (l *LightingBoltCaster) GetCooldown() time.Time {
 	return l.nextCooldown
+}
+func (l *LightingBoltCaster) GetCooldownDuration() time.Duration {
+	return l.CoolDown
 }
