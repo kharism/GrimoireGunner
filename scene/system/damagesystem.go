@@ -3,9 +3,10 @@ package system
 import (
 	"time"
 
+	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
-	mycomponent "github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
@@ -20,15 +21,15 @@ type damageSystem struct {
 var DamageSystem = &damageSystem{
 	DamagableQuery: donburi.NewQuery(
 		filter.Contains(
-			mycomponent.Health,
-			mycomponent.GridPos,
+			component.Health,
+			component.GridPos,
 		),
 	),
 	DamagingQuery: donburi.NewQuery(
 		filter.Contains(
-			mycomponent.Damage,
-			mycomponent.GridPos,
-			mycomponent.OnHit,
+			component.Damage,
+			component.GridPos,
+			component.OnHit,
 		),
 	),
 }
@@ -52,18 +53,18 @@ func AddHitAnim(ecs *ecs.ECS, damagedEntity donburi.Entity) {
 func (s *damageSystem) Update(ecs *ecs.ECS) {
 	gridMap := [4][8]*donburi.Entry{}
 	s.DamagableQuery.Each(ecs.World, func(e *donburi.Entry) {
-		gridPos := mycomponent.GridPos.Get(e)
+		gridPos := component.GridPos.Get(e)
 		// health := mycomponent.Health.Get(e)
 		// fmt.Println(e.Entity(), gridPos, gridPos.Row, gridPos.Col, health.Name)
 		gridMap[gridPos.Row][gridPos.Col] = e
 	})
 
 	s.DamagingQuery.Each(ecs.World, func(e *donburi.Entry) {
-		gridPos := mycomponent.GridPos.Get(e)
+		gridPos := component.GridPos.Get(e)
 		if gridMap[gridPos.Row][gridPos.Col] != nil {
 			damageableEntity := gridMap[gridPos.Row][gridPos.Col]
 			// damage := mycomponent.Damage.Get(e).Damage
-			onhit := mycomponent.OnHit.GetValue(e)
+			onhit := component.OnHit.GetValue(e)
 			invisTime := component.Health.Get(damageableEntity).InvisTime
 			isZero := invisTime.IsZero()
 			before := (!isZero && invisTime.Before(time.Now()))
@@ -77,20 +78,59 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			}
 
 			if component.Health.Get(damageableEntity).HP <= 0 {
-				scrPos := mycomponent.ScreenPos.GetValue(damageableEntity)
-				gridMap[gridPos.Row][gridPos.Col] = nil
-				ecs.World.Remove(damageableEntity.Entity())
-				explosionAnim := assets.NewExplosionAnim(assets.SpriteParam{
-					ScreenX: scrPos.X - float64(assets.TileWidth)/2,
-					ScreenY: scrPos.Y - 75,
-					Modulo:  5,
-				})
-				entity := ecs.World.Create(component.Fx)
-				entry := ecs.World.Entry(entity)
-				explosionAnim.Done = func() {
-					ecs.World.Remove(entity)
+				playerEnt, _ := archetype.PlayerTag.First(ecs.World)
+				if playerEnt == damageableEntity {
+					//TODO: game over screen
+					//trigger game over here
+				} else {
+					// destroy anim
+					scrPos := component.ScreenPos.GetValue(damageableEntity)
+					gridMap[gridPos.Row][gridPos.Col] = nil
+					ecs.World.Remove(damageableEntity.Entity())
+					explosionAnim := assets.NewExplosionAnim(assets.SpriteParam{
+						ScreenX: scrPos.X - float64(assets.TileWidth)/2,
+						ScreenY: scrPos.Y - 75,
+						Modulo:  5,
+					})
+					entity := ecs.World.Create(component.Fx)
+					entry := ecs.World.Entry(entity)
+					explosionAnim.Done = func() {
+						ecs.World.Remove(entity)
+					}
+					component.Fx.Set(entry, &component.FxData{explosionAnim})
+					// check for other enemies
+					enemyCount := 0
+					component.EnemyTag.Each(ecs.World, func(e *donburi.Entry) {
+						enemyCount += 1
+					})
+					if enemyCount == 0 {
+						// TODO: end of battle
+						// show stage clear
+						stgClrDim := assets.StageClear.Bounds()
+						movableImg := core.NewMovableImage(assets.StageClear,
+							core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+								Sx:    float64(-stgClrDim.Dx()),
+								Sy:    float64(300 + stgClrDim.Dy()/2),
+								Speed: 10}))
+						movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
+							Tx:    float64(600 - stgClrDim.Dx()/2 - 60),
+							Ty:    float64(300 + stgClrDim.Dy()/2),
+							Speed: 5,
+						}))
+						movableImg.Done = func() {
+
+						}
+						//turn off attack system
+						PlayerAttackSystem.State = CombatClearState
+						//attach the stageclear to fx system
+						stgDone := ecs.World.Create(component.Fx)
+						component.Fx.Set(ecs.World.Entry(stgDone), &component.FxData{
+							Animation: movableImg,
+						})
+
+					}
 				}
-				component.Fx.Set(entry, &component.FxData{explosionAnim})
+
 			}
 			// mycomponent.Health.Get(damageableEntity).HP -= damage
 		}

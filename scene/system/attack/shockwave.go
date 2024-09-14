@@ -1,6 +1,7 @@
 package attack
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -17,10 +18,11 @@ type ShockWaveCaster struct {
 	Cost         int
 	Damage       int
 	nextCooldown time.Time
+	Cooldown     time.Duration
 }
 
 func NewShockwaveCaster() *ShockWaveCaster {
-	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40}
+	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second}
 }
 
 var queryHP = donburi.NewQuery(
@@ -69,13 +71,19 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 func (l *ShockWaveCaster) GetDamage() int {
 	return l.Damage
 }
+func (l *ShockWaveCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nHit 2 grid in front for %d damage.\nCooldown %.1f seconds", l.Cost/100, l.Damage, l.Cooldown.Seconds())
+}
+func (l *ShockWaveCaster) GetName() string {
+	return "ShockWave"
+}
 
 // cost 2 EN and inflict 40 DMG, slow moving projectile. Push back on enemy when hit
 // cooldown for 2sec
 func (c *ShockWaveCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= 200 {
-		c.nextCooldown = time.Now().Add(2 * time.Second)
+		c.nextCooldown = time.Now().Add(c.Cooldown)
 		ensource.SetEn(en - c.Cost)
 		query := donburi.NewQuery(
 			filter.Contains(
@@ -144,4 +152,7 @@ func (c *ShockWaveCaster) GetIcon() *ebiten.Image {
 }
 func (c *ShockWaveCaster) GetCooldown() time.Time {
 	return c.nextCooldown
+}
+func (l *ShockWaveCaster) GetCooldownDuration() time.Duration {
+	return l.Cooldown
 }

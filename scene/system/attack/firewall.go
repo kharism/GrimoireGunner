@@ -59,10 +59,16 @@ type FirewallCaster struct {
 }
 
 func NewFirewallCaster() *FirewallCaster {
-	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second}
+	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10}
 }
 func (f *FirewallCaster) GetDamage() int {
 	return f.Damage
+}
+func (l *FirewallCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nCreate firewall which damage %d if stepped on.\nCooldown %.1fs", l.Cost/100, l.Damage, l.Cooldown.Seconds())
+}
+func (l *FirewallCaster) GetName() string {
+	return "Firewall"
 }
 func (f *FirewallCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
@@ -91,4 +97,7 @@ func (f *FirewallCaster) GetIcon() *ebiten.Image {
 }
 func (f *FirewallCaster) GetCooldown() time.Time {
 	return f.nextCooldown
+}
+func (f *FirewallCaster) GetCooldownDuration() time.Duration {
+	return f.Cooldown
 }

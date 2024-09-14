@@ -18,6 +18,7 @@ import (
 func NewCannoneer(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Cannoneer)
 	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
 	component.Health.Set(entry, &component.HealthData{HP: 200, Name: "Cannoneer"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})

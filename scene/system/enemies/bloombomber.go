@@ -14,6 +14,7 @@ import (
 func NewBloombomber(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Bloombomber)
 	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
 	component.Health.Set(entry, &component.HealthData{HP: 140, Name: "Cannoneer"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})

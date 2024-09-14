@@ -15,6 +15,9 @@ type Event interface {
 	GetTime() time.Time
 }
 
+// eventqueue to generate/do things after certain period of time is reached
+// do not mix this with donburi/feature/events.
+// this does not process that events whatsoever
 var EventQueue = eventQueue{Queue: []Event{}}
 
 func (eq *eventQueue) AddEvent(ev Event) {

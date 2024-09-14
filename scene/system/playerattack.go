@@ -7,19 +7,23 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/events"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
-type PlayerAttackSystem struct {
+type playerAttackSystem struct {
 	PlayerIndex     *donburi.Entity
 	returnToStandby time.Time
+	// State change the behaviour of action key press, the default ones will be combatState
+	State func(ecs *ecs.ECS, s *playerAttackSystem)
 }
 
-func NewPlayerAttackSystem(player *donburi.Entity) *PlayerAttackSystem {
-	return &PlayerAttackSystem{PlayerIndex: player}
-}
+//	func NewPlayerAttackSystem(player *donburi.Entity) *PlayerAttackSystem {
+//		return &PlayerAttackSystem{PlayerIndex: player}
+//	}
+var PlayerAttackSystem = playerAttackSystem{State: CombatState}
 
 // var timerDelay = time.Now()
 var CurLoadOut = [2]Caster{}
@@ -27,7 +31,7 @@ var CurLoadOut = [2]Caster{}
 var SubLoadOut1 = [2]Caster{}
 var SubLoadOut2 = [2]Caster{}
 
-func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
+func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 	if inpututil.IsKeyJustReleased(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
 		// if time.Now().Sub(timerDelay) > 500*time.Millisecond {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
@@ -81,4 +85,14 @@ func (s *PlayerAttackSystem) Update(ecs *ecs.ECS) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Stand})
 	}
+}
+func CombatClearState(ecs *ecs.ECS, s *playerAttackSystem) {
+	if inpututil.IsKeyJustReleased(ebiten.KeyE) || inpututil.IsKeyJustReleased(ebiten.KeyW) || inpututil.IsKeyJustReleased(ebiten.KeyQ) {
+		events.CombatClearEvent.Publish(ecs.World, events.CombatClearData{})
+		events.CombatClearEvent.ProcessEvents(ecs.World)
+	}
+
+}
+func (s *playerAttackSystem) Update(ecs *ecs.ECS) {
+	s.State(ecs, s)
 }

@@ -1,6 +1,7 @@
 package attack
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -29,6 +30,12 @@ type LongSwordCaster struct {
 // cost 2 EN to execute. 80 dmg 2 tiles in front
 func NewLongSwordCaster() *LongSwordCaster {
 	return &LongSwordCaster{Cost: 200, Damage: 80, nextCooldown: time.Now()}
+}
+func (l *LongSwordCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\nHit 2 grid in front for %d damage.\nNo cooldown", l.Cost/100, l.Damage)
+}
+func (l *LongSwordCaster) GetName() string {
+	return "LongSwrd"
 }
 func (l *LongSwordCaster) GetDamage() int {
 	return l.Damage
@@ -61,4 +68,7 @@ func (l *LongSwordCaster) GetIcon() *ebiten.Image {
 }
 func (l *LongSwordCaster) GetCooldown() time.Time {
 	return l.nextCooldown
+}
+func (l *LongSwordCaster) GetCooldownDuration() time.Duration {
+	return 0
 }
