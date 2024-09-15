@@ -87,7 +87,7 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 	}
 }
 func CombatClearState(ecs *ecs.ECS, s *playerAttackSystem) {
-	if inpututil.IsKeyJustReleased(ebiten.KeyE) || inpututil.IsKeyJustReleased(ebiten.KeyW) || inpututil.IsKeyJustReleased(ebiten.KeyQ) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeyW) || inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		events.CombatClearEvent.Publish(ecs.World, events.CombatClearData{})
 		events.CombatClearEvent.ProcessEvents(ecs.World)
 	}

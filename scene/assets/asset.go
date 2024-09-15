@@ -132,6 +132,12 @@ var na_icon []byte
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
 
+//go:embed images/icon_cannon.png
+var cannon_icon []byte
+
+//go:embed images/icon_shotgun.png
+var shotgun_icon []byte
+
 //go:embed images/icon_firewall.png
 var firewall_icon []byte
 
@@ -171,6 +177,8 @@ var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
 var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
+var CannonIcon *ebiten.Image
+var ShotgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
@@ -313,6 +321,14 @@ func init() {
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if CannonIcon == nil {
+		imgReader := bytes.NewReader(cannon_icon)
+		CannonIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ShotgunIcon == nil {
+		imgReader := bytes.NewReader(shotgun_icon)
+		ShotgunIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if WideSwordIcon == nil {
 		imgReader := bytes.NewReader(widesword_icon)
