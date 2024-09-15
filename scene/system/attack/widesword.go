@@ -106,7 +106,7 @@ func (l *WideSwordCaster) GetCost() int {
 	return l.Cost
 }
 func (l *WideSwordCaster) GetIcon() *ebiten.Image {
-	return assets.LongSwordIcon
+	return assets.WideSwordIcon
 }
 func (l *WideSwordCaster) GetCooldown() time.Time {
 	return l.nextCooldown

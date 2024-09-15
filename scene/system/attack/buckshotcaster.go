@@ -35,7 +35,7 @@ func (l *BuckshotCaster) GetDamage() int {
 }
 func (l *BuckshotCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= 200 {
+	if en >= l.Cost {
 		l.nextCooldown = time.Now().Add(l.CoolDown)
 		query := donburi.NewQuery(
 			filter.Contains(
