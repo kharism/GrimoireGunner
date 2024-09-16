@@ -83,6 +83,19 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
 		}
+		dmgText := CurLoadOut[0].GetDamage()
+		textTranslate := ebiten.GeoM{}
+		// textTranslate.Translate()
+		textTranslate.Translate(float64(LoadOutIconStartX)+float64(iconBound.Dx())*2, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+		textDrawOpt := text.DrawOptions{
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign: text.AlignEnd,
+			},
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM: textTranslate,
+			},
+		}
+		text.Draw(screen, fmt.Sprintf("%.d", dmgText), MonogramFace, &textDrawOpt)
 
 	}
 	if CurLoadOut[1] != nil {
@@ -131,6 +144,19 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
 		}
+		dmgText := CurLoadOut[1].GetDamage()
+		textTranslate := ebiten.GeoM{}
+		// textTranslate.Translate()
+		textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*4), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+		textDrawOpt := text.DrawOptions{
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign: text.AlignEnd,
+			},
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM: textTranslate,
+			},
+		}
+		text.Draw(screen, fmt.Sprintf("%.d", dmgText), MonogramFace, &textDrawOpt)
 		// screen.DrawImage(icon, &DrawOp)
 	}
 	Sub1StartIconX := LoadOutIconStartX
