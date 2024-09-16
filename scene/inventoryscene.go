@@ -228,7 +228,7 @@ func (r *InventoryScene) Update() error {
 		}
 	}
 	if cardPickInventory == nil {
-		if len(r.data.Inventory) > 0 {
+		if len(r.data.Inventory) > 0 && itemCursorYPos == 1 {
 			cardPickInventory = core.NewMovableImage(assets.CardPick, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
 				Sx: 20 - 5,
 				Sy: CardStartY - 10,
@@ -238,7 +238,7 @@ func (r *InventoryScene) Update() error {
 			cardPickInventory = core.NewMovableImage(assets.CardPick, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
 				Sx: 140 - 2,
 				Sy: 100 - 2,
-			}).WithScale(&core.ScaleParam{Sx: float64(32.0 / 195), Sy: 32 / 250}))
+			}).WithScale(&core.ScaleParam{Sx: float64(32.0 / 195), Sy: float64(32.0 / 250.0)}))
 			itemCursorYPos = 0
 		}
 
@@ -504,6 +504,10 @@ var InventorySceneInstance = &InventoryScene{}
 func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
+	cardPickInventory = nil
+	loadoutIdx = 0
+	itemIdx = 0
+	swapPayloadInstance.source = nil
 	if len(state.Inventory) == 0 {
 		itemCursorYPos = 0
 		r.moveLR = MoveCursorLeftRightLoadout
