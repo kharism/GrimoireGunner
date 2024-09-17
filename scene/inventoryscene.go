@@ -238,7 +238,7 @@ func (r *InventoryScene) Update() error {
 			cardPickInventory = core.NewMovableImage(assets.CardPick, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
 				Sx: 140 - 2,
 				Sy: 100 - 2,
-			}).WithScale(&core.ScaleParam{Sx: float64(32.0 / 195), Sy: float64(32.0 / 250.0)}))
+			}).WithScale(&core.ScaleParam{Sx: float64(34.0 / 195), Sy: float64(34.0 / 250.0)}))
 			itemCursorYPos = 0
 		}
 
@@ -250,7 +250,7 @@ func (r *InventoryScene) Update() error {
 			targetY := 100.0
 			scaleX := float64(32.0 / 195.0)
 			scaleY := float64(32.0 / 250.0)
-			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: -0.04, SpeedY: -0.08}
+			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: -0.02, SpeedY: -0.03}
 			scaleAnimation.Apply(cardPickInventory)
 			anim := core.NewMoveAnimationFromParam(core.MoveParam{
 				Tx: targetX, Ty: targetY, Speed: 6,
@@ -271,7 +271,7 @@ func (r *InventoryScene) Update() error {
 			targetY := CardStartY - 2
 			scaleX := 1.0 //float64(32.0 / 195.0)
 			scaleY := 1.0 //float64(32.0 / 250.0)
-			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: 0.04, SpeedY: 0.08}
+			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: 0.02, SpeedY: 0.03}
 			scaleAnimation.Apply(cardPickInventory)
 			anim := core.NewMoveAnimationFromParam(core.MoveParam{
 				Tx: targetX, Ty: targetY, Speed: 6,

@@ -1,0 +1,11 @@
+1024x600
+
+lower 300 is the field
+
+each tile is 100x50 with red/blue border
+
+Make sure each sprite is using center bottom as starting point before any translation.
+
+VFX stuff does not follow above limitation. Just use screen pos on top left instead
+
+any damage is done by component.OnAtkHit. If something must be done to attack target 
