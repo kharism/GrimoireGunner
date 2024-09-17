@@ -49,6 +49,7 @@ func (l *ShotgunCaster) GetCooldownDuration() time.Duration {
 func (l *ShotgunCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
+		ensource.SetEn(en - l.Cost)
 		l.nextCooldown = time.Now().Add(l.CoolDown)
 		query := donburi.NewQuery(
 			filter.Contains(
