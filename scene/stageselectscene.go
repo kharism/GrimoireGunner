@@ -151,7 +151,9 @@ func (r *StageSelect) Update() error {
 		} else {
 			CursYPos := StartPositionY + float64(YDist*stageCursorIndex)
 			if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
-				CursYPos += float64(YDist)
+				if len(curLevel.NextNode) == 1 {
+					CursYPos += float64(YDist)
+				}
 			}
 			stagePick.AddAnimation(core.NewMoveAnimationFromParam(
 				core.MoveParam{
@@ -169,7 +171,10 @@ func (r *StageSelect) Update() error {
 		} else {
 			CursYPos := StartPositionY + float64(YDist*stageCursorIndex)
 			if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
-				CursYPos += float64(YDist)
+				if len(curLevel.NextNode) == 1 {
+					CursYPos += float64(YDist)
+				}
+
 			}
 			stagePick.AddAnimation(core.NewMoveAnimationFromParam(
 				core.MoveParam{
