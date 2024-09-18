@@ -115,7 +115,7 @@ func (r *StageSelect) Draw(screen *ebiten.Image) {
 			PrimaryAlign: text.AlignCenter,
 		},
 	})
-
+	//TODO: bugfix display
 	for idx1, c := range tiers {
 		for idx2, d := range c {
 
@@ -181,7 +181,7 @@ func (r *StageSelect) Update() error {
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-		pickedStage = tiers[r.data.CurrentLevel.Tier+1][stageCursorIndex]
+		pickedStage = r.data.CurrentLevel.NextNode[stageCursorIndex]
 		r.sm.ProcessTrigger(TriggerToCombat)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
@@ -216,7 +216,9 @@ func (r *StageSelect) Load(state *SceneData, manager stagehand.SceneController[*
 	)
 	startY := StartPositionY
 	if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
-		startY += float64(YDist)
+		if len(curLevel.NextNode) == 1 {
+			startY += float64(YDist)
+		}
 	}
 	stagePick.SetPos(StartPositionX+float64(XDist*(curLevel.Tier+1)), startY)
 
