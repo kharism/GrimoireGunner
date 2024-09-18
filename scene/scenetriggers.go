@@ -6,4 +6,5 @@ const (
 	TriggerToReward stagehand.SceneTransitionTrigger = iota
 	TriggerToCombat
 	TriggerToInventory
+	TriggerToStageSelect
 )

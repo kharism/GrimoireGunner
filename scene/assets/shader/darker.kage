@@ -1,0 +1,6 @@
+package main
+
+func Fragment(position vec4, srcPos vec2, _ vec4) vec4 {	
+    sample := imageSrc0UnsafeAt(srcPos)
+	return vec4(sample.r*0.5,sample.g*0.5,sample.b*0.5,sample.a)
+}

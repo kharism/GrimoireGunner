@@ -35,6 +35,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
+	Level := scene.GenerateLayout1()
 	state := &scene.SceneData{
 		Bg:            assets.BgForrest,
 		PlayerHP:      1000,
@@ -46,14 +47,16 @@ func main() {
 			attack.NewShotgunCaster(),
 			attack.NewWideSwordCaster(),
 		},
-		PlayerRow:   1,
-		PlayerCol:   1,
-		Level:       1,
-		World:       donburi.NewWorld(),
-		SceneDecor:  scene.Level1Decorator1, //scene.RandDecorator(),
-		SubLoadout1: []system.Caster{nil, nil},
-		SubLoadout2: []system.Caster{nil, nil},
-		Inventory:   []scene.ItemInterface{},
+		PlayerRow:    1,
+		PlayerCol:    1,
+		Level:        1,
+		World:        donburi.NewWorld(),
+		LevelLayout:  Level,
+		CurrentLevel: Level.Root,
+		SceneDecor:   Level.Root.Decorator, //scene.RandDecorator(),
+		SubLoadout1:  []system.Caster{nil, nil},
+		SubLoadout2:  []system.Caster{nil, nil},
+		Inventory:    []scene.ItemInterface{},
 	}
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}
@@ -61,11 +64,15 @@ func main() {
 		combatScene: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.RewardSceneInstance, Trigger: scene.TriggerToReward},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.InventorySceneInstance, Trigger: scene.TriggerToInventory},
+			stagehand.Directive[*scene.SceneData]{Dest: scene.StageSelectInstance, Trigger: scene.TriggerToStageSelect},
 		},
 		scene.RewardSceneInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 		scene.InventorySceneInstance: {
+			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+		},
+		scene.StageSelectInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 	}
