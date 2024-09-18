@@ -24,7 +24,9 @@ type SceneData struct {
 
 	Level int //the difficulties
 
-	SceneDecor CombatSceneDecorator
+	LevelLayout  *Level
+	SceneDecor   CombatSceneDecorator
+	CurrentLevel *LevelNode
 
 	Bg *ebiten.Image
 }

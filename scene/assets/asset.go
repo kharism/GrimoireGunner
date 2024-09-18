@@ -138,11 +138,17 @@ var cannon_icon []byte
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
 
+//go:embed images/icon_battle.png
+var battle_icon []byte
+
 //go:embed images/icon_firewall.png
 var firewall_icon []byte
 
 //go:embed shader/dakka.kage
 var dakkaShader []byte
+
+//go:embed shader/darker.kage
+var darkerShader []byte
 
 //go:embed images/stageclear.png
 var stageclear []byte
@@ -180,8 +186,10 @@ var GatlingIcon *ebiten.Image
 var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
+var BattleIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
+var DarkerShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
@@ -338,6 +346,10 @@ func init() {
 		imgReader := bytes.NewReader(lightning_icon)
 		LightningIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BattleIcon == nil {
+		imgReader := bytes.NewReader(battle_icon)
+		BattleIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if BuckshotIcon == nil {
 		imgReader := bytes.NewReader(buckshot_icon)
 		BuckshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -360,6 +372,9 @@ func init() {
 	}
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)
+	}
+	if DarkerShader == nil {
+		DarkerShader, _ = ebiten.NewShader(darkerShader)
 	}
 
 	if ExplosionRaw == nil {

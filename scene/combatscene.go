@@ -35,6 +35,9 @@ func (c *CombatScene) Update() error {
 	if c.sandboxMode && inpututil.IsKeyJustPressed(ebiten.KeyI) {
 		c.sm.ProcessTrigger(TriggerToInventory)
 	}
+	if c.sandboxMode && inpututil.IsKeyJustPressed(ebiten.KeyTab) {
+		c.sm.ProcessTrigger(TriggerToStageSelect)
+	}
 	if c.debugPause {
 		return nil
 	}
@@ -113,6 +116,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	s.data = state
 	if !RegisterCombatClear {
 		events.CombatClearEvent.Subscribe(s.world, func(w donburi.World, event events.CombatClearData) {
+			RegisterCombatClear = false
 			s.sm.ProcessTrigger(TriggerToReward)
 		})
 		RegisterCombatClear = true
