@@ -36,7 +36,7 @@ var Decorators = []CombatSceneDecorator{}
 
 func init() {
 	Decorators = []CombatSceneDecorator{
-		// level1Decorator1,
+		level1Decorator1,
 		level1Decorator2,
 		level1Decorator3,
 	}
@@ -47,7 +47,7 @@ func RandDecorator() CombatSceneDecorator {
 }
 
 // put in 1 rock and 1 cannoneer and 1 rock
-func Level1Decorator1(ecs *ecs.ECS) {
+func level1Decorator1(ecs *ecs.ECS) {
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
 		Row: 0,
