@@ -2,6 +2,7 @@ package scene
 
 import (
 	"fmt"
+	"image"
 	"image/color"
 
 	// "image/color"
@@ -10,6 +11,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/joelschutz/stagehand"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/hanashi/core"
@@ -92,12 +94,62 @@ func TraverseBfs(node *LevelNode, tiers *[][]*LevelNode) {
 	}
 }
 
+var (
+	whiteImage = ebiten.NewImage(3, 3)
+
+	// whiteSubImage is an internal sub image of whiteImage.
+	// Use whiteSubImage at DrawTriangles instead of whiteImage in order to avoid bleeding edges.
+	whiteSubImage = whiteImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
+)
+
+func init() {
+	whiteImage.Fill(color.White)
+}
+
 var StartPositionX = 10.0
 var XDist = 40 * 3
 var YDist = 40 * 3
 var StartPositionY = 80.0
 var tiers [][]*LevelNode
 
+func drawLine(dest *ebiten.Image, xStart, yStart, xEnd, yEnd float32, lColor color.Color) {
+	var path vector.Path
+	path.MoveTo(xStart, yStart)
+	path.LineTo(xEnd, yEnd)
+	path.Close()
+	var vs []ebiten.Vertex
+	var is []uint16
+
+	op := &vector.StrokeOptions{}
+	op.Width = 5
+	op.LineJoin = vector.LineJoinRound
+	R, G, B, _ := lColor.RGBA()
+
+	vs, is = path.AppendVerticesAndIndicesForStroke(nil, nil, op)
+	for i := range vs {
+		// vs[i].DstX = (vs[i].DstX + float32(x))
+		// vs[i].DstY = (vs[i].DstY + float32(y))
+		// vs[i].SrcX = 1
+		// vs[i].SrcY = 1
+		vs[i].ColorR = float32(R) / float32(256)
+		vs[i].ColorG = float32(G) / float32(256)
+		vs[i].ColorB = float32(B) / float32(256)
+		vs[i].ColorA = 1
+	}
+	op2 := &ebiten.DrawTrianglesOptions{}
+	op2.AntiAlias = true
+	op2.FillRule = ebiten.NonZero
+
+	dest.DrawTriangles(vs, is, whiteSubImage, op2)
+}
+func getIndexOfLevelNode(hay []*LevelNode, ss *LevelNode) int {
+	for idx, c := range hay {
+		if c == ss {
+			return idx
+		}
+	}
+	return -1
+}
 func (r *StageSelect) Draw(screen *ebiten.Image) {
 
 	// fmt.Println(tiers)
@@ -118,7 +170,22 @@ func (r *StageSelect) Draw(screen *ebiten.Image) {
 	//TODO: bugfix display
 	for idx1, c := range tiers {
 		for idx2, d := range c {
-
+			var lineColor color.Color
+			if d == r.data.CurrentLevel || contains(r.data.CurrentLevel.NextNode, d) {
+				lineColor = color.White
+			} else {
+				lineColor = color.RGBA{128, 128, 128, 255}
+			}
+			for _, e := range d.NextNode {
+				idx3 := getIndexOfLevelNode(tiers[idx1+1], e)
+				drawLine(screen,
+					float32(StartPositionX+float64(XDist*idx1))+40,
+					float32(StartPositionY+float64(YDist*idx2))+40,
+					float32(StartPositionX+float64(XDist*(idx1+1)))+40,
+					float32(StartPositionY+float64(YDist*idx3))+40,
+					lineColor,
+				)
+			}
 			transform := ebiten.GeoM{}
 			transform.Scale(3, 3)
 			transform.Translate(StartPositionX+float64(XDist*idx1), StartPositionY+float64(YDist*idx2))
