@@ -5,12 +5,10 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/filter"
 )
 
 type WideSwordCaster struct {
@@ -35,17 +33,8 @@ func (l *WideSwordCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		ensource.SetEn(en - l.Cost)
-		query := donburi.NewQuery(
-			filter.Contains(
-				archetype.PlayerTag,
-			),
-		)
 
-		playerEntry, ok := query.First(ecs.World)
-		if !ok {
-			return
-		}
-		playerGridLoc := component.GridPos.GetValue(playerEntry)
+		playerGridLoc, _ := GetPlayerGridPos(ecs)
 		var entry1 *donburi.Entry
 		var entry2 *donburi.Entry
 		var entry3 *donburi.Entry

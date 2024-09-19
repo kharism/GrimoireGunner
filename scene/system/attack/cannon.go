@@ -5,12 +5,9 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
-	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/filter"
 )
 
 // cost 1 EN and cast hitscan bullet
@@ -37,33 +34,7 @@ func (l *CannonCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		l.nextCooldown = time.Now().Add(l.CoolDown)
-		query := donburi.NewQuery(
-			filter.Contains(
-				archetype.PlayerTag,
-			),
-		)
-		playerId, ok := query.First(ecs.World)
-		if !ok {
-			return
-		}
-		gridPos := component.GridPos.Get(playerId)
-		var closestTarget *donburi.Entry
-		closestCol := 99
-		query = donburi.NewQuery(filter.Contains(
-			component.Health,
-		))
-		query.Each(ecs.World, func(e *donburi.Entry) {
-			if e == playerId {
-				return
-			}
-			gridPosE := component.GridPos.Get(e)
-			if gridPosE.Row == gridPos.Row {
-				if gridPosE.Col < closestCol {
-					closestCol = gridPosE.Col
-					closestTarget = e
-				}
-			}
-		})
+		closestTarget := HitScanGetNearestTarget(ecs)
 		if closestTarget != nil {
 			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			grid1Entry := ecs.World.Entry(grid1)

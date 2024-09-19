@@ -111,6 +111,9 @@ var flametower_fx []byte
 //go:embed images/fx/hit.png
 var hit_fx []byte
 
+//go:embed images/fx/heal.png
+var heal_fx []byte
+
 //go:embed images/icon_longsword.png
 var longsword_icon []byte
 
@@ -134,6 +137,9 @@ var shockwave_icon []byte
 
 //go:embed images/icon_cannon.png
 var cannon_icon []byte
+
+//go:embed images/icon_heal.png
+var heal_icon []byte
 
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
@@ -187,6 +193,7 @@ var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var BattleIcon *ebiten.Image
+var HealIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
@@ -205,6 +212,7 @@ var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
+var HealFx *ebiten.Image
 
 var StageClear *ebiten.Image
 var CardTemplate *ebiten.Image
@@ -358,6 +366,10 @@ func init() {
 		imgReader := bytes.NewReader(shockwave_icon)
 		ShockwaveIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if HealIcon == nil {
+		imgReader := bytes.NewReader(heal_icon)
+		HealIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if FirewallIcon == nil {
 		imgReader := bytes.NewReader(firewall_icon)
 		FirewallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -400,6 +412,10 @@ func init() {
 	if DustFxRaw == nil {
 		imgReader := bytes.NewReader(dust_fx)
 		DustFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if HealFx == nil {
+		imgReader := bytes.NewReader(heal_fx)
+		HealFx, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if WideslashRaw == nil {
 		imgReader := bytes.NewReader(wideslash_fx)

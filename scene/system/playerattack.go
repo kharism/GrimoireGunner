@@ -53,6 +53,11 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		if len(CurLoadOut) >= 2 && CurLoadOut[1] != nil {
 			if !CurLoadOut[1].GetCooldown().IsZero() && CurLoadOut[1].GetCooldown().Before(time.Now()) {
 				CurLoadOut[1].Cast(EnergySystem, ecs)
+				if vv, ok := CurLoadOut[1].(Consumables); ok {
+					if vv.GetCharge() == 0 {
+						CurLoadOut[1] = nil
+					}
+				}
 			}
 
 		}
@@ -72,6 +77,11 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		if len(CurLoadOut) >= 1 && CurLoadOut[0] != nil {
 			if !CurLoadOut[0].GetCooldown().IsZero() && CurLoadOut[0].GetCooldown().Before(time.Now()) {
 				CurLoadOut[0].Cast(EnergySystem, ecs)
+				if vv, ok := CurLoadOut[0].(Consumables); ok {
+					if vv.GetCharge() == 0 {
+						CurLoadOut[0] = nil
+					}
+				}
 			}
 		}
 	}

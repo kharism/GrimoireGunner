@@ -96,6 +96,7 @@ func LoadPlayer(world donburi.World, state *SceneData) *donburi.Entity {
 	gridPos.Col = state.PlayerCol
 	gridPos.Row = state.PlayerRow
 	component.Health.Get(world.Entry(*playerEntity)).HP = state.PlayerHP
+	component.Health.Get(world.Entry(*playerEntity)).MaxHP = state.PlayerMaxHP
 	system.EnergySystem.SetEn(state.PlayerCurrEn)
 	system.EnergySystem.MaxEN = state.PlayerMaxEn
 	system.EnergySystem.ENRegen = state.PlayerEnRegen
