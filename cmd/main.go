@@ -44,7 +44,7 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []system.Caster{
-			attack.NewShotgunCaster(),
+			attack.NewHealCaster(),
 			attack.NewWideSwordCaster(),
 		},
 		PlayerRow:    1,

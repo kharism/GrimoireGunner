@@ -9,6 +9,7 @@ import (
 
 type HealthData struct {
 	HP           int
+	MaxHP        int
 	Name         string
 	InvisTime    time.Time
 	OnTakeDamage OnTakeDamageFunc
