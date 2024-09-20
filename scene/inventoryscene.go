@@ -9,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/joelschutz/stagehand"
 	"github.com/kharism/grimoiregunner/scene/assets"
-	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 )
 
@@ -60,7 +60,7 @@ func GetItem(pos *positionSwap, r *InventoryScene) ItemInterface {
 }
 func SetItem(pos *positionSwap, r *InventoryScene, i ItemInterface) error {
 	if pos.itemCursorYPos == 0 {
-		ii, ok := i.(system.Caster)
+		ii, ok := i.(loadout.Caster)
 		if i != nil && !ok {
 			return errors.New("incompatible")
 		}
@@ -111,7 +111,7 @@ func (s *swapPayload) Swap(r *InventoryScene) {
 			// update invlist
 			ItemSlot = []*core.MovableImage{}
 			for inventoryIdx, j := range r.data.Inventory {
-				if vv, ok := j.(system.Caster); ok {
+				if vv, ok := j.(loadout.Caster); ok {
 					c := GenerateCard(vv)
 					dim := c.Bounds()
 					newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
@@ -291,7 +291,7 @@ func (r *InventoryScene) Update() error {
 		r.data.Inventory = append(r.data.Inventory, item)
 		ItemSlot = []*core.MovableImage{}
 		for inventoryIdx, j := range r.data.Inventory {
-			if vv, ok := j.(system.Caster); ok {
+			if vv, ok := j.(loadout.Caster); ok {
 				c := GenerateCard(vv)
 				dim := c.Bounds()
 				newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
@@ -525,7 +525,7 @@ func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneControlle
 	}
 	ItemSlot = []*core.MovableImage{}
 	for inventoryIdx, j := range r.data.Inventory {
-		if vv, ok := j.(system.Caster); ok {
+		if vv, ok := j.(loadout.Caster); ok {
 			c := GenerateCard(vv)
 			dim := c.Bounds()
 			newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{

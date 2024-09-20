@@ -7,6 +7,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/events"
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -140,13 +141,13 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	// enemies.NewReaper(s.ecs, 4, 1)
 	assets.Bg = state.Bg
 
-	system.CurLoadOut[0] = state.MainLoadout[0]
-	system.CurLoadOut[1] = state.MainLoadout[1] //attack.NewLongSwordCaster()
+	loadout.CurLoadOut[0] = state.MainLoadout[0]
+	loadout.CurLoadOut[1] = state.MainLoadout[1] //attack.NewLongSwordCaster()
 
-	system.SubLoadOut1[0] = state.SubLoadout1[0]
-	system.SubLoadOut1[1] = state.SubLoadout1[1]
-	system.SubLoadOut2[0] = state.SubLoadout2[0]
-	system.SubLoadOut2[1] = state.SubLoadout2[1]
+	loadout.SubLoadOut1[0] = state.SubLoadout1[0]
+	loadout.SubLoadOut1[1] = state.SubLoadout1[1]
+	loadout.SubLoadOut2[0] = state.SubLoadout2[0]
+	loadout.SubLoadOut2[1] = state.SubLoadout2[1]
 	if state.SceneDecor != nil {
 		state.SceneDecor(s.ecs)
 		s.sandboxMode = false
@@ -187,8 +188,8 @@ func (s *CombatScene) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 }
 func (s *CombatScene) Unload() *SceneData {
 	// your unload code
-	s.data.MainLoadout = system.CurLoadOut[:]
-	s.data.SubLoadout1 = system.SubLoadOut1[:]
-	s.data.SubLoadout2 = system.SubLoadOut2[:]
+	s.data.MainLoadout = loadout.CurLoadOut[:]
+	s.data.SubLoadout1 = loadout.SubLoadOut1[:]
+	s.data.SubLoadout2 = loadout.SubLoadOut2[:]
 	return s.data
 }

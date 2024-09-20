@@ -9,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/joelschutz/stagehand"
 	"github.com/kharism/grimoiregunner/scene/assets"
-	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 )
 
@@ -133,9 +133,9 @@ func (r *RewardScene) Draw(screen *ebiten.Image) {
 
 }
 
-var casterPick = [3]system.Caster{}
+var casterPick = [3]loadout.Caster{}
 
-func GenerateCard(caster system.Caster) *ebiten.Image {
+func GenerateCard(caster loadout.Caster) *ebiten.Image {
 
 	cardBounds := assets.CardTemplate.Bounds()
 	newImage := ebiten.NewImage(cardBounds.Dx(), cardBounds.Dy())

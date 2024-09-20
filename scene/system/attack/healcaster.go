@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -29,7 +30,7 @@ func (l *HealCaster) GetDescription() string {
 func (l *HealCaster) GetName() string {
 	return "Heal"
 }
-func (l *HealCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.GetCost() {
 		ensource.SetEn(en - l.GetCost())

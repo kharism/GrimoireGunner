@@ -7,6 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
+	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -16,6 +18,7 @@ type CannonCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
+	ModEntry     *donburi.Entry
 }
 
 func NewCannonCaster() *CannonCaster {
@@ -28,9 +31,13 @@ func (l *CannonCaster) GetName() string {
 	return "Cannon"
 }
 func (l *CannonCaster) GetDamage() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + mod.DamageModifier
+	}
 	return l.Damage
 }
-func (l *CannonCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		l.nextCooldown = time.Now().Add(l.CoolDown)
@@ -40,8 +47,14 @@ func (l *CannonCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			grid1Entry := ecs.World.Entry(grid1)
 			targetGridPos := component.GridPos.Get(closestTarget)
 			component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col, Row: targetGridPos.Row})
-			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.Damage})
+			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
+		}
+		if l.ModEntry != nil {
+			mod := component.CasterModifier.Get(l.ModEntry)
+			if mod.PostAtkBehaviour != nil {
+				mod.PostAtkBehaviour(ecs)
+			}
 		}
 	}
 }

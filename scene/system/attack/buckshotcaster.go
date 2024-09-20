@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
@@ -33,7 +34,7 @@ func (l *BuckshotCaster) GetName() string {
 func (l *BuckshotCaster) GetDamage() int {
 	return l.Damage
 }
-func (l *BuckshotCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		l.nextCooldown = time.Now().Add(l.CoolDown)

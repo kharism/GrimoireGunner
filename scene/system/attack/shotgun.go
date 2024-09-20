@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -43,7 +44,7 @@ func (l *ShotgunCaster) GetCooldownDuration() time.Duration {
 	return l.CoolDown
 }
 
-func (l *ShotgunCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		ensource.SetEn(en - l.Cost)

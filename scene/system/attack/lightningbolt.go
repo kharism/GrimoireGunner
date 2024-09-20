@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -69,7 +70,7 @@ func NewLightningBolCaster() *LightingBoltCaster {
 	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
 
-func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= 300 {
 		ensource.SetEn(en - l.Cost)

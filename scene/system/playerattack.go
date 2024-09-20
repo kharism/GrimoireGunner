@@ -9,6 +9,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/events"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -26,10 +27,6 @@ type playerAttackSystem struct {
 var PlayerAttackSystem = playerAttackSystem{State: CombatState}
 
 // var timerDelay = time.Now()
-var CurLoadOut = [2]Caster{}
-
-var SubLoadOut1 = [2]Caster{}
-var SubLoadOut2 = [2]Caster{}
 
 func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 	if inpututil.IsKeyJustReleased(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
@@ -50,12 +47,12 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
 		// attack.NewLongSwordAttack(EnergySystem, ecs, *scrPos, *gridPos)
-		if len(CurLoadOut) >= 2 && CurLoadOut[1] != nil {
-			if !CurLoadOut[1].GetCooldown().IsZero() && CurLoadOut[1].GetCooldown().Before(time.Now()) {
-				CurLoadOut[1].Cast(EnergySystem, ecs)
-				if vv, ok := CurLoadOut[1].(Consumables); ok {
+		if len(loadout.CurLoadOut) >= 2 && loadout.CurLoadOut[1] != nil {
+			if !loadout.CurLoadOut[1].GetCooldown().IsZero() && loadout.CurLoadOut[1].GetCooldown().Before(time.Now()) {
+				loadout.CurLoadOut[1].Cast(EnergySystem, ecs)
+				if vv, ok := loadout.CurLoadOut[1].(Consumables); ok {
 					if vv.GetCharge() == 0 {
-						CurLoadOut[1] = nil
+						loadout.CurLoadOut[1] = nil
 					}
 				}
 			}
@@ -74,22 +71,22 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		// 	Direction: 1,
 		// 	Actor:     playerId,
 		// })
-		if len(CurLoadOut) >= 1 && CurLoadOut[0] != nil {
-			if !CurLoadOut[0].GetCooldown().IsZero() && CurLoadOut[0].GetCooldown().Before(time.Now()) {
-				CurLoadOut[0].Cast(EnergySystem, ecs)
-				if vv, ok := CurLoadOut[0].(Consumables); ok {
+		if len(loadout.CurLoadOut) >= 1 && loadout.CurLoadOut[0] != nil {
+			if !loadout.CurLoadOut[0].GetCooldown().IsZero() && loadout.CurLoadOut[0].GetCooldown().Before(time.Now()) {
+				loadout.CurLoadOut[0].Cast(EnergySystem, ecs)
+				if vv, ok := loadout.CurLoadOut[0].(Consumables); ok {
 					if vv.GetCharge() == 0 {
-						CurLoadOut[0] = nil
+						loadout.CurLoadOut[0] = nil
 					}
 				}
 			}
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-		temp := CurLoadOut
-		CurLoadOut = SubLoadOut1
-		SubLoadOut1 = SubLoadOut2
-		SubLoadOut2 = temp
+		temp := loadout.CurLoadOut
+		loadout.CurLoadOut = loadout.SubLoadOut1
+		loadout.SubLoadOut1 = loadout.SubLoadOut2
+		loadout.SubLoadOut2 = temp
 	}
 	if time.Now().After(s.returnToStandby) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)

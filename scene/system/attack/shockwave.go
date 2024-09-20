@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -80,7 +81,7 @@ func (l *ShockWaveCaster) GetName() string {
 
 // cost 2 EN and inflict 40 DMG, slow moving projectile. Push back on enemy when hit
 // cooldown for 2sec
-func (c *ShockWaveCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= 200 {
 		c.nextCooldown = time.Now().Add(c.Cooldown)

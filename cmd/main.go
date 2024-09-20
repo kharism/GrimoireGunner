@@ -5,8 +5,8 @@ import (
 
 	"github.com/kharism/grimoiregunner/scene"
 	"github.com/kharism/grimoiregunner/scene/assets"
-	"github.com/kharism/grimoiregunner/scene/system"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -43,7 +43,7 @@ func main() {
 		PlayerCurrEn:  300,
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
-		MainLoadout: []system.Caster{
+		MainLoadout: []loadout.Caster{
 			attack.NewHealCaster(),
 			attack.NewWideSwordCaster(),
 		},
@@ -54,8 +54,8 @@ func main() {
 		LevelLayout:  Level,
 		CurrentLevel: Level.Root,
 		SceneDecor:   Level.Root.Decorator, //scene.RandDecorator(),
-		SubLoadout1:  []system.Caster{nil, nil},
-		SubLoadout2:  []system.Caster{nil, nil},
+		SubLoadout1:  []loadout.Caster{nil, nil},
+		SubLoadout2:  []loadout.Caster{nil, nil},
 		Inventory:    []scene.ItemInterface{},
 	}
 	combatScene := &scene.CombatScene{}
