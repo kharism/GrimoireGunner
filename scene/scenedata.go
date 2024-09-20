@@ -2,7 +2,7 @@ package scene
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 )
 
@@ -16,9 +16,9 @@ type SceneData struct {
 	PlayerCol     int
 	World         donburi.World
 
-	MainLoadout []system.Caster
-	SubLoadout1 []system.Caster
-	SubLoadout2 []system.Caster
+	MainLoadout []loadout.Caster
+	SubLoadout1 []loadout.Caster
+	SubLoadout2 []loadout.Caster
 
 	Inventory []ItemInterface
 

@@ -3,12 +3,12 @@ package scene
 import (
 	"math/rand"
 
-	"github.com/kharism/grimoiregunner/scene/system"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 )
 
-func GenerateCaster() system.Caster {
-	casters := []system.Caster{
+func GenerateCaster() loadout.Caster {
+	casters := []loadout.Caster{
 		attack.NewBuckshotCaster(),
 		attack.NewFirewallCaster(),
 		attack.NewLongSwordCaster(),
