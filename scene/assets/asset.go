@@ -141,6 +141,9 @@ var cannon_icon []byte
 //go:embed images/icon_heal.png
 var heal_icon []byte
 
+//go:embed images/icon_atkup.png
+var atkup_icon []byte
+
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
 
@@ -194,6 +197,7 @@ var ShotgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
+var AtkUp *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
@@ -357,6 +361,10 @@ func init() {
 	if BattleIcon == nil {
 		imgReader := bytes.NewReader(battle_icon)
 		BattleIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if AtkUp == nil {
+		imgReader := bytes.NewReader(atkup_icon)
+		AtkUp, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if BuckshotIcon == nil {
 		imgReader := bytes.NewReader(buckshot_icon)
