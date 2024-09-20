@@ -20,8 +20,15 @@ type ShockWaveCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
+	ModEntry     *donburi.Entry
 }
 
+func (l *ShockWaveCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *ShockWaveCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
 func NewShockwaveCaster() *ShockWaveCaster {
 	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second}
 }
@@ -70,10 +77,14 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	}
 }
 func (l *ShockWaveCaster) GetDamage() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + mod.DamageModifier
+	}
 	return l.Damage
 }
 func (l *ShockWaveCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\nHit 2 grid in front for %d damage.\nCooldown %.1f seconds", l.Cost/100, l.Damage, l.Cooldown.Seconds())
+	return fmt.Sprintf("Cost:%d EN\nHit 2 grid in front for %d damage.\nCooldown %.1f seconds", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
 }
 func (l *ShockWaveCaster) GetName() string {
 	return "ShockWave"
@@ -83,9 +94,9 @@ func (l *ShockWaveCaster) GetName() string {
 // cooldown for 2sec
 func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= 200 {
-		c.nextCooldown = time.Now().Add(c.Cooldown)
-		ensource.SetEn(en - c.Cost)
+	if en >= c.GetCost() {
+		c.nextCooldown = time.Now().Add(c.GetCooldownDuration())
+		ensource.SetEn(en - c.GetCost())
 		query := donburi.NewQuery(
 			filter.Contains(
 				archetype.PlayerTag,
@@ -120,7 +131,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		component.OnHit.SetValue(shockwaveEntry, shockWaveOnAtkHit)
 		SPEED := 5.0
 		component.Speed.Set(shockwaveEntry, &component.SpeedData{Vx: SPEED, Vy: 0})
-		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: c.Damage})
+		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: c.GetDamage()})
 		screenX, screenY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		screenX = screenX - 50
 		screenY = screenY - 100
@@ -142,10 +153,20 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		)
 		// shockwaveAnim.MovableImage
 		component.Fx.Set(shockwaveEntry, &component.FxData{Animation: shockwaveAnim})
+		if c.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(c.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 	}
 
 }
 func (c *ShockWaveCaster) GetCost() int {
+	if c.ModEntry != nil {
+		mod := component.CasterModifier.Get(c.ModEntry)
+		return c.Cost + mod.CostModifier
+	}
 	return c.Cost
 }
 func (c *ShockWaveCaster) GetIcon() *ebiten.Image {
@@ -155,5 +176,9 @@ func (c *ShockWaveCaster) GetCooldown() time.Time {
 	return c.nextCooldown
 }
 func (l *ShockWaveCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return mod.CooldownModifer
+	}
 	return l.Cooldown
 }

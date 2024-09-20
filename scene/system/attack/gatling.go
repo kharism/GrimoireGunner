@@ -20,32 +20,52 @@ type GatlingCaster struct {
 	ShotAmount       int
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
+	ModEntry         *donburi.Entry
 }
 
 func NewGatlingCastor() *GatlingCaster {
 	return &GatlingCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second}
 }
 func (l *GatlingCaster) GetDamage() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + mod.DamageModifier
+	}
 	return l.Damage
 }
 func (l *GatlingCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\nShoots %d damage bullet %d times.\nCooldown %.1fs", l.Cost/100, l.Damage, l.ShotAmount, l.CooldownDuration.Seconds())
+	return fmt.Sprintf("Cost:%d EN\nShoots %d damage bullet %d times.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.ShotAmount, l.CooldownDuration.Seconds())
 }
 func (l *GatlingCaster) GetName() string {
 	return "Gatling"
 }
 func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= l.Cost {
-		ensource.SetEn(en - l.Cost)
-		l.nextCooldown = time.Now().Add(l.CooldownDuration)
+	if en >= l.GetCost() {
+		ensource.SetEn(en - l.GetCost())
+		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		now := time.Now()
 		for i := 0; i < l.ShotAmount; i++ {
-			ev := &addGatlingShot{Damage: l.Damage, Time: now.Add(time.Duration(100*i) * time.Millisecond)}
+			ev := &addGatlingShot{Damage: l.GetDamage(), Time: now.Add(time.Duration(100*i) * time.Millisecond)}
 			component.EventQueue.Queue = append(component.EventQueue.Queue, ev)
+		}
+		if l.ModEntry != nil {
+			if l.ModEntry.HasComponent(component.PostAtkModifier) {
+				l := component.PostAtkModifier.GetValue(l.ModEntry)
+				if l != nil {
+					l(ecs)
+				}
+
+			}
 		}
 	}
 
+}
+func (l *GatlingCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *GatlingCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
 }
 
 type addGatlingShot struct {
@@ -80,6 +100,10 @@ func (a *addGatlingShot) GetTime() time.Time {
 	return a.Time
 }
 func (l *GatlingCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *GatlingCaster) GetIcon() *ebiten.Image {
@@ -89,5 +113,9 @@ func (l *GatlingCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *GatlingCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CooldownDuration + mod.CooldownModifer
+	}
 	return l.CooldownDuration
 }

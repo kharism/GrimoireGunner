@@ -44,8 +44,8 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewHealCaster(),
-			attack.NewWideSwordCaster(),
+			attack.NewCannonCaster(),
+			attack.NewAtkBonusCaster(),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,

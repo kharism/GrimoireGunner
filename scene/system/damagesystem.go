@@ -104,8 +104,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						enemyCount += 1
 					})
 					if enemyCount == 0 {
-						// TODO: end of battle
-						// show stage clear
+
 						stgClrDim := assets.StageClear.Bounds()
 						movableImg := core.NewMovableImage(assets.StageClear,
 							core.NewMovableImageParams().WithMoveParam(core.MoveParam{
@@ -115,13 +114,13 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
 							Tx:    float64(600 - stgClrDim.Dx()/2 - 60),
 							Ty:    float64(300 + stgClrDim.Dy()/2),
-							Speed: 5,
+							Speed: 10,
 						}))
 						movableImg.Done = func() {
-
+							PlayerAttackSystem.State = CombatClearState
 						}
 						//turn off attack system
-						PlayerAttackSystem.State = CombatClearState
+						PlayerAttackSystem.State = DoNothingState
 						//attach the stageclear to fx system
 						stgDone := ecs.World.Create(component.Fx)
 						component.Fx.Set(ecs.World.Entry(stgDone), &component.FxData{

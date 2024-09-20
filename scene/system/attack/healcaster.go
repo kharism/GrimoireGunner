@@ -10,6 +10,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
+	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -19,6 +20,7 @@ type HealCaster struct {
 	Charge           int
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
+	ModEntry         *donburi.Entry
 }
 
 func NewHealCaster() *HealCaster {
@@ -29,6 +31,33 @@ func (l *HealCaster) GetDescription() string {
 }
 func (l *HealCaster) GetName() string {
 	return "Heal"
+}
+func (l *HealCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *HealCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
+
+// this is a test
+func AddHeal(ecs *ecs.ECS) {
+	gridPos, playerEnt := GetPlayerGridPos(ecs)
+	healthComp := component.Health.Get(playerEnt)
+	if healthComp.HP+10 < healthComp.MaxHP {
+		healthComp.HP += 10
+	} else {
+		healthComp.HP = healthComp.MaxHP
+	}
+
+	fxEntity := ecs.World.Create(component.Fx, component.Transient)
+	fx := ecs.World.Entry(fxEntity)
+
+	x, y := assets.GridCoord2Screen(gridPos.Row, gridPos.Col)
+	x -= 50
+	y -= 100
+	anim := core.NewMovableImage(assets.HealFx, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: x, Sy: y}))
+	component.Fx.Set(fx, &component.FxData{Animation: anim})
+	component.Transient.Set(fx, &component.TransientData{Start: time.Now(), Duration: 500 * time.Millisecond})
 }
 func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
@@ -54,7 +83,12 @@ func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		anim := core.NewMovableImage(assets.HealFx, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: x, Sy: y}))
 		component.Fx.Set(fx, &component.FxData{Animation: anim})
 		component.Transient.Set(fx, &component.TransientData{Start: time.Now(), Duration: 500 * time.Millisecond})
-
+		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 	}
 }
 func (l *HealCaster) GetCharge() int {
@@ -67,6 +101,10 @@ func (l *HealCaster) GetDamage() int {
 	return 0
 }
 func (l *HealCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *HealCaster) GetIcon() *ebiten.Image {
@@ -91,5 +129,9 @@ func (l *HealCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *HealCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CooldownDuration + mod.CooldownModifer
+	}
 	return l.CooldownDuration
 }

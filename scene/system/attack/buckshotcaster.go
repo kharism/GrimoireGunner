@@ -20,13 +20,20 @@ type BuckshotCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
+	ModEntry     *donburi.Entry
 }
 
+func (l *BuckshotCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *BuckshotCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
 func NewBuckshotCaster() *BuckshotCaster {
 	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second}
 }
 func (l *BuckshotCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\n%d Damage in T-shaped cone in front. Hit the target in front 3 times\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+	return fmt.Sprintf("Cost:%d EN\n%d Damage in T-shaped cone in front. Hit the target in front 3 times\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
 }
 func (l *BuckshotCaster) GetName() string {
 	return "BuckShot"
@@ -106,11 +113,21 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				ecs.World.Remove(fx)
 			},
 		})
+		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 		component.Fx.Set(fxEnt, &component.FxData{Animation: buckShotAnim})
 	}
 
 }
 func (l *BuckshotCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *BuckshotCaster) GetIcon() *ebiten.Image {
@@ -120,5 +137,9 @@ func (l *BuckshotCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *BuckshotCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + mod.CooldownModifer
+	}
 	return l.CoolDown
 }

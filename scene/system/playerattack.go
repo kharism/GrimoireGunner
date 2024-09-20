@@ -26,18 +26,21 @@ type playerAttackSystem struct {
 //	}
 var PlayerAttackSystem = playerAttackSystem{State: CombatState}
 
-// var timerDelay = time.Now()
+var timerDelay = time.Now()
 
+func DoNothingState(ecs *ecs.ECS, s *playerAttackSystem) {
+
+}
 func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
-	if inpututil.IsKeyJustReleased(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
-		// if time.Now().Sub(timerDelay) > 500*time.Millisecond {
-		playerId := ecs.World.Entry(*s.PlayerIndex)
-		gridPos := component.GridPos.Get(playerId)
-		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
-		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
-		attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 25)
-		// timerDelay = time.Now()
-		// }
+	if ebiten.IsKeyPressed(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
+		if time.Now().Sub(timerDelay) > 200*time.Millisecond {
+			playerId := ecs.World.Entry(*s.PlayerIndex)
+			gridPos := component.GridPos.Get(playerId)
+			component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
+			s.returnToStandby = time.Now().Add(500 * time.Millisecond)
+			attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 25)
+			timerDelay = time.Now()
+		}
 
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {

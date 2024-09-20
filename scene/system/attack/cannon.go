@@ -37,10 +37,17 @@ func (l *CannonCaster) GetDamage() int {
 	}
 	return l.Damage
 }
+func (l *CannonCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *CannonCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
 func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= l.Cost {
-		l.nextCooldown = time.Now().Add(l.CoolDown)
+	if en >= l.GetCost() {
+		ensource.SetEn(en - l.GetCost())
+		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		closestTarget := HitScanGetNearestTarget(ecs)
 		if closestTarget != nil {
 			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
@@ -50,16 +57,20 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 		}
-		if l.ModEntry != nil {
-			mod := component.CasterModifier.Get(l.ModEntry)
-			if mod.PostAtkBehaviour != nil {
-				mod.PostAtkBehaviour(ecs)
+		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
 			}
 		}
 	}
 }
 
 func (l *CannonCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *CannonCaster) GetIcon() *ebiten.Image {
@@ -69,5 +80,9 @@ func (l *CannonCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *CannonCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + mod.CooldownModifer
+	}
 	return l.CoolDown
 }

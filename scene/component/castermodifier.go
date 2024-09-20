@@ -7,14 +7,15 @@ import (
 	"github.com/yohamta/donburi/ecs"
 )
 
+// this component holds simple stat change for caster
 type CasterModifierData struct {
 	DamageModifier  int
 	CooldownModifer time.Duration
 	CostModifier    int
 	SpecialModifier int
-
-	//execute this after attack is hit
-	PostAtkBehaviour func(*ecs.ECS)
 }
+type PostAtkBehaviour func(*ecs.ECS)
 
 var CasterModifier = donburi.NewComponentType[CasterModifierData]()
+
+var PostAtkModifier = donburi.NewComponentType[PostAtkBehaviour]()
