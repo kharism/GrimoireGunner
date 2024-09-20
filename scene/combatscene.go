@@ -79,6 +79,9 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 			},
 		}
 		text.Draw(screen, "Press i for inventory", MonogramFace, &textDrawOpt)
+		textTranslate.Translate(0, -30)
+		textDrawOpt.DrawImageOptions.GeoM = textTranslate
+		text.Draw(screen, "Press tab for map", MonogramFace, &textDrawOpt)
 	}
 }
 func LoadGrid(world donburi.World) {
