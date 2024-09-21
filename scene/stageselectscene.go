@@ -39,7 +39,7 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:        "0",
 			Tier:      0,
-			Decorator: RandDecorator(),
+			Decorator: Level1Decorator5,
 			Icon:      assets.BattleIcon,
 		},
 	}

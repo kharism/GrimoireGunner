@@ -87,6 +87,15 @@ var reaper_warmup []byte
 //go:embed images/reaper3.png
 var reaper_cooldown []byte
 
+//go:embed images/hammerghoul.png
+var hammerghoul []byte
+
+//go:embed images/hammerghoul_atk.png
+var hammerghoul_warmup []byte
+
+//go:embed images/hammerghoul_atk2.png
+var hammerghoul_cooldown []byte
+
 //go:embed images/wideslash.png
 var wideslash_fx []byte
 
@@ -184,6 +193,9 @@ var Gatlingghoul *ebiten.Image
 var Reaper *ebiten.Image
 var ReaperWarmup *ebiten.Image
 var ReaperCooldown *ebiten.Image
+var Hammerghoul *ebiten.Image
+var HammerghoulWarmup *ebiten.Image
+var HammerghoulCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -338,6 +350,19 @@ func init() {
 		imgReader := bytes.NewReader(reaper_cooldown)
 		ReaperCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Hammerghoul == nil {
+		imgReader := bytes.NewReader(hammerghoul)
+		Hammerghoul, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if HammerghoulWarmup == nil {
+		imgReader := bytes.NewReader(hammerghoul_warmup)
+		HammerghoulWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if HammerghoulCooldown == nil {
+		imgReader := bytes.NewReader(hammerghoul_cooldown)
+		HammerghoulCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)

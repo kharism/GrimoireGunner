@@ -153,7 +153,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		)
 		// shockwaveAnim.MovableImage
 		component.Fx.Set(shockwaveEntry, &component.FxData{Animation: shockwaveAnim})
-		if c.ModEntry.HasComponent(component.PostAtkModifier) {
+		if c.ModEntry != nil && c.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(c.ModEntry)
 			if l != nil {
 				l(ecs)

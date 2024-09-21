@@ -39,6 +39,7 @@ func init() {
 		level1Decorator1,
 		level1Decorator2,
 		level1Decorator3,
+		level1Decorator4,
 	}
 }
 func RandDecorator() CombatSceneDecorator {
@@ -55,7 +56,7 @@ func level1Decorator1(ecs *ecs.ECS) {
 	enemies.NewCannoneer(ecs, 6, 1)
 }
 
-// put 2 bloombomber
+// put 1 bloombomber
 func level1Decorator2(ecs *ecs.ECS) {
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
@@ -68,4 +69,15 @@ func level1Decorator2(ecs *ecs.ECS) {
 func level1Decorator3(ecs *ecs.ECS) {
 	// enemies.NewGatlingGhoul(ecs, 4, 0)
 	enemies.NewGatlingGhoul(ecs, 4, 3)
+}
+
+// put 1 gatlinghoul and 1 reaper
+func level1Decorator4(ecs *ecs.ECS) {
+	// enemies.NewGatlingGhoul(ecs, 4, 0)
+	enemies.NewGatlingGhoul(ecs, 4, 3)
+	enemies.NewReaper(ecs, 4, 2)
+}
+
+func Level1Decorator5(ecs *ecs.ECS) {
+	enemies.NewHammerghoul(ecs, 5, 2)
 }
