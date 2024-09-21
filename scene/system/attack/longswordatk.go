@@ -71,7 +71,7 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		playerGridLoc := component.GridPos.GetValue(playerEntry)
 		newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.GetDamage())
 		l.nextCooldown = time.Now().Add(750 * time.Millisecond)
-		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(l.ModEntry)
 			if l != nil {
 				l(ecs)

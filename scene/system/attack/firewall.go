@@ -99,7 +99,7 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 		gridPos := component.GridPos.Get(playerId)
 		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage)
-		if f.ModEntry.HasComponent(component.PostAtkModifier) {
+		if f.ModEntry != nil && f.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(f.ModEntry)
 			if l != nil {
 				l(ecs)

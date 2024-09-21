@@ -57,7 +57,7 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 		}
-		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(l.ModEntry)
 			if l != nil {
 				l(ecs)

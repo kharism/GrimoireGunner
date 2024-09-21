@@ -93,7 +93,12 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		})
 		wideSword.FlipHorizontal = true
 		component.Fx.Set(fx, &component.FxData{Animation: wideSword})
-
+		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 	}
 }
 
