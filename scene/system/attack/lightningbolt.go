@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -63,16 +64,22 @@ type LightingBoltCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	Damage       int
+	ModEntry     *donburi.Entry
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
 	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
-
-func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *LightingBoltCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *LightingBoltCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
+func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= 300 {
-		ensource.SetEn(en - l.Cost)
+	if en >= l.GetCost() {
+		ensource.SetEn(en - l.GetCost())
 		query := donburi.NewQuery(
 			filter.Contains(
 				archetype.PlayerTag,
@@ -89,22 +96,36 @@ func (l *LightingBoltCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			StartCol:  gridPos.Col + 1,
 			Direction: 1,
 			Actor:     playerId,
-			Damage:    l.Damage,
+			Damage:    l.GetDamage(),
 		}
 		NewLigtningAttack(ecs, param)
 		l.nextCooldown = time.Now().Add(l.CoolDown)
+		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 	}
 }
 func (l *LightingBoltCaster) GetDamage() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + mod.DamageModifier
+	}
 	return l.Damage
 }
 func (l *LightingBoltCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\nShoots %d damage Lightning bolt instantly.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+	return fmt.Sprintf("Cost:%d EN\nShoots %d damage Lightning bolt instantly.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
 }
 func (l *LightingBoltCaster) GetName() string {
 	return "LightningBolt"
 }
 func (l *LightingBoltCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *LightingBoltCaster) GetIcon() *ebiten.Image {
@@ -114,5 +135,9 @@ func (l *LightingBoltCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *LightingBoltCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + mod.CooldownModifer
+	}
 	return l.CoolDown
 }

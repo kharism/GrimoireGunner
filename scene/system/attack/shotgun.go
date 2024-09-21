@@ -7,6 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
+	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -16,21 +18,36 @@ type ShotgunCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
+	ModEntry     *donburi.Entry
 }
 
+func (l *ShotgunCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *ShotgunCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
 func NewShotgunCaster() *ShotgunCaster {
 	return &ShotgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 1 * time.Second}
 }
 func (l *ShotgunCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and its behind immediately.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and its behind immediately.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
 }
 func (l *ShotgunCaster) GetName() string {
 	return "Shotgun"
 }
 func (l *ShotgunCaster) GetDamage() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + mod.DamageModifier
+	}
 	return l.Damage
 }
 func (l *ShotgunCaster) GetCost() int {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + mod.CostModifier
+	}
 	return l.Cost
 }
 func (l *ShotgunCaster) GetIcon() *ebiten.Image {
@@ -40,10 +57,14 @@ func (l *ShotgunCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
 func (l *ShotgunCaster) GetCooldownDuration() time.Duration {
+	if l.ModEntry != nil {
+		mod := component.CasterModifier.Get(l.ModEntry)
+		return mod.CooldownModifer
+	}
 	return l.CoolDown
 }
 
-func (l *ShotgunCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		ensource.SetEn(en - l.Cost)
@@ -55,16 +76,22 @@ func (l *ShotgunCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 			grid1Entry := ecs.World.Entry(grid1)
 			targetGridPos := component.GridPos.Get(closestTarget)
 			component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col, Row: targetGridPos.Row})
-			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.Damage})
+			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 			if targetGridPos.Col < 7 {
 				grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 				grid1Entry := ecs.World.Entry(grid1)
 				targetGridPos := component.GridPos.Get(closestTarget)
 				component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col + 1, Row: targetGridPos.Row})
-				component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.Damage})
+				component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 				component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 				component.Transient.Set(grid1Entry, &component.TransientData{Duration: 1 * time.Second, Start: time.Now()})
+			}
+		}
+		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l != nil {
+				l(ecs)
 			}
 		}
 	}

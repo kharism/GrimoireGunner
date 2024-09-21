@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -56,12 +57,23 @@ type FirewallCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
+	ModEntry     *donburi.Entry
 }
 
 func NewFirewallCaster() *FirewallCaster {
 	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10}
 }
+func (l *FirewallCaster) GetModifierEntry() *donburi.Entry {
+	return l.ModEntry
+}
+func (l *FirewallCaster) SetModifier(e *donburi.Entry) {
+	l.ModEntry = e
+}
 func (f *FirewallCaster) GetDamage() int {
+	if f.ModEntry != nil {
+		mod := component.CasterModifier.Get(f.ModEntry)
+		return f.Damage + mod.DamageModifier
+	}
 	return f.Damage
 }
 func (l *FirewallCaster) GetDescription() string {
@@ -70,7 +82,7 @@ func (l *FirewallCaster) GetDescription() string {
 func (l *FirewallCaster) GetName() string {
 	return "Firewall"
 }
-func (f *FirewallCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
+func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
 	if curEn >= f.Cost {
 		ensource.SetEn(curEn - f.Cost)
@@ -87,9 +99,19 @@ func (f *FirewallCaster) Cast(ensource ENSetGetter, ecs *ecs.ECS) {
 		}
 		gridPos := component.GridPos.Get(playerId)
 		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage)
+		if f.ModEntry.HasComponent(component.PostAtkModifier) {
+			l := component.PostAtkModifier.GetValue(f.ModEntry)
+			if l != nil {
+				l(ecs)
+			}
+		}
 	}
 }
 func (f *FirewallCaster) GetCost() int {
+	if f.ModEntry != nil {
+		mod := component.CasterModifier.Get(f.ModEntry)
+		return f.Cost + mod.CostModifier
+	}
 	return f.Cost
 }
 func (f *FirewallCaster) GetIcon() *ebiten.Image {
@@ -99,5 +121,9 @@ func (f *FirewallCaster) GetCooldown() time.Time {
 	return f.nextCooldown
 }
 func (f *FirewallCaster) GetCooldownDuration() time.Duration {
+	if f.ModEntry != nil {
+		mod := component.CasterModifier.Get(f.ModEntry)
+		return f.Cooldown + mod.CooldownModifer
+	}
 	return f.Cooldown
 }

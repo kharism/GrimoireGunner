@@ -9,6 +9,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
@@ -37,8 +38,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 	playerSprite := component.Sprite.Get(playerEntry).Image
 	playerScrPos := component.ScreenPos.Get(playerEntry)
 	bounds := playerSprite.Bounds()
-	if CurLoadOut[0] != nil {
-		icon := CurLoadOut[0].GetIcon()
+	if loadout.CurLoadOut[0] != nil {
+		icon := loadout.CurLoadOut[0].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(0.75, 0.75)
 		iconBound := icon.Bounds()
@@ -53,7 +54,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation2,
 		}
 		now := time.Now()
-		if CurLoadOut[0].GetCooldown().After(now) {
+		if loadout.CurLoadOut[0].GetCooldown().After(now) {
 			opts := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
@@ -65,7 +66,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := CurLoadOut[0].GetCooldown().Sub(now)
+			dist := loadout.CurLoadOut[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(LoadOutIconStartX)+10, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
@@ -83,7 +84,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
 		}
-		dmgText := CurLoadOut[0].GetDamage()
+		dmgText := loadout.CurLoadOut[0].GetDamage()
 		textTranslate := ebiten.GeoM{}
 		// textTranslate.Translate()
 		textTranslate.Translate(float64(LoadOutIconStartX)+float64(iconBound.Dx())*2, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
@@ -98,8 +99,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		text.Draw(screen, fmt.Sprintf("%.d", dmgText), MonogramFace, &textDrawOpt)
 
 	}
-	if CurLoadOut[1] != nil {
-		icon := CurLoadOut[1].GetIcon()
+	if loadout.CurLoadOut[1] != nil {
+		icon := loadout.CurLoadOut[1].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(0.75, 0.75)
 		iconBound := icon.Bounds()
@@ -114,7 +115,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation2,
 		}
 		now := time.Now()
-		if CurLoadOut[1].GetCooldown().After(now) {
+		if loadout.CurLoadOut[1].GetCooldown().After(now) {
 			opts := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
@@ -125,7 +126,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := CurLoadOut[1].GetCooldown().Sub(now)
+			dist := loadout.CurLoadOut[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
@@ -144,7 +145,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
 		}
-		dmgText := CurLoadOut[1].GetDamage()
+		dmgText := loadout.CurLoadOut[1].GetDamage()
 		textTranslate := ebiten.GeoM{}
 		// textTranslate.Translate()
 		textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*4), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
@@ -160,8 +161,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		// screen.DrawImage(icon, &DrawOp)
 	}
 	Sub1StartIconX := LoadOutIconStartX
-	if SubLoadOut1[0] != nil {
-		icon := SubLoadOut1[0].GetIcon()
+	if loadout.SubLoadOut1[0] != nil {
+		icon := loadout.SubLoadOut1[0].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(2, 2)
 		iconBound := icon.Bounds()
@@ -170,13 +171,13 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation,
 		}
 		now := time.Now()
-		if SubLoadOut1[0].GetCooldown().After(now) {
+		if loadout.SubLoadOut1[0].GetCooldown().After(now) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := SubLoadOut1[0].GetCooldown().Sub(now)
+			dist := loadout.SubLoadOut1[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(Sub1StartIconX+2*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
@@ -194,8 +195,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 		}
 	}
-	if SubLoadOut1[1] != nil {
-		icon := SubLoadOut1[1].GetIcon()
+	if loadout.SubLoadOut1[1] != nil {
+		icon := loadout.SubLoadOut1[1].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(2, 2)
 		iconBound := icon.Bounds()
@@ -204,13 +205,13 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation,
 		}
 		now := time.Now()
-		if SubLoadOut1[1].GetCooldown().After(now) {
+		if loadout.SubLoadOut1[1].GetCooldown().After(now) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := SubLoadOut1[1].GetCooldown().Sub(now)
+			dist := loadout.SubLoadOut1[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(Sub1StartIconX+3*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
@@ -228,8 +229,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 		}
 	}
-	if SubLoadOut2[0] != nil {
-		icon := SubLoadOut2[0].GetIcon()
+	if loadout.SubLoadOut2[0] != nil {
+		icon := loadout.SubLoadOut2[0].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(2, 2)
 		iconBound := icon.Bounds()
@@ -238,13 +239,13 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation,
 		}
 		now := time.Now()
-		if SubLoadOut2[0].GetCooldown().After(now) {
+		if loadout.SubLoadOut2[0].GetCooldown().After(now) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := SubLoadOut2[0].GetCooldown().Sub(now)
+			dist := loadout.SubLoadOut2[0].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
@@ -262,8 +263,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			screen.DrawImage(icon, &DrawOp)
 		}
 	}
-	if SubLoadOut2[1] != nil {
-		icon := SubLoadOut2[1].GetIcon()
+	if loadout.SubLoadOut2[1] != nil {
+		icon := loadout.SubLoadOut2[1].GetIcon()
 		transformation := ebiten.GeoM{}
 		transformation.Scale(2, 2)
 		iconBound := icon.Bounds()
@@ -272,13 +273,13 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			GeoM: transformation,
 		}
 		now := time.Now()
-		if SubLoadOut2[1].GetCooldown().After(now) {
+		if loadout.SubLoadOut2[1].GetCooldown().After(now) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := SubLoadOut2[1].GetCooldown().Sub(now)
+			dist := loadout.SubLoadOut2[1].GetCooldown().Sub(now)
 			textTranslate := ebiten.GeoM{}
 			textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
