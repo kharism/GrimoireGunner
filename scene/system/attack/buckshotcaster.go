@@ -113,7 +113,7 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				ecs.World.Remove(fx)
 			},
 		})
-		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(l.ModEntry)
 			if l != nil {
 				l(ecs)

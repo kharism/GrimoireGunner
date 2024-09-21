@@ -30,7 +30,7 @@ func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
 	return &entity
 }
 
-type CombatSceneDecorator func(*ecs.ECS)
+type CombatSceneDecorator func(*ecs.ECS, *CombatScene)
 
 var Decorators = []CombatSceneDecorator{}
 
@@ -48,7 +48,7 @@ func RandDecorator() CombatSceneDecorator {
 }
 
 // put in 1 rock and 1 cannoneer and 1 rock
-func level1Decorator1(ecs *ecs.ECS) {
+func level1Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
 		Row: 0,
@@ -57,7 +57,7 @@ func level1Decorator1(ecs *ecs.ECS) {
 }
 
 // put 1 bloombomber
-func level1Decorator2(ecs *ecs.ECS) {
+func level1Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
 		Row: 0,
@@ -66,18 +66,22 @@ func level1Decorator2(ecs *ecs.ECS) {
 }
 
 // put 1 gatlinghoul
-func level1Decorator3(ecs *ecs.ECS) {
+func level1Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
 	// enemies.NewGatlingGhoul(ecs, 4, 0)
 	enemies.NewGatlingGhoul(ecs, 4, 3)
 }
 
 // put 1 gatlinghoul and 1 reaper
-func level1Decorator4(ecs *ecs.ECS) {
+func level1Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
 	// enemies.NewGatlingGhoul(ecs, 4, 0)
 	enemies.NewGatlingGhoul(ecs, 4, 3)
 	enemies.NewReaper(ecs, 4, 2)
 }
 
-func Level1Decorator5(ecs *ecs.ECS) {
+func Level1Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
+	LoadBoulder(ecs.World, BoulderParam{
+		Col: 4,
+		Row: 2,
+	})
 	enemies.NewHammerghoul(ecs, 5, 2)
 }

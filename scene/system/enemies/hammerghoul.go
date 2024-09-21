@@ -53,6 +53,8 @@ func HammerGhoulRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 }
 func OnAtkHitExplosion(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	gg := component.Fx.Get(projectile)
+	dmg := component.Damage.Get(projectile).Damage
+	component.Health.Get(receiver).HP -= dmg
 	anim := gg.Animation.(*core.AnimatedImage)
 	anim.Done()
 }

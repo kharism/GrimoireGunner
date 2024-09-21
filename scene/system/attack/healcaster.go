@@ -83,7 +83,7 @@ func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		anim := core.NewMovableImage(assets.HealFx, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: x, Sy: y}))
 		component.Fx.Set(fx, &component.FxData{Animation: anim})
 		component.Transient.Set(fx, &component.TransientData{Start: time.Now(), Duration: 500 * time.Millisecond})
-		if l.ModEntry.HasComponent(component.PostAtkModifier) {
+		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(l.ModEntry)
 			if l != nil {
 				l(ecs)
