@@ -54,7 +54,7 @@ var PixelFontTTF []byte
 //go:embed fonts/monogram.ttf
 var MonogramTTF []byte
 
-//go:embed images/bg_forest/bg.png
+//go:embed images/forrest_path_bg.png
 var bg_forest []byte
 
 //go:embed images/pyro-eyes.png
