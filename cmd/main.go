@@ -53,10 +53,10 @@ func main() {
 		World:        donburi.NewWorld(),
 		LevelLayout:  Level,
 		CurrentLevel: Level.Root,
-		SceneDecor:   Level.Root.Decorator, //scene.RandDecorator(),
-		SubLoadout1:  []loadout.Caster{nil, nil},
-		SubLoadout2:  []loadout.Caster{nil, nil},
-		Inventory:    []scene.ItemInterface{},
+		// SceneDecor:   scene.,
+		SubLoadout1: []loadout.Caster{nil, nil},
+		SubLoadout2: []loadout.Caster{nil, nil},
+		Inventory:   []scene.ItemInterface{},
 	}
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}

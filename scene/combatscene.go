@@ -151,6 +151,9 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	loadout.SubLoadOut1[1] = state.SubLoadout1[1]
 	loadout.SubLoadOut2[0] = state.SubLoadout2[0]
 	loadout.SubLoadOut2[1] = state.SubLoadout2[1]
+	if state.CurrentLevel != nil && state.CurrentLevel.SelectedStage != nil {
+		state.CurrentLevel.SelectedStage.DecorSceneData(s.data)
+	}
 	if state.SceneDecor != nil {
 		state.SceneDecor(s.ecs, s)
 		s.sandboxMode = false
