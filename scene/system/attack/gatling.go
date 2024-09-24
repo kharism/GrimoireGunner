@@ -61,6 +61,9 @@ func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	}
 
 }
+func (l *GatlingCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *GatlingCaster) GetModifierEntry() *donburi.Entry {
 	return l.ModEntry
 }

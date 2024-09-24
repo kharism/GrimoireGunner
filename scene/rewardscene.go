@@ -221,6 +221,7 @@ func (s *RewardScene) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 }
 func (s *RewardScene) Unload() *SceneData {
 	// your unload code
+	s.data.CurrentLevel.SelectedStage = nil
 	s.data.SceneDecor = nil
 
 	return s.data

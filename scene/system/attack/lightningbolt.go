@@ -108,6 +108,9 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 	}
 }
+func (l *LightingBoltCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *LightingBoltCaster) GetDamage() int {
 	if l.ModEntry != nil {
 		mod := component.CasterModifier.Get(l.ModEntry)

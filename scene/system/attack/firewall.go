@@ -114,6 +114,9 @@ func (f *FirewallCaster) GetCost() int {
 	}
 	return f.Cost
 }
+func (l *FirewallCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (f *FirewallCaster) GetIcon() *ebiten.Image {
 	return assets.FirewallIcon
 }

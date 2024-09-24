@@ -59,6 +59,9 @@ func AddHeal(ecs *ecs.ECS) {
 	component.Fx.Set(fx, &component.FxData{Animation: anim})
 	component.Transient.Set(fx, &component.TransientData{Start: time.Now(), Duration: 500 * time.Millisecond})
 }
+func (l *HealCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.GetCost() {

@@ -101,7 +101,9 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 	}
 }
-
+func (l *WideSwordCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func OnWideswordHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	DmgComponent := component.Damage.Get(projectile)
 	Health := component.Health.Get(receiver)

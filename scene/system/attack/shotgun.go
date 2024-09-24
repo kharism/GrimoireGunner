@@ -63,7 +63,9 @@ func (l *ShotgunCaster) GetCooldownDuration() time.Duration {
 	}
 	return l.CoolDown
 }
-
+func (l *ShotgunCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {

@@ -73,6 +73,9 @@ func (l *CannonCaster) GetCost() int {
 	}
 	return l.Cost
 }
+func (l *CannonCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *CannonCaster) GetIcon() *ebiten.Image {
 	return assets.CannonIcon
 }

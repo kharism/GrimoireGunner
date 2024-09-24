@@ -17,6 +17,9 @@ type AtkBonusCaster struct {
 func NewAtkBonusCaster() *AtkBonusCaster {
 	return &AtkBonusCaster{nextCooldown: time.Now()}
 }
+func (l *AtkBonusCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (a *AtkBonusCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= a.GetCost() {

@@ -79,6 +79,9 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 	}
 }
+func (l *LongSwordCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *LongSwordCaster) GetCost() int {
 	if l.ModEntry != nil {
 		mod := component.CasterModifier.Get(l.ModEntry)

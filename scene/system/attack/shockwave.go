@@ -162,6 +162,9 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	}
 
 }
+func (l *ShockWaveCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (c *ShockWaveCaster) GetCost() int {
 	if c.ModEntry != nil {
 		mod := component.CasterModifier.Get(c.ModEntry)

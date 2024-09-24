@@ -123,6 +123,9 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	}
 
 }
+func (l *BuckshotCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *BuckshotCaster) GetCost() int {
 	if l.ModEntry != nil {
 		mod := component.CasterModifier.Get(l.ModEntry)
