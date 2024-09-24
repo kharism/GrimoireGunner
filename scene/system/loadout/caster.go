@@ -17,6 +17,8 @@ type Caster interface {
 	GetCooldownDuration() time.Duration
 	GetDamage() int
 
+	ResetCooldown()
+
 	GetDescription() string
 	GetName() string
 }
