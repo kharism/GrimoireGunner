@@ -46,19 +46,26 @@ func (a *Add2ndShotEvent) GetTime() time.Time {
 }
 func DoubleCast(caster loadout.Caster) func(*ecs.ECS, loadout.ENSetGetter) {
 	return func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
-		nextShot := Add2ndShotEvent{time: time.Now().Add(100 * time.Millisecond), ShotFunc: func() {
-			// ff := component.PostAtkModifier.GetValue(entry)
-			var ff component.PostAtkBehaviour
-			if jj, ok := caster.(ModifierGetSetter); ok {
-				ff = jj.GetModifierEntry().PostAtk
-				jj.GetModifierEntry().PostAtk = nil
-				caster.Cast(ensource, ecs)
-				jj.GetModifierEntry().PostAtk = ff
-			}
+		// nextShot := Add2ndShotEvent{time: time.Now().Add(50 * time.Millisecond), ShotFunc: func() {
+		// 	// ff := component.PostAtkModifier.GetValue(entry)
+		// 	var ff component.PostAtkBehaviour
+		// 	if jj, ok := caster.(ModifierGetSetter); ok {
+		// 		ff = jj.GetModifierEntry().PostAtk
+		// 		jj.GetModifierEntry().PostAtk = nil
+		// 		caster.Cast(ensource, ecs)
+		// 		jj.GetModifierEntry().PostAtk = ff
+		// 	}
 
-			// component.PostAtkModifier.SetValue(entry, ff)
-		}}
-		component.EventQueue.AddEvent(&nextShot)
+		// 	// component.PostAtkModifier.SetValue(entry, ff)
+		// }}
+		var ff component.PostAtkBehaviour
+		if jj, ok := caster.(ModifierGetSetter); ok {
+			ff = jj.GetModifierEntry().PostAtk
+			jj.GetModifierEntry().PostAtk = nil
+			caster.Cast(ensource, ecs)
+			jj.GetModifierEntry().PostAtk = ff
+		}
+		// component.EventQueue.AddEvent(&nextShot)
 
 	}
 }
