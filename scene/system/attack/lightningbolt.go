@@ -64,16 +64,16 @@ type LightingBoltCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	Damage       int
-	ModEntry     *donburi.Entry
+	ModEntry     *component.CasterModifierData
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
 	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
-func (l *LightingBoltCaster) GetModifierEntry() *donburi.Entry {
+func (l *LightingBoltCaster) GetModifierEntry() *component.CasterModifierData {
 	return l.ModEntry
 }
-func (l *LightingBoltCaster) SetModifier(e *donburi.Entry) {
+func (l *LightingBoltCaster) SetModifier(e *component.CasterModifierData) {
 	l.ModEntry = e
 }
 func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
@@ -100,10 +100,10 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 		NewLigtningAttack(ecs, param)
 		l.nextCooldown = time.Now().Add(l.CoolDown)
-		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
@@ -113,8 +113,8 @@ func (l *LightingBoltCaster) ResetCooldown() {
 }
 func (l *LightingBoltCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
@@ -126,8 +126,8 @@ func (l *LightingBoltCaster) GetName() string {
 }
 func (l *LightingBoltCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -139,8 +139,8 @@ func (l *LightingBoltCaster) GetCooldown() time.Time {
 }
 func (l *LightingBoltCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.CoolDown + mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + l.ModEntry.CooldownModifer
 	}
 	return l.CoolDown
 }

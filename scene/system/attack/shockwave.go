@@ -156,7 +156,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		if c.ModEntry != nil && c.ModEntry.HasComponent(component.PostAtkModifier) {
 			l := component.PostAtkModifier.GetValue(c.ModEntry)
 			if l != nil {
-				l(ecs)
+				l(ecs, ensource)
 			}
 		}
 	}

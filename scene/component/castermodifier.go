@@ -3,6 +3,7 @@ package component
 import (
 	"time"
 
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -13,8 +14,9 @@ type CasterModifierData struct {
 	CooldownModifer time.Duration
 	CostModifier    int
 	SpecialModifier int
+	PostAtk         PostAtkBehaviour
 }
-type PostAtkBehaviour func(*ecs.ECS)
+type PostAtkBehaviour func(*ecs.ECS, loadout.ENSetGetter)
 
 var CasterModifier = donburi.NewComponentType[CasterModifierData]()
 

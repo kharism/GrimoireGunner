@@ -153,6 +153,12 @@ var heal_icon []byte
 //go:embed images/icon_atkup.png
 var atkup_icon []byte
 
+//go:embed images/icon_hpup.png
+var hpup_icon []byte
+
+//go:embed images/icon_medkit.png
+var medkit_icon []byte
+
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
 
@@ -210,6 +216,8 @@ var NAIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
 var AtkUp *ebiten.Image
+var HPUpIcon *ebiten.Image
+var MedkitIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
@@ -375,6 +383,10 @@ func init() {
 		imgReader := bytes.NewReader(shotgun_icon)
 		ShotgunIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if MedkitIcon == nil {
+		imgReader := bytes.NewReader(medkit_icon)
+		MedkitIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if WideSwordIcon == nil {
 		imgReader := bytes.NewReader(widesword_icon)
 		WideSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -398,6 +410,10 @@ func init() {
 	if ShockwaveIcon == nil {
 		imgReader := bytes.NewReader(shockwave_icon)
 		ShockwaveIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if HPUpIcon == nil {
+		imgReader := bytes.NewReader(hpup_icon)
+		HPUpIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if HealIcon == nil {
 		imgReader := bytes.NewReader(heal_icon)

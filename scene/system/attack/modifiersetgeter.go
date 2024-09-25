@@ -1,8 +1,8 @@
 package attack
 
-import "github.com/yohamta/donburi"
+import "github.com/kharism/grimoiregunner/scene/component"
 
 type ModifierGetSetter interface {
-	GetModifierEntry() *donburi.Entry
-	SetModifier(*donburi.Entry)
+	GetModifierEntry() *component.CasterModifierData
+	SetModifier(*component.CasterModifierData)
 }

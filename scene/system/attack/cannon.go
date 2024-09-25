@@ -8,7 +8,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
-	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -18,7 +17,7 @@ type CannonCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *donburi.Entry
+	ModEntry     *component.CasterModifierData
 }
 
 func NewCannonCaster() *CannonCaster {
@@ -32,15 +31,15 @@ func (l *CannonCaster) GetName() string {
 }
 func (l *CannonCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
-func (l *CannonCaster) GetModifierEntry() *donburi.Entry {
+func (l *CannonCaster) GetModifierEntry() *component.CasterModifierData {
 	return l.ModEntry
 }
-func (l *CannonCaster) SetModifier(e *donburi.Entry) {
+func (l *CannonCaster) SetModifier(e *component.CasterModifierData) {
 	l.ModEntry = e
 }
 func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
@@ -57,10 +56,10 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 		}
-		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
@@ -68,8 +67,8 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 
 func (l *CannonCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -84,8 +83,8 @@ func (l *CannonCaster) GetCooldown() time.Time {
 }
 func (l *CannonCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.CoolDown + mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + l.ModEntry.CooldownModifer
 	}
 	return l.CoolDown
 }

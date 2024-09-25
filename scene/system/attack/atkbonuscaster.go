@@ -34,36 +34,34 @@ func (a *AtkBonusCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		if l, ok := caster.(ModifierGetSetter); ok {
 			mod := l.GetModifierEntry()
 			if mod == nil {
-				entity := ecs.World.Create(component.CasterModifier, component.PostAtkModifier)
-				mod = ecs.World.Entry(entity)
-			} else {
-				if !mod.HasComponent(component.CasterModifier) {
-					mod.AddComponent(component.CasterModifier)
-				}
-				if !mod.HasComponent(component.PostAtkModifier) {
-					mod.AddComponent(component.PostAtkModifier)
-				}
+				// entity := ecs.World.Create(component.CasterModifier, component.PostAtkModifier)
+				mod = &component.CasterModifierData{}
+				l.SetModifier(mod)
 			}
+
+			mod.DamageModifier += 10
+			oriVal := mod.PostAtk
+			mod.PostAtk = RemoveAtk(l, oriVal)
 			l.SetModifier(mod)
-			component.CasterModifier.Get(mod).DamageModifier = 10
-			oriVal := component.PostAtkModifier.GetValue(mod)
-			component.PostAtkModifier.SetValue(mod, RemoveAtk(l, oriVal))
+			// component.PostAtkModifier.SetValue( RemoveAtk(l, oriVal))
 
 		}
 	}
 
 }
-func RemoveAtk(origin ModifierGetSetter, originalFunc func(*ecs.ECS)) func(*ecs.ECS) {
-	return func(ecs *ecs.ECS) {
+func RemoveAtk(origin ModifierGetSetter, originalFunc func(*ecs.ECS, loadout.ENSetGetter)) func(*ecs.ECS, loadout.ENSetGetter) {
+	return func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
 		if originalFunc != nil {
-			originalFunc(ecs)
+			originalFunc(ecs, ensource)
 		}
 
 		mod := origin.GetModifierEntry()
 		// ecs.World.Remove(mod.Entity())
 		// origin.SetModifier(nil)
-		component.CasterModifier.Get(mod).DamageModifier -= 10
-		component.PostAtkModifier.SetValue(mod, originalFunc)
+		// component.CasterModifier.Get(mod).DamageModifier -= 10
+		mod.DamageModifier -= 10
+		// component.PostAtkModifier.SetValue(mod, originalFunc)
+		mod.PostAtk = originalFunc
 		// mod.RemoveComponent(component.PostAtkModifier)
 	}
 }

@@ -499,6 +499,10 @@ type ItemInterface interface {
 	GetName() string
 }
 
+type OnAquireDoer interface {
+	OnAquireDo(*SceneData)
+}
+
 var InventorySceneInstance = &InventoryScene{}
 
 func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
@@ -525,7 +529,7 @@ func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneControlle
 	}
 	ItemSlot = []*core.MovableImage{}
 	for inventoryIdx, j := range r.data.Inventory {
-		if vv, ok := j.(loadout.Caster); ok {
+		if vv, ok := j.(ItemInterface); ok {
 			c := GenerateCard(vv)
 			dim := c.Bounds()
 			newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{

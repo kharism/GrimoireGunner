@@ -7,7 +7,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
-	"github.com/yohamta/donburi"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -36,6 +35,7 @@ func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
 	Level := scene.GenerateLayout1()
+
 	state := &scene.SceneData{
 		Bg:            assets.BgForrest,
 		PlayerHP:      1000,
@@ -50,7 +50,7 @@ func main() {
 		PlayerRow:    1,
 		PlayerCol:    1,
 		Level:        1,
-		World:        donburi.NewWorld(),
+		World:        nil,
 		LevelLayout:  Level,
 		CurrentLevel: Level.Root,
 		// SceneDecor:   scene.,
