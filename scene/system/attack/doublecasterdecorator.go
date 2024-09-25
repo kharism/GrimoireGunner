@@ -14,15 +14,16 @@ type DoubleCastDecor struct {
 	caster   loadout.Caster
 }
 
-func DecorateWithDoubleCast(caster loadout.Caster, ecs *ecs.ECS) loadout.Caster {
+func DecorateWithDoubleCast(caster loadout.Caster) loadout.Caster {
 	if cc, ok := caster.(ModifierGetSetter); ok {
 		// newModifier := ecs.World.Create(component.CasterModifier, component.PostAtkModifier)
 		ll := cc.GetModifierEntry()
 		if ll == nil {
 			ll = &component.CasterModifierData{}
-			ll.PostAtk = DoubleCast(caster)
-		}
 
+		}
+		ll.PostAtk = DoubleCast(caster)
+		cc.SetModifier(ll)
 		// entry := ecs.World.Entry(newModifier)
 		// component.PostAtkModifier.SetValue(entry, DoubleCast(caster, entry))
 		// cc.SetModifier(entry)
