@@ -17,13 +17,13 @@ type ShotgunCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *ShotgunCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *ShotgunCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *ShotgunCaster) SetModifier(e *component.CasterModifierData) {
+func (l *ShotgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewShotgunCaster() *ShotgunCaster {

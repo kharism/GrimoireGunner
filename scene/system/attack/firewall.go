@@ -57,16 +57,16 @@ type FirewallCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
 func NewFirewallCaster() *FirewallCaster {
 	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10}
 }
-func (l *FirewallCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *FirewallCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *FirewallCaster) SetModifier(e *component.CasterModifierData) {
+func (l *FirewallCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func (f *FirewallCaster) GetDamage() int {

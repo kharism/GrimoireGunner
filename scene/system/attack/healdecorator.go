@@ -16,12 +16,12 @@ type HealDecor struct {
 }
 
 func DecorateWithHeal(caster loadout.Caster, ecs_ *ecs.ECS) loadout.Caster {
-	if cc, ok := caster.(ModifierGetSetter); ok {
-		var mod *component.CasterModifierData
+	if cc, ok := caster.(loadout.ModifierGetSetter); ok {
+		var mod *loadout.CasterModifierData
 		if cc.GetModifierEntry() != nil {
 			mod = cc.GetModifierEntry()
 		} else {
-			mod = &component.CasterModifierData{}
+			mod = &loadout.CasterModifierData{}
 		}
 		if mod.PostAtk != nil {
 			mod.PostAtk = func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {

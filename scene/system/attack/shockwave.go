@@ -78,7 +78,7 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func (l *ShockWaveCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
+		mod := loadout.CasterModifier.Get(l.ModEntry)
 		return l.Damage + mod.DamageModifier
 	}
 	return l.Damage
@@ -153,8 +153,8 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		)
 		// shockwaveAnim.MovableImage
 		component.Fx.Set(shockwaveEntry, &component.FxData{Animation: shockwaveAnim})
-		if c.ModEntry != nil && c.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(c.ModEntry)
+		if c.ModEntry != nil && c.ModEntry.HasComponent(loadout.PostAtkModifier) {
+			l := loadout.PostAtkModifier.GetValue(c.ModEntry)
 			if l != nil {
 				l(ecs, ensource)
 			}
@@ -167,7 +167,7 @@ func (l *ShockWaveCaster) ResetCooldown() {
 }
 func (c *ShockWaveCaster) GetCost() int {
 	if c.ModEntry != nil {
-		mod := component.CasterModifier.Get(c.ModEntry)
+		mod := loadout.CasterModifier.Get(c.ModEntry)
 		return c.Cost + mod.CostModifier
 	}
 	return c.Cost
@@ -180,7 +180,7 @@ func (c *ShockWaveCaster) GetCooldown() time.Time {
 }
 func (l *ShockWaveCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
+		mod := loadout.CasterModifier.Get(l.ModEntry)
 		return mod.CooldownModifer
 	}
 	return l.Cooldown

@@ -5,7 +5,6 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
-	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -31,11 +30,11 @@ func (a *AtkBonusCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		} else {
 			caster = loadout.CurLoadOut[0]
 		}
-		if l, ok := caster.(ModifierGetSetter); ok {
+		if l, ok := caster.(loadout.ModifierGetSetter); ok {
 			mod := l.GetModifierEntry()
 			if mod == nil {
 				// entity := ecs.World.Create(component.CasterModifier, component.PostAtkModifier)
-				mod = &component.CasterModifierData{}
+				mod = &loadout.CasterModifierData{}
 				l.SetModifier(mod)
 			}
 
@@ -49,7 +48,7 @@ func (a *AtkBonusCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	}
 
 }
-func RemoveAtk(origin ModifierGetSetter, originalFunc func(*ecs.ECS, loadout.ENSetGetter)) func(*ecs.ECS, loadout.ENSetGetter) {
+func RemoveAtk(origin loadout.ModifierGetSetter, originalFunc func(*ecs.ECS, loadout.ENSetGetter)) func(*ecs.ECS, loadout.ENSetGetter) {
 	return func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
 		if originalFunc != nil {
 			originalFunc(ecs, ensource)

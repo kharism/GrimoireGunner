@@ -64,16 +64,16 @@ type LightingBoltCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	Damage       int
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
 	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
 }
-func (l *LightingBoltCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *LightingBoltCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *LightingBoltCaster) SetModifier(e *component.CasterModifierData) {
+func (l *LightingBoltCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {

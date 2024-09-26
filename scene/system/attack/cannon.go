@@ -17,7 +17,7 @@ type CannonCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
 func NewCannonCaster() *CannonCaster {
@@ -36,12 +36,13 @@ func (l *CannonCaster) GetDamage() int {
 	}
 	return l.Damage
 }
-func (l *CannonCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *CannonCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *CannonCaster) SetModifier(e *component.CasterModifierData) {
+func (l *CannonCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
+
 func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.GetCost() {

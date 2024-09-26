@@ -26,13 +26,13 @@ type LongSwordCaster struct {
 	Cost         int
 	Damage       int
 	nextCooldown time.Time
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *LongSwordCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *LongSwordCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *LongSwordCaster) SetModifier(e *component.CasterModifierData) {
+func (l *LongSwordCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 

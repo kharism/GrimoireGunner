@@ -20,7 +20,7 @@ type GatlingCaster struct {
 	ShotAmount       int
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
-	ModEntry         *component.CasterModifierData
+	ModEntry         *loadout.CasterModifierData
 }
 
 func NewGatlingCastor() *GatlingCaster {
@@ -64,10 +64,10 @@ func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 func (l *GatlingCaster) ResetCooldown() {
 	l.nextCooldown = time.Now()
 }
-func (l *GatlingCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *GatlingCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *GatlingCaster) SetModifier(e *component.CasterModifierData) {
+func (l *GatlingCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 

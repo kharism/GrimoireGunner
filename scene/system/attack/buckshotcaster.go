@@ -20,13 +20,13 @@ type BuckshotCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *component.CasterModifierData
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *BuckshotCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *BuckshotCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *BuckshotCaster) SetModifier(e *component.CasterModifierData) {
+func (l *BuckshotCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewBuckshotCaster() *BuckshotCaster {

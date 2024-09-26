@@ -19,7 +19,7 @@ type HealCaster struct {
 	Charge           int
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
-	ModEntry         *component.CasterModifierData
+	ModEntry         *loadout.CasterModifierData
 }
 
 func NewHealCaster() *HealCaster {
@@ -31,10 +31,10 @@ func (l *HealCaster) GetDescription() string {
 func (l *HealCaster) GetName() string {
 	return "Heal"
 }
-func (l *HealCaster) GetModifierEntry() *component.CasterModifierData {
+func (l *HealCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *HealCaster) SetModifier(e *component.CasterModifierData) {
+func (l *HealCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 

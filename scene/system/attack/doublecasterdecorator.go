@@ -4,22 +4,21 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
 
 type DoubleCastDecor struct {
-	ensource loadout.ENSetGetter
-	caster   loadout.Caster
+	// ensource loadout.ENSetGetter
+	caster loadout.Caster
 }
 
 func DecorateWithDoubleCast(caster loadout.Caster) loadout.Caster {
-	if cc, ok := caster.(ModifierGetSetter); ok {
+	if cc, ok := caster.(loadout.ModifierGetSetter); ok {
 		// newModifier := ecs.World.Create(component.CasterModifier, component.PostAtkModifier)
 		ll := cc.GetModifierEntry()
 		if ll == nil {
-			ll = &component.CasterModifierData{}
+			ll = &loadout.CasterModifierData{}
 
 		}
 		ll.PostAtk = DoubleCast(caster)
@@ -27,7 +26,7 @@ func DecorateWithDoubleCast(caster loadout.Caster) loadout.Caster {
 		// entry := ecs.World.Entry(newModifier)
 		// component.PostAtkModifier.SetValue(entry, DoubleCast(caster, entry))
 		// cc.SetModifier(entry)
-		return caster
+		return &DoubleCastDecor{caster: caster}
 	} else {
 		return nil
 	}
@@ -58,8 +57,8 @@ func DoubleCast(caster loadout.Caster) func(*ecs.ECS, loadout.ENSetGetter) {
 
 		// 	// component.PostAtkModifier.SetValue(entry, ff)
 		// }}
-		var ff component.PostAtkBehaviour
-		if jj, ok := caster.(ModifierGetSetter); ok {
+		var ff loadout.PostAtkBehaviour
+		if jj, ok := caster.(loadout.ModifierGetSetter); ok {
 			ff = jj.GetModifierEntry().PostAtk
 			jj.GetModifierEntry().PostAtk = nil
 			caster.Cast(ensource, ecs)
@@ -69,10 +68,22 @@ func DoubleCast(caster loadout.Caster) func(*ecs.ECS, loadout.ENSetGetter) {
 
 	}
 }
+func (l *DoubleCastDecor) GetModifierEntry() *loadout.CasterModifierData {
+	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
+		return cc.GetModifierEntry()
+	}
+	return nil
+}
+func (l *DoubleCastDecor) SetModifier(e *loadout.CasterModifierData) {
+	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
+		cc.SetModifier(e)
+	}
+}
 func (h *DoubleCastDecor) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
-	h.ensource = ensource
+	// h.ensource = ensource
 	h.caster.Cast(ensource, ecs)
 }
+
 func (h *DoubleCastDecor) GetCost() int {
 	return h.caster.GetCost() * 2
 }
@@ -94,8 +105,8 @@ func (h *DoubleCastDecor) ResetCooldown() {
 }
 
 func (h *DoubleCastDecor) GetDescription() string {
-	return h.caster.GetDescription() + "\nHeal 5HP on cast"
+	return h.caster.GetDescription() + "\nDouble cost/cast"
 }
 func (h *DoubleCastDecor) GetName() string {
-	return h.caster.GetName() + " +cast another one"
+	return h.caster.GetName() + " +Double"
 }
