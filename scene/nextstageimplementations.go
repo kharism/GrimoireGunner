@@ -27,3 +27,17 @@ func NewCombatNextStage(decorator CombatSceneDecorator) *CombatSceneNextStage {
 	}
 	return &CombatSceneNextStage{decorator: RandCombatDecorator()}
 }
+
+type RestSceneNextStage struct {
+}
+
+func (c *RestSceneNextStage) DecorSceneData(data *SceneData) {
+
+}
+
+func (c *RestSceneNextStage) GetNextStageTrigger() stagehand.SceneTransitionTrigger {
+	return TriggerToRest
+}
+func (c *RestSceneNextStage) GetIcon() *ebiten.Image {
+	return assets.RestIcon
+}

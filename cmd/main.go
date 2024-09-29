@@ -74,6 +74,10 @@ func main() {
 		},
 		scene.StageSelectInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+			stagehand.Directive[*scene.SceneData]{Dest: scene.RestSceneInstance, Trigger: scene.TriggerToRest},
+		},
+		scene.RestSceneInstance: {
+			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 	}
 	manager := stagehand.NewSceneDirector[*scene.SceneData](combatScene, state, ruleSet)

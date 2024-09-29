@@ -50,11 +50,12 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		closestTarget := HitScanGetNearestTarget(ecs)
 		if closestTarget != nil {
-			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
+			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 			grid1Entry := ecs.World.Entry(grid1)
 			targetGridPos := component.GridPos.Get(closestTarget)
 			component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col, Row: targetGridPos.Row})
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
+			component.Transient.Set(grid1Entry, &component.TransientData{Start: time.Now(), Duration: 100 * time.Millisecond})
 			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
 		}
 		if l.ModEntry != nil {

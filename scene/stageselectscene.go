@@ -55,6 +55,8 @@ func GenerateLayout1() *Level {
 	LevelLayout1.Root.NextNode = []*LevelNode{
 		CurNode1, CurNode2,
 	}
+	CurNode1.SelectedStage = &RestSceneNextStage{}
+	CurNode1.Icon = assets.RestIcon
 	for i := 0; i < 4; i++ {
 		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
 		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}

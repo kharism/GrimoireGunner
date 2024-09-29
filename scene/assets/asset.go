@@ -57,6 +57,9 @@ var MonogramTTF []byte
 //go:embed images/forrest_path_bg.png
 var bg_forest []byte
 
+//go:embed images/restbg.png
+var bg_rest []byte
+
 //go:embed images/pyro-eyes.png
 var pyro_eyes []byte
 
@@ -165,6 +168,9 @@ var shotgun_icon []byte
 //go:embed images/icon_battle.png
 var battle_icon []byte
 
+//go:embed images/icon_rest.png
+var rest_icon []byte
+
 //go:embed images/icon_firewall.png
 var firewall_icon []byte
 
@@ -183,6 +189,7 @@ var DamageGrid *ebiten.Image
 var TargetedGrid *ebiten.Image
 var Bomb1 *ebiten.Image
 var Bg *ebiten.Image
+var BgRest *ebiten.Image
 var BgForrest *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
@@ -218,6 +225,7 @@ var HealIcon *ebiten.Image
 var AtkUp *ebiten.Image
 var HPUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
+var RestIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
@@ -301,6 +309,10 @@ func init() {
 	if Player1Attack == nil {
 		imgReader := bytes.NewReader(player1attack)
 		Player1Attack, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BgRest == nil {
+		imgReader := bytes.NewReader(bg_rest)
+		BgRest, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Bomb1 == nil {
 		imgReader := bytes.NewReader(bomb1)
@@ -398,6 +410,10 @@ func init() {
 	if BattleIcon == nil {
 		imgReader := bytes.NewReader(battle_icon)
 		BattleIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if RestIcon == nil {
+		imgReader := bytes.NewReader(rest_icon)
+		RestIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if AtkUp == nil {
 		imgReader := bytes.NewReader(atkup_icon)
