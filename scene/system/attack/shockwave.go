@@ -168,6 +168,9 @@ func (l *ShockWaveCaster) ResetCooldown() {
 func (c *ShockWaveCaster) GetCost() int {
 	if c.ModEntry != nil {
 		mod := loadout.CasterModifier.Get(c.ModEntry)
+		if c.Cost+mod.CostModifier < 0 {
+			return 0
+		}
 		return c.Cost + mod.CostModifier
 	}
 	return c.Cost

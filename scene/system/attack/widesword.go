@@ -113,6 +113,9 @@ func OnWideswordHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 func (l *WideSwordCaster) GetCost() int {
 	if l.ModEntry != nil {
 		mod := loadout.CasterModifier.Get(l.ModEntry)
+		if l.Cost+mod.CostModifier < 0 {
+			return 0
+		}
 		return l.Cost + mod.CostModifier
 	}
 	return l.Cost

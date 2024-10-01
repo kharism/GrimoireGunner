@@ -70,6 +70,9 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 func (l *CannonCaster) GetCost() int {
 	if l.ModEntry != nil {
 		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
+			return 0
+		}
 		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost

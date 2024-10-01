@@ -110,6 +110,9 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 func (f *FirewallCaster) GetCost() int {
 	if f.ModEntry != nil {
 		// mod := component.CasterModifier.Get(f.ModEntry)
+		if f.Cost+f.ModEntry.CostModifier < 0 {
+			return 0
+		}
 		return f.Cost + f.ModEntry.CostModifier
 	}
 	return f.Cost
