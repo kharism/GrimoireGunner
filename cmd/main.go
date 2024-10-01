@@ -56,7 +56,10 @@ func main() {
 		// SceneDecor:   scene.,
 		SubLoadout1: []loadout.Caster{nil, nil},
 		SubLoadout2: []loadout.Caster{nil, nil},
-		Inventory:   []scene.ItemInterface{},
+		Inventory: []scene.ItemInterface{
+			attack.NewGatlingCastor(),
+			attack.NewHealCaster(),
+		},
 	}
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}
@@ -79,8 +82,11 @@ func main() {
 		scene.RestSceneInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
+		scene.WorkshopSceneInstance: {
+			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+		},
 	}
-	manager := stagehand.NewSceneDirector[*scene.SceneData](combatScene, state, ruleSet)
+	manager := stagehand.NewSceneDirector[*scene.SceneData](scene.WorkshopSceneInstance, state, ruleSet)
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)
 	}

@@ -15,7 +15,7 @@ type HealDecor struct {
 	caster loadout.Caster
 }
 
-func DecorateWithHeal(caster loadout.Caster, ecs_ *ecs.ECS) loadout.Caster {
+func DecorateWithHeal(caster loadout.Caster) loadout.Caster {
 	if cc, ok := caster.(loadout.ModifierGetSetter); ok {
 		var mod *loadout.CasterModifierData
 		if cc.GetModifierEntry() != nil {
@@ -32,7 +32,7 @@ func DecorateWithHeal(caster loadout.Caster, ecs_ *ecs.ECS) loadout.Caster {
 			mod.PostAtk = AddHeal
 		}
 		// cc.SetModifier(entry)
-		return caster
+		return &HealDecor{caster}
 	} else {
 		return nil
 	}
