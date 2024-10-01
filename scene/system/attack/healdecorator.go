@@ -31,7 +31,7 @@ func DecorateWithHeal(caster loadout.Caster) loadout.Caster {
 		} else {
 			mod.PostAtk = AddHeal
 		}
-		// cc.SetModifier(entry)
+		cc.SetModifier(mod)
 		return &HealDecor{caster}
 	} else {
 		return nil
@@ -61,6 +61,17 @@ func AddHeal(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
 }
 func (h *HealDecor) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	h.caster.Cast(ensource, ecs)
+}
+func (l *HealDecor) GetModifierEntry() *loadout.CasterModifierData {
+	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
+		return cc.GetModifierEntry()
+	}
+	return nil
+}
+func (l *HealDecor) SetModifier(e *loadout.CasterModifierData) {
+	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
+		cc.SetModifier(e)
+	}
 }
 func (h *HealDecor) GetCost() int {
 	return h.caster.GetCost()

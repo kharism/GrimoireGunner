@@ -60,6 +60,9 @@ var bg_forest []byte
 //go:embed images/restbg.png
 var bg_rest []byte
 
+//go:embed images/workbench.png
+var bg_workbench []byte
+
 //go:embed images/pyro-eyes.png
 var pyro_eyes []byte
 
@@ -190,6 +193,7 @@ var TargetedGrid *ebiten.Image
 var Bomb1 *ebiten.Image
 var Bg *ebiten.Image
 var BgRest *ebiten.Image
+var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
@@ -333,6 +337,10 @@ func init() {
 	if BgForrest == nil {
 		imgReader := bytes.NewReader(bg_forest)
 		BgForrest, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BgWorkbench == nil {
+		imgReader := bytes.NewReader(bg_workbench)
+		BgWorkbench, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if DamageGrid == nil {
 		imgReader := bytes.NewReader(tileDmgPng)

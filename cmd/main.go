@@ -45,7 +45,7 @@ func main() {
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
 			attack.NewAtkBonusCaster(),
-			attack.DecorateWithDoubleCast(attack.NewCannonCaster()),
+			attack.NewGatlingCastor(),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,
@@ -56,9 +56,9 @@ func main() {
 		// SceneDecor:   scene.,
 		SubLoadout1: []loadout.Caster{nil, nil},
 		SubLoadout2: []loadout.Caster{nil, nil},
-		Inventory: []scene.ItemInterface{
-			attack.NewGatlingCastor(),
-			attack.NewHealCaster(),
+		Inventory:   []scene.ItemInterface{
+			// attack.NewCannonCaster(),
+			// attack.NewHealCaster(),
 		},
 	}
 	combatScene := &scene.CombatScene{}
@@ -86,7 +86,7 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 	}
-	manager := stagehand.NewSceneDirector[*scene.SceneData](scene.WorkshopSceneInstance, state, ruleSet)
+	manager := stagehand.NewSceneDirector[*scene.SceneData](combatScene, state, ruleSet)
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)
 	}
