@@ -21,6 +21,7 @@ func GenerateReward() ItemInterface {
 		attack.NewLightningBolCaster(),
 		&Medkit{},
 		&HPUp{},
+		&ENUp{},
 	}
 	rnd := rand.Int() % len(items)
 	return items[rnd]

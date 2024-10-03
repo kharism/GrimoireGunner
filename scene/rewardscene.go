@@ -217,8 +217,8 @@ func (r *RewardScene) Load(state *SceneData, manager stagehand.SceneController[*
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
 	casterPick[0] = GenerateReward()
-	casterPick[1] = &Medkit{}
-	casterPick[2] = GenerateCaster()
+	casterPick[1] = GenerateReward()
+	casterPick[2] = GenerateReward()
 	cards = []*core.MovableImage{nil, nil, nil}
 
 	card1 := GenerateCard(casterPick[0])

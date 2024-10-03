@@ -41,3 +41,17 @@ func (c *RestSceneNextStage) GetNextStageTrigger() stagehand.SceneTransitionTrig
 func (c *RestSceneNextStage) GetIcon() *ebiten.Image {
 	return assets.RestIcon
 }
+
+type WorkshopSceneNextStage struct {
+}
+
+func (c *WorkshopSceneNextStage) DecorSceneData(data *SceneData) {
+
+}
+
+func (c *WorkshopSceneNextStage) GetNextStageTrigger() stagehand.SceneTransitionTrigger {
+	return TriggerToShop
+}
+func (c *WorkshopSceneNextStage) GetIcon() *ebiten.Image {
+	return assets.WorkbenchIcon
+}

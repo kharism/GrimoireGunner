@@ -159,8 +159,14 @@ var heal_icon []byte
 //go:embed images/icon_atkup.png
 var atkup_icon []byte
 
+//go:embed images/icon_workbench.png
+var workbench_icon []byte
+
 //go:embed images/icon_hpup.png
 var hpup_icon []byte
+
+//go:embed images/icon_enup.png
+var enup_icon []byte
 
 //go:embed images/icon_medkit.png
 var medkit_icon []byte
@@ -228,8 +234,10 @@ var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
 var AtkUp *ebiten.Image
 var HPUpIcon *ebiten.Image
+var ENUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
 var RestIcon *ebiten.Image
+var WorkbenchIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
@@ -423,6 +431,10 @@ func init() {
 		imgReader := bytes.NewReader(rest_icon)
 		RestIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if WorkbenchIcon == nil {
+		imgReader := bytes.NewReader(workbench_icon)
+		WorkbenchIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if AtkUp == nil {
 		imgReader := bytes.NewReader(atkup_icon)
 		AtkUp, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -438,6 +450,10 @@ func init() {
 	if HPUpIcon == nil {
 		imgReader := bytes.NewReader(hpup_icon)
 		HPUpIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ENUpIcon == nil {
+		imgReader := bytes.NewReader(enup_icon)
+		ENUpIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if HealIcon == nil {
 		imgReader := bytes.NewReader(heal_icon)
