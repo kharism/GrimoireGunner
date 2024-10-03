@@ -42,7 +42,7 @@ func init() {
 		level1Decorator4,
 	}
 }
-func RandDecorator() CombatSceneDecorator {
+func RandCombatDecorator() CombatSceneDecorator {
 	i := rand.Int() % len(Decorators)
 	return Decorators[i]
 }

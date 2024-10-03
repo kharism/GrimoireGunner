@@ -64,7 +64,7 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 				component.GridPos.Set(entry, &component.GridPosComponentData{Row: jj[0], Col: jj[1]})
 				component.Damage.Set(entry, &component.DamageData{Damage: 20})
 				component.OnHit.SetValue(entry, GatlingGhoulOnAtkHit)
-				component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: time.Second})
+				component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 200 * time.Millisecond})
 				screenX, screenY := assets.GridCoord2Screen(jj[0], jj[1])
 				screenX -= 50
 				screenY -= 50

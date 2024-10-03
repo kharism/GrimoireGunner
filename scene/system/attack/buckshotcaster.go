@@ -20,13 +20,13 @@ type BuckshotCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *BuckshotCaster) GetModifierEntry() *donburi.Entry {
+func (l *BuckshotCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *BuckshotCaster) SetModifier(e *donburi.Entry) {
+func (l *BuckshotCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewBuckshotCaster() *BuckshotCaster {
@@ -113,20 +113,26 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				ecs.World.Remove(fx)
 			},
 		})
-		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 		component.Fx.Set(fxEnt, &component.FxData{Animation: buckShotAnim})
 	}
 
 }
+func (l *BuckshotCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *BuckshotCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
+			return 0
+		}
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -138,8 +144,8 @@ func (l *BuckshotCaster) GetCooldown() time.Time {
 }
 func (l *BuckshotCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.CoolDown + mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CoolDown + l.ModEntry.CooldownModifer
 	}
 	return l.CoolDown
 }

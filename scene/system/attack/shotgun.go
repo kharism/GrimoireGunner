@@ -8,7 +8,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
-	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -18,13 +17,13 @@ type ShotgunCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	CoolDown     time.Duration
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *ShotgunCaster) GetModifierEntry() *donburi.Entry {
+func (l *ShotgunCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *ShotgunCaster) SetModifier(e *donburi.Entry) {
+func (l *ShotgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewShotgunCaster() *ShotgunCaster {
@@ -38,15 +37,18 @@ func (l *ShotgunCaster) GetName() string {
 }
 func (l *ShotgunCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
 func (l *ShotgunCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
+			return 0
+		}
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -58,12 +60,14 @@ func (l *ShotgunCaster) GetCooldown() time.Time {
 }
 func (l *ShotgunCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.ModEntry.CooldownModifer
 	}
 	return l.CoolDown
 }
-
+func (l *ShotgunCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
@@ -88,10 +92,10 @@ func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				component.Transient.Set(grid1Entry, &component.TransientData{Duration: 1 * time.Second, Start: time.Now()})
 			}
 		}
-		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}

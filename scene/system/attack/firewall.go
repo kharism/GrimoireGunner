@@ -57,22 +57,22 @@ type FirewallCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
 }
 
 func NewFirewallCaster() *FirewallCaster {
 	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10}
 }
-func (l *FirewallCaster) GetModifierEntry() *donburi.Entry {
+func (l *FirewallCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *FirewallCaster) SetModifier(e *donburi.Entry) {
+func (l *FirewallCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func (f *FirewallCaster) GetDamage() int {
 	if f.ModEntry != nil {
-		mod := component.CasterModifier.Get(f.ModEntry)
-		return f.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(f.ModEntry)
+		return f.Damage + f.ModEntry.DamageModifier
 	}
 	return f.Damage
 }
@@ -99,20 +99,26 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 		gridPos := component.GridPos.Get(playerId)
 		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage)
-		if f.ModEntry != nil && f.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(f.ModEntry)
-			if l != nil {
-				l(ecs)
+		if f.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(f.ModEntry)
+			if f.ModEntry.PostAtk != nil {
+				f.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
 }
 func (f *FirewallCaster) GetCost() int {
 	if f.ModEntry != nil {
-		mod := component.CasterModifier.Get(f.ModEntry)
-		return f.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(f.ModEntry)
+		if f.Cost+f.ModEntry.CostModifier < 0 {
+			return 0
+		}
+		return f.Cost + f.ModEntry.CostModifier
 	}
 	return f.Cost
+}
+func (l *FirewallCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
 }
 func (f *FirewallCaster) GetIcon() *ebiten.Image {
 	return assets.FirewallIcon
@@ -122,8 +128,8 @@ func (f *FirewallCaster) GetCooldown() time.Time {
 }
 func (f *FirewallCaster) GetCooldownDuration() time.Duration {
 	if f.ModEntry != nil {
-		mod := component.CasterModifier.Get(f.ModEntry)
-		return f.Cooldown + mod.CooldownModifer
+		// mod := component.CasterModifier.Get(f.ModEntry)
+		return f.Cooldown + f.ModEntry.CooldownModifer
 	}
 	return f.Cooldown
 }

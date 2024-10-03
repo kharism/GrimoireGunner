@@ -24,11 +24,18 @@ type StageSelect struct {
 }
 type LevelNode struct {
 	Id string
+	// Trigger     stagehand.SceneTransitionTrigger
+	Icon          *ebiten.Image
+	Tier          int
+	SelectedStage nextStagePicker
+	// CombatDecor CombatSceneDecorator
+	NextNode []*LevelNode
+}
 
-	Icon      *ebiten.Image
-	Tier      int
-	Decorator CombatSceneDecorator
-	NextNode  []*LevelNode
+type nextStagePicker interface {
+	DecorSceneData(*SceneData)
+	GetNextStageTrigger() stagehand.SceneTransitionTrigger
+	GetIcon() *ebiten.Image
 }
 type Level struct {
 	Root *LevelNode
@@ -37,22 +44,33 @@ type Level struct {
 func GenerateLayout1() *Level {
 	var LevelLayout1 = &Level{
 		Root: &LevelNode{
-			Id:        "0",
-			Tier:      0,
-			Decorator: Level1Decorator5,
-			Icon:      assets.BattleIcon,
+			Id:            "0",
+			Tier:          0,
+			SelectedStage: NewCombatNextStage(Level1Decorator5),
+			Icon:          assets.BattleIcon,
 		},
 	}
-	CurNode1 := &LevelNode{Id: "1", Tier: 1, Decorator: RandDecorator(), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
-	CurNode2 := &LevelNode{Id: "2", Tier: 1, Decorator: RandDecorator(), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	CurNode1 := &LevelNode{Id: "1", Tier: 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	CurNode2 := &LevelNode{Id: "2", Tier: 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
 	LevelLayout1.Root.NextNode = []*LevelNode{
 		CurNode1, CurNode2,
 	}
 	for i := 0; i < 4; i++ {
-		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, Decorator: RandDecorator(), NextNode: []*LevelNode{}}
-		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, Decorator: RandDecorator(), NextNode: []*LevelNode{}}
+		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
+		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
 		CurNode1.NextNode = append(CurNode1.NextNode, NewNodeA)
 		CurNode2.NextNode = append(CurNode2.NextNode, NewNodeB)
+		if i == 3 {
+			if rand.Int()%2 == 0 {
+				NewNodeA.SelectedStage = &RestSceneNextStage{}
+				NewNodeB.SelectedStage = &WorkshopSceneNextStage{}
+			} else {
+				NewNodeA.SelectedStage = &WorkshopSceneNextStage{}
+				NewNodeB.SelectedStage = &RestSceneNextStage{}
+			}
+			NewNodeA.Icon = NewNodeA.SelectedStage.GetIcon()
+			NewNodeB.Icon = NewNodeB.SelectedStage.GetIcon()
+		}
 		if rand.Int()%10 <= 3 {
 			// add cros section
 			if rand.Int()%2 == 0 {
@@ -254,7 +272,7 @@ func (r *StageSelect) Update() error {
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		pickedStage = r.data.CurrentLevel.NextNode[stageCursorIndex]
-		r.sm.ProcessTrigger(TriggerToCombat)
+		r.sm.ProcessTrigger(pickedStage.SelectedStage.GetNextStageTrigger())
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
 		// pickedStage = tiers[r.data.CurrentLevel.Tier+1][stageCursorIndex]
@@ -302,7 +320,8 @@ func (s *StageSelect) Unload() *SceneData {
 	if pickedStage != nil {
 		RegisterCombatClear = false
 		s.data.CurrentLevel = pickedStage
-		s.data.SceneDecor = pickedStage.Decorator
+		pickedStage.SelectedStage.DecorSceneData(s.data)
+		// s.data.SceneDecor = pickedStage.CombatDecor
 	}
 	// s.data.CurrentLevel = tiers[s.data.CurrentLevel.Tier][stageCursorIndex]
 	return s.data

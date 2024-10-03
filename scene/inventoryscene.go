@@ -37,25 +37,25 @@ type swapPayload struct {
 	dest   *positionSwap
 }
 
-func GetItem(pos *positionSwap, r *InventoryScene) ItemInterface {
+func GetItem(pos *positionSwap, data *SceneData) ItemInterface {
 	if pos.itemCursorYPos == 0 {
 		switch pos.XPos {
 		case 0:
-			return r.data.MainLoadout[0]
+			return data.MainLoadout[0]
 		case 1:
-			return r.data.MainLoadout[1]
+			return data.MainLoadout[1]
 		case 2:
-			return r.data.SubLoadout1[0]
+			return data.SubLoadout1[0]
 		case 3:
-			return r.data.SubLoadout1[1]
+			return data.SubLoadout1[1]
 		case 4:
-			return r.data.SubLoadout2[0]
+			return data.SubLoadout2[0]
 		case 5:
-			return r.data.SubLoadout2[1]
+			return data.SubLoadout2[1]
 		}
 		return nil
 	} else {
-		return r.data.Inventory[itemIdx]
+		return data.Inventory[itemIdx]
 	}
 }
 func SetItem(pos *positionSwap, r *InventoryScene, i ItemInterface) error {
@@ -94,8 +94,8 @@ func SetItem(pos *positionSwap, r *InventoryScene, i ItemInterface) error {
 var swapPayloadInstance = &swapPayload{}
 
 func (s *swapPayload) Swap(r *InventoryScene) {
-	source1 := GetItem(s.source, r)
-	source2 := GetItem(s.dest, r)
+	source1 := GetItem(s.source, r.data)
+	source2 := GetItem(s.dest, r.data)
 	if SetItem(s.source, r, source2) == nil {
 		if SetItem(s.dest, r, source1) != nil {
 			//rollback
@@ -128,7 +128,7 @@ func (s *swapPayload) Swap(r *InventoryScene) {
 
 }
 
-func MoveCursorLeftRightLoadout(r *InventoryScene, LR int) {
+func MoveCursorLeftRightLoadout(data *SceneData, LR int) {
 	_, targetY := cardPickInventory.GetPos()
 	loadoutIdx += LR
 	if loadoutIdx == -1 {
@@ -139,14 +139,14 @@ func MoveCursorLeftRightLoadout(r *InventoryScene, LR int) {
 		loadoutIdx = 5
 		return
 	}
-	inventoryDesc = GetDescOfLoadout(r)
+	inventoryDesc = GetDescOfLoadout(data)
 	targetX := float64(ArrXposLoadout[loadoutIdx])
 	cardPickInventory.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
 		Tx: targetX, Ty: targetY, Speed: 6,
 	}))
 
 }
-func MoveCursorLeftRightInv(r *InventoryScene, LR int) {
+func MoveCursorLeftRightInv(data *SceneData, LR int) {
 	itemIdx += LR
 	if itemIdx == -1 {
 		itemIdx = 0
@@ -156,7 +156,7 @@ func MoveCursorLeftRightInv(r *InventoryScene, LR int) {
 		itemIdx = len(ItemSlot) - 1
 		return
 	}
-	inventoryDesc = GetDescOfItem(r)
+	inventoryDesc = GetDescOfItem(data)
 	for _, j := range ItemSlot {
 		posX, Ty := j.GetPos()
 		width, _ := j.GetSize()
@@ -168,40 +168,40 @@ func MoveCursorLeftRightInv(r *InventoryScene, LR int) {
 // abstract function to handle the left/right movement of the cursor
 // LR is integer to tell whether the user move cursor left or right
 // 1 is for right, -1 is for left
-type MoveCursorState func(r *InventoryScene, LR int)
+type MoveCursorState func(r *SceneData, LR int)
 
-func GetDescOfLoadout(r *InventoryScene) string {
+func GetDescOfLoadout(data *SceneData) string {
 	switch loadoutIdx {
 	case 0:
-		if r.data.MainLoadout[0] != nil {
-			return r.data.MainLoadout[0].GetDescription()
+		if data.MainLoadout[0] != nil {
+			return data.MainLoadout[0].GetDescription()
 		}
 	case 1:
-		if r.data.MainLoadout[1] != nil {
-			return r.data.MainLoadout[1].GetDescription()
+		if data.MainLoadout[1] != nil {
+			return data.MainLoadout[1].GetDescription()
 		}
 	case 2:
-		if r.data.SubLoadout1[0] != nil {
-			return r.data.SubLoadout1[0].GetDescription()
+		if data.SubLoadout1[0] != nil {
+			return data.SubLoadout1[0].GetDescription()
 		}
 	case 3:
-		if r.data.SubLoadout1[1] != nil {
-			return r.data.SubLoadout1[1].GetDescription()
+		if data.SubLoadout1[1] != nil {
+			return data.SubLoadout1[1].GetDescription()
 		}
 	case 4:
-		if r.data.SubLoadout2[0] != nil {
-			return r.data.SubLoadout2[0].GetDescription()
+		if data.SubLoadout2[0] != nil {
+			return data.SubLoadout2[0].GetDescription()
 		}
 	case 5:
-		if r.data.SubLoadout2[1] != nil {
-			return r.data.SubLoadout2[1].GetDescription()
+		if data.SubLoadout2[1] != nil {
+			return data.SubLoadout2[1].GetDescription()
 		}
 	}
 	return ""
 
 }
-func GetDescOfItem(r *InventoryScene) string {
-	return r.data.Inventory[itemIdx].GetDescription()
+func GetDescOfItem(data *SceneData) string {
+	return data.Inventory[itemIdx].GetDescription()
 }
 
 func (r *InventoryScene) Update() error {
@@ -260,7 +260,7 @@ func (r *InventoryScene) Update() error {
 				r.cursorIsMoving = false
 			}
 			cardPickInventory.AddAnimation(anim)
-			inventoryDesc = GetDescOfLoadout(r)
+			inventoryDesc = GetDescOfLoadout(r.data)
 			r.moveLR = MoveCursorLeftRightLoadout
 		}
 	}
@@ -281,12 +281,12 @@ func (r *InventoryScene) Update() error {
 				r.cursorIsMoving = false
 			}
 			cardPickInventory.AddAnimation(anim)
-			inventoryDesc = GetDescOfItem(r)
+			inventoryDesc = GetDescOfItem(r.data)
 			r.moveLR = MoveCursorLeftRightInv
 		}
 	}
 	if !r.cursorIsMoving && itemCursorYPos == 0 && inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		item := GetItem(&positionSwap{0, loadoutIdx}, r)
+		item := GetItem(&positionSwap{0, loadoutIdx}, r.data)
 		SetItem(&positionSwap{0, loadoutIdx}, r, nil)
 		r.data.Inventory = append(r.data.Inventory, item)
 		ItemSlot = []*core.MovableImage{}
@@ -306,10 +306,10 @@ func (r *InventoryScene) Update() error {
 
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyRight) {
-		r.moveLR(r, +1)
+		r.moveLR(r.data, +1)
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-		r.moveLR(r, -1)
+		r.moveLR(r.data, -1)
 	}
 	cardPickInventory.Update()
 	for _, j := range ItemSlot {
@@ -499,6 +499,10 @@ type ItemInterface interface {
 	GetName() string
 }
 
+type OnAquireDoer interface {
+	OnAquireDo(*SceneData)
+}
+
 var InventorySceneInstance = &InventoryScene{}
 
 func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
@@ -511,7 +515,7 @@ func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneControlle
 	if len(state.Inventory) == 0 {
 		itemCursorYPos = 0
 		r.moveLR = MoveCursorLeftRightLoadout
-		inventoryDesc = GetDescOfLoadout(r)
+		inventoryDesc = GetDescOfLoadout(r.data)
 
 	} else {
 		// itemCursorYPos = 1
@@ -521,11 +525,11 @@ func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneControlle
 			r.moveLR = MoveCursorLeftRightLoadout
 		}
 
-		inventoryDesc = GetDescOfItem(r)
+		inventoryDesc = GetDescOfItem(r.data)
 	}
 	ItemSlot = []*core.MovableImage{}
 	for inventoryIdx, j := range r.data.Inventory {
-		if vv, ok := j.(loadout.Caster); ok {
+		if vv, ok := j.(ItemInterface); ok {
 			c := GenerateCard(vv)
 			dim := c.Bounds()
 			newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{

@@ -151,6 +151,9 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	loadout.SubLoadOut1[1] = state.SubLoadout1[1]
 	loadout.SubLoadOut2[0] = state.SubLoadout2[0]
 	loadout.SubLoadOut2[1] = state.SubLoadout2[1]
+	if state.CurrentLevel != nil && state.CurrentLevel.SelectedStage != nil {
+		state.CurrentLevel.SelectedStage.DecorSceneData(s.data)
+	}
 	if state.SceneDecor != nil {
 		state.SceneDecor(s.ecs, s)
 		s.sandboxMode = false
@@ -192,7 +195,25 @@ func (s *CombatScene) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 func (s *CombatScene) Unload() *SceneData {
 	// your unload code
 	s.data.MainLoadout = loadout.CurLoadOut[:]
+	if s.data.MainLoadout[0] != nil {
+		s.data.MainLoadout[0].ResetCooldown()
+	}
+	if s.data.MainLoadout[1] != nil {
+		s.data.MainLoadout[1].ResetCooldown()
+	}
 	s.data.SubLoadout1 = loadout.SubLoadOut1[:]
+	if s.data.SubLoadout1[0] != nil {
+		s.data.SubLoadout1[0].ResetCooldown()
+	}
+	if s.data.SubLoadout1[1] != nil {
+		s.data.SubLoadout1[1].ResetCooldown()
+	}
 	s.data.SubLoadout2 = loadout.SubLoadOut2[:]
+	if s.data.SubLoadout2[0] != nil {
+		s.data.SubLoadout2[0].ResetCooldown()
+	}
+	if s.data.SubLoadout2[1] != nil {
+		s.data.SubLoadout2[1].ResetCooldown()
+	}
 	return s.data
 }

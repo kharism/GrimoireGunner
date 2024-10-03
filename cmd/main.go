@@ -7,7 +7,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
-	"github.com/yohamta/donburi"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/joelschutz/stagehand"
@@ -36,6 +35,7 @@ func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
 	Level := scene.GenerateLayout1()
+
 	state := &scene.SceneData{
 		Bg:            assets.BgForrest,
 		PlayerHP:      1000,
@@ -44,19 +44,22 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewGatlingCastor(),
 			attack.NewAtkBonusCaster(),
+			attack.NewGatlingCastor(),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,
 		Level:        1,
-		World:        donburi.NewWorld(),
+		World:        nil,
 		LevelLayout:  Level,
 		CurrentLevel: Level.Root,
-		SceneDecor:   Level.Root.Decorator, //scene.RandDecorator(),
-		SubLoadout1:  []loadout.Caster{nil, nil},
-		SubLoadout2:  []loadout.Caster{nil, nil},
-		Inventory:    []scene.ItemInterface{},
+		// SceneDecor:   scene.,
+		SubLoadout1: []loadout.Caster{nil, nil},
+		SubLoadout2: []loadout.Caster{nil, nil},
+		Inventory:   []scene.ItemInterface{
+			// attack.NewCannonCaster(),
+			// attack.NewHealCaster(),
+		},
 	}
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}
@@ -73,6 +76,13 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 		scene.StageSelectInstance: {
+			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+			stagehand.Directive[*scene.SceneData]{Dest: scene.RestSceneInstance, Trigger: scene.TriggerToRest},
+		},
+		scene.RestSceneInstance: {
+			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+		},
+		scene.WorkshopSceneInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 		},
 	}

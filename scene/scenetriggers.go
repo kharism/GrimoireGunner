@@ -7,4 +7,6 @@ const (
 	TriggerToCombat
 	TriggerToInventory
 	TriggerToStageSelect
+	TriggerToRest
+	TriggerToShop
 )

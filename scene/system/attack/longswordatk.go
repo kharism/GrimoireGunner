@@ -26,13 +26,13 @@ type LongSwordCaster struct {
 	Cost         int
 	Damage       int
 	nextCooldown time.Time
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
 }
 
-func (l *LongSwordCaster) GetModifierEntry() *donburi.Entry {
+func (l *LongSwordCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *LongSwordCaster) SetModifier(e *donburi.Entry) {
+func (l *LongSwordCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 
@@ -48,8 +48,8 @@ func (l *LongSwordCaster) GetName() string {
 }
 func (l *LongSwordCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
@@ -71,18 +71,24 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		playerGridLoc := component.GridPos.GetValue(playerEntry)
 		newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.GetDamage())
 		l.nextCooldown = time.Now().Add(750 * time.Millisecond)
-		if l.ModEntry != nil && l.ModEntry.HasComponent(component.PostAtkModifier) {
-			l := component.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
 }
+func (l *LongSwordCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
 func (l *LongSwordCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
+			return 0
+		}
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -94,8 +100,8 @@ func (l *LongSwordCaster) GetCooldown() time.Time {
 }
 func (l *LongSwordCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.ModEntry.CooldownModifer
 	}
 	return 0
 }

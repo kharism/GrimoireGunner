@@ -38,6 +38,9 @@ func (r *RewardScene) Update() error {
 					// trigger event to go to
 					// just to test manually assign to subweapon1 slot0
 					// r.data.SubLoadout1[0] = casterPick[currentPick]
+					if cc, ok := casterPick[currentPick].(OnAquireDoer); ok {
+						cc.OnAquireDo(r.data)
+					}
 					r.data.Inventory = append(r.data.Inventory, casterPick[currentPick])
 					r.sm.ProcessTrigger(TriggerToCombat)
 				}
@@ -133,9 +136,9 @@ func (r *RewardScene) Draw(screen *ebiten.Image) {
 
 }
 
-var casterPick = [3]loadout.Caster{}
+var casterPick = [3]ItemInterface{}
 
-func GenerateCard(caster loadout.Caster) *ebiten.Image {
+func GenerateCard(caster ItemInterface) *ebiten.Image {
 
 	cardBounds := assets.CardTemplate.Bounds()
 	newImage := ebiten.NewImage(cardBounds.Dx(), cardBounds.Dy())
@@ -150,15 +153,18 @@ func GenerateCard(caster loadout.Caster) *ebiten.Image {
 	geom.Reset()
 	geom.Scale(1.2, 1.2)
 	geom.Translate(13, 17)
-	Cost := caster.GetCost() / 100
 	colorScale := &ebiten.ColorScale{}
 	colorScale.Scale(1, 1, 1, 1)
-	text.Draw(newImage, fmt.Sprintf("%d", Cost), assets.FontFace, &text.DrawOptions{
-		DrawImageOptions: ebiten.DrawImageOptions{
-			GeoM:       geom,
-			ColorScale: *colorScale,
-		},
-	})
+	if cc, ok := caster.(loadout.Caster); ok {
+		Cost := cc.GetCost() / 100
+		text.Draw(newImage, fmt.Sprintf("%d", Cost), assets.FontFace, &text.DrawOptions{
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM:       geom,
+				ColorScale: *colorScale,
+			},
+		})
+	}
+
 	geom.Reset()
 	geom.Scale(0.8, 0.8)
 	geom.Translate(float64(cardBounds.Dx())/2, 45)
@@ -176,37 +182,43 @@ func GenerateCard(caster loadout.Caster) *ebiten.Image {
 	geom.Reset()
 	geom.Scale(1.3, 1.3)
 	geom.Translate(180, 190)
-	Damage := caster.GetDamage()
-	text.Draw(newImage, fmt.Sprintf("%d", Damage), assets.FontFace, &text.DrawOptions{
-		DrawImageOptions: ebiten.DrawImageOptions{
-			GeoM:       geom,
-			ColorScale: *colorScale,
-		},
-		LayoutOptions: text.LayoutOptions{
-			PrimaryAlign: text.AlignEnd,
-		},
-	})
+	if cc, ok := caster.(loadout.Caster); ok {
+		Damage := cc.GetDamage()
+		text.Draw(newImage, fmt.Sprintf("%d", Damage), assets.FontFace, &text.DrawOptions{
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM:       geom,
+				ColorScale: *colorScale,
+			},
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign: text.AlignEnd,
+			},
+		})
+	}
+
 	geom.Reset()
 	geom.Translate(10, 200)
-	cooldown := caster.GetCooldownDuration()
-	text.Draw(newImage, fmt.Sprintf("%.1fs", cooldown.Seconds()), assets.FontFace, &text.DrawOptions{
-		DrawImageOptions: ebiten.DrawImageOptions{
-			GeoM:       geom,
-			ColorScale: *colorScale,
-		},
-		LayoutOptions: text.LayoutOptions{
-			PrimaryAlign: text.AlignStart,
-		},
-	})
+	if cc, ok := caster.(loadout.Caster); ok {
+		cooldown := cc.GetCooldownDuration()
+		text.Draw(newImage, fmt.Sprintf("%.1fs", cooldown.Seconds()), assets.FontFace, &text.DrawOptions{
+			DrawImageOptions: ebiten.DrawImageOptions{
+				GeoM:       geom,
+				ColorScale: *colorScale,
+			},
+			LayoutOptions: text.LayoutOptions{
+				PrimaryAlign: text.AlignStart,
+			},
+		})
+	}
+
 	return newImage
 }
 
 func (r *RewardScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
-	casterPick[0] = GenerateCaster()
-	casterPick[1] = GenerateCaster()
-	casterPick[2] = GenerateCaster()
+	casterPick[0] = GenerateReward()
+	casterPick[1] = GenerateReward()
+	casterPick[2] = GenerateReward()
 	cards = []*core.MovableImage{nil, nil, nil}
 
 	card1 := GenerateCard(casterPick[0])
@@ -221,6 +233,7 @@ func (s *RewardScene) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 }
 func (s *RewardScene) Unload() *SceneData {
 	// your unload code
+	s.data.CurrentLevel.SelectedStage = nil
 	s.data.SceneDecor = nil
 
 	return s.data

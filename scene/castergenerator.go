@@ -7,6 +7,25 @@ import (
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 )
 
+func GenerateReward() ItemInterface {
+	items := []ItemInterface{
+		attack.NewBuckshotCaster(),
+		attack.NewFirewallCaster(),
+		attack.NewLongSwordCaster(),
+		attack.NewShockwaveCaster(),
+		attack.NewCannonCaster(),
+		attack.NewWideSwordCaster(),
+		attack.NewShotgunCaster(),
+		attack.NewHealCaster(),
+		attack.NewGatlingCastor(),
+		attack.NewLightningBolCaster(),
+		&Medkit{},
+		&HPUp{},
+		&ENUp{},
+	}
+	rnd := rand.Int() % len(items)
+	return items[rnd]
+}
 func GenerateCaster() loadout.Caster {
 	casters := []loadout.Caster{
 		attack.NewBuckshotCaster(),
@@ -16,6 +35,7 @@ func GenerateCaster() loadout.Caster {
 		attack.NewCannonCaster(),
 		attack.NewWideSwordCaster(),
 		attack.NewShotgunCaster(),
+		attack.NewHealCaster(),
 		attack.NewGatlingCastor(),
 		attack.NewLightningBolCaster(),
 	}

@@ -20,7 +20,7 @@ type GatlingCaster struct {
 	ShotAmount       int
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
-	ModEntry         *donburi.Entry
+	ModEntry         *loadout.CasterModifierData
 }
 
 func NewGatlingCastor() *GatlingCaster {
@@ -28,8 +28,8 @@ func NewGatlingCastor() *GatlingCaster {
 }
 func (l *GatlingCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
@@ -50,21 +50,24 @@ func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.EventQueue.Queue = append(component.EventQueue.Queue, ev)
 		}
 		if l.ModEntry != nil {
-			if l.ModEntry.HasComponent(component.PostAtkModifier) {
-				l := component.PostAtkModifier.GetValue(l.ModEntry)
-				if l != nil {
-					l(ecs)
-				}
-
+			// if l.ModEntry.HasComponent(component.PostAtkModifier) {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
+
+			// }
 		}
 	}
 
 }
-func (l *GatlingCaster) GetModifierEntry() *donburi.Entry {
+func (l *GatlingCaster) ResetCooldown() {
+	l.nextCooldown = time.Now()
+}
+func (l *GatlingCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *GatlingCaster) SetModifier(e *donburi.Entry) {
+func (l *GatlingCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 
@@ -101,8 +104,11 @@ func (a *addGatlingShot) GetTime() time.Time {
 }
 func (l *GatlingCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.Cost + mod.CostModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
+			return 0
+		}
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -114,8 +120,8 @@ func (l *GatlingCaster) GetCooldown() time.Time {
 }
 func (l *GatlingCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := component.CasterModifier.Get(l.ModEntry)
-		return l.CooldownDuration + mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.CooldownDuration + l.ModEntry.CooldownModifer
 	}
 	return l.CooldownDuration
 }
