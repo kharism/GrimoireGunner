@@ -57,6 +57,9 @@ var MonogramTTF []byte
 //go:embed images/forrest_path_bg.png
 var bg_forest []byte
 
+//go:embed images/bg_mountain.png
+var bg_mountain []byte
+
 //go:embed images/restbg.png
 var bg_rest []byte
 
@@ -201,6 +204,7 @@ var Bg *ebiten.Image
 var BgRest *ebiten.Image
 var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
+var BgMountain *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
@@ -345,6 +349,10 @@ func init() {
 	if BgForrest == nil {
 		imgReader := bytes.NewReader(bg_forest)
 		BgForrest, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BgMountain == nil {
+		imgReader := bytes.NewReader(bg_mountain)
+		BgMountain, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if BgWorkbench == nil {
 		imgReader := bytes.NewReader(bg_workbench)

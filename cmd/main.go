@@ -37,7 +37,7 @@ func main() {
 	Level := scene.GenerateLayout1()
 
 	state := &scene.SceneData{
-		Bg:            assets.BgForrest,
+		Bg:            assets.BgMountain,
 		PlayerHP:      1000,
 		PlayerMaxHP:   1000,
 		PlayerCurrEn:  300,
