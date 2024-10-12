@@ -47,7 +47,7 @@ func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		now := time.Now()
 		for i := 0; i < l.ShotAmount; i++ {
 			ev := &addGatlingShot{Damage: l.GetDamage(), Time: now.Add(time.Duration(100*i) * time.Millisecond)}
-			component.EventQueue.Queue = append(component.EventQueue.Queue, ev)
+			component.EventQueue.AddEvent(ev)
 		}
 		if l.ModEntry != nil {
 			// if l.ModEntry.HasComponent(component.PostAtkModifier) {
