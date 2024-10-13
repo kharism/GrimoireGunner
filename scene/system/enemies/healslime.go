@@ -64,7 +64,7 @@ func SlimeRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 							break checkMove
 						}
 					case 1:
-						if validMove(ecs, gridPos.Row, gridPos.Col-1) {
+						if validMove(ecs, gridPos.Row, gridPos.Col-1) && gridPos.Col-1 >= 4 {
 							gridPos.Col -= 1
 							scrPos.X -= float64(assets.TileWidth)
 							memory[MOVE_COUNT] = moveCount + 1
@@ -99,12 +99,18 @@ func SlimeRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	}
 	if memory[CURRENT_STRATEGY] == "ATTACK" {
 		now := time.Now()
+		component.Sprite.Set(entity, &component.SpriteData{Image: assets.Slime2})
 		for i := 0; i < 10; i++ {
 			component.EventQueue.AddEvent(NewSlimeShoot(now.Add(time.Duration(i*300)*time.Millisecond),
 				gridPos.Col, gridPos.Row))
 		}
-		memory[CURRENT_STRATEGY] = "MOVE"
 		memory[WARM_UP] = time.Now().Add(1200 * time.Millisecond)
+		memory[CURRENT_STRATEGY] = "COOLDOWN"
+	}
+	if memory[CURRENT_STRATEGY] == "COOLDOWN" {
+		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
+			memory[CURRENT_STRATEGY] = "MOVE"
+		}
 	}
 
 }
