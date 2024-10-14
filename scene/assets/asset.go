@@ -192,6 +192,9 @@ var medkit_icon []byte
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
 
+//go:embed images/icon_pushgun.png
+var pushgun_icon []byte
+
 //go:embed images/icon_battle.png
 var battle_icon []byte
 
@@ -253,6 +256,7 @@ var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
 var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
+var PushgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
@@ -450,6 +454,10 @@ func init() {
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PushgunIcon == nil {
+		imgReader := bytes.NewReader(pushgun_icon)
+		PushgunIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if CannonIcon == nil {
 		imgReader := bytes.NewReader(cannon_icon)
