@@ -185,7 +185,7 @@ func (c *ShockWaveCaster) GetCooldown() time.Time {
 func (l *ShockWaveCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
 		mod := loadout.CasterModifier.Get(l.ModEntry)
-		return mod.CooldownModifer
+		return l.Cooldown + mod.CooldownModifer
 	}
 	return l.Cooldown
 }
