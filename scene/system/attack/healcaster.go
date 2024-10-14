@@ -20,6 +20,7 @@ type HealCaster struct {
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
 	ModEntry         *loadout.CasterModifierData
+	OnHit            component.OnAtkHit
 }
 
 func NewHealCaster() *HealCaster {

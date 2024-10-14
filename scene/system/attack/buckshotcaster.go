@@ -21,6 +21,7 @@ type BuckshotCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func (l *BuckshotCaster) GetModifierEntry() *loadout.CasterModifierData {
@@ -30,7 +31,7 @@ func (l *BuckshotCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewBuckshotCaster() *BuckshotCaster {
-	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second}
+	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *BuckshotCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage in T-shaped cone in front. Hit the target in front 3 times\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
@@ -67,10 +68,10 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		component.Damage.Set(grid2Entry, &component.DamageData{Damage: l.Damage})
 		component.Damage.Set(grid1bEntry, &component.DamageData{Damage: l.Damage})
 		component.Damage.Set(grid1cEntry, &component.DamageData{Damage: l.Damage})
-		component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
-		component.OnHit.SetValue(grid2Entry, SingleHitProjectile)
-		component.OnHit.SetValue(grid1bEntry, SingleHitProjectile)
-		component.OnHit.SetValue(grid1cEntry, SingleHitProjectile)
+		component.OnHit.SetValue(grid1Entry, l.OnHit)
+		component.OnHit.SetValue(grid2Entry, l.OnHit)
+		component.OnHit.SetValue(grid1bEntry, l.OnHit)
+		component.OnHit.SetValue(grid1cEntry, l.OnHit)
 		component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: gridPos.Col + 1, Row: gridPos.Row})
 		component.GridPos.Set(grid1bEntry, &component.GridPosComponentData{Col: gridPos.Col + 1, Row: gridPos.Row})
 		component.GridPos.Set(grid1cEntry, &component.GridPosComponentData{Col: gridPos.Col + 1, Row: gridPos.Row})
@@ -81,14 +82,14 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			grid3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			grid3Entry = ecs.World.Entry(grid3)
 			component.Damage.Set(grid3Entry, &component.DamageData{Damage: l.Damage})
-			component.OnHit.SetValue(grid3Entry, SingleHitProjectile)
+			component.OnHit.SetValue(grid3Entry, l.OnHit)
 			component.GridPos.Set(grid3Entry, &component.GridPosComponentData{Col: gridPos.Col + 2, Row: gridPos.Row - 1})
 		}
 		if gridPos.Row < 3 {
 			grid4 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			grid4Entry = ecs.World.Entry(grid4)
 			component.Damage.Set(grid4Entry, &component.DamageData{Damage: l.Damage})
-			component.OnHit.SetValue(grid4Entry, SingleHitProjectile)
+			component.OnHit.SetValue(grid4Entry, l.OnHit)
 			component.GridPos.Set(grid4Entry, &component.GridPosComponentData{Col: gridPos.Col + 2, Row: gridPos.Row + 1})
 		}
 		fx := ecs.World.Create(component.Fx)

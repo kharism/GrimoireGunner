@@ -21,6 +21,7 @@ type ShockWaveCaster struct {
 	nextCooldown time.Time
 	Cooldown     time.Duration
 	ModEntry     *donburi.Entry
+	OnHit        component.OnAtkHit
 }
 
 func (l *ShockWaveCaster) GetModifierEntry() *donburi.Entry {
@@ -30,7 +31,7 @@ func (l *ShockWaveCaster) SetModifier(e *donburi.Entry) {
 	l.ModEntry = e
 }
 func NewShockwaveCaster() *ShockWaveCaster {
-	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second}
+	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second, OnHit: shockWaveOnAtkHit}
 }
 
 var queryHP = donburi.NewQuery(
@@ -128,7 +129,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			Tx: screenTargetX,
 			Ty: screenTargetY,
 		})
-		component.OnHit.SetValue(shockwaveEntry, shockWaveOnAtkHit)
+		component.OnHit.SetValue(shockwaveEntry, c.OnHit)
 		SPEED := 5.0
 		component.Speed.Set(shockwaveEntry, &component.SpeedData{Vx: SPEED, Vy: 0})
 		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: c.GetDamage()})

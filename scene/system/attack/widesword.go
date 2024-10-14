@@ -17,10 +17,11 @@ type WideSwordCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	ModEntry     *donburi.Entry
+	OnHit        component.OnAtkHit
 }
 
 func NewWideSwordCaster() *WideSwordCaster {
-	return &WideSwordCaster{Cost: 200, Damage: 100, nextCooldown: time.Now()}
+	return &WideSwordCaster{Cost: 200, Damage: 100, nextCooldown: time.Now(), OnHit: OnWideswordHit}
 }
 func (l *WideSwordCaster) GetModifierEntry() *donburi.Entry {
 	return l.ModEntry
@@ -55,19 +56,19 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			entry1 = ecs.World.Entry(hitbox1)
 			component.Damage.Set(entry1, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry1, &component.GridPosComponentData{Row: playerGridLoc.Row - 1, Col: playerGridLoc.Col + 1})
-			component.OnHit.SetValue(entry1, OnWideswordHit)
+			component.OnHit.SetValue(entry1, l.OnHit)
 		}
 		hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 		entry2 = ecs.World.Entry(hitbox2)
 		component.Damage.Set(entry2, &component.DamageData{Damage: l.GetDamage()})
 		component.GridPos.Set(entry2, &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1})
-		component.OnHit.SetValue(entry2, OnWideswordHit)
+		component.OnHit.SetValue(entry2, l.OnHit)
 		if playerGridLoc.Row < 3 {
 			hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			entry3 = ecs.World.Entry(hitbox3)
 			component.Damage.Set(entry3, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry3, &component.GridPosComponentData{Row: playerGridLoc.Row + 1, Col: playerGridLoc.Col + 1})
-			component.OnHit.SetValue(entry3, OnWideswordHit)
+			component.OnHit.SetValue(entry3, l.OnHit)
 		}
 		fxEntity := ecs.World.Create(component.Fx)
 		fx := ecs.World.Entry(fxEntity)

@@ -18,6 +18,7 @@ type ShotgunCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func (l *ShotgunCaster) GetModifierEntry() *loadout.CasterModifierData {
@@ -27,7 +28,7 @@ func (l *ShotgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewShotgunCaster() *ShotgunCaster {
-	return &ShotgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 1 * time.Second}
+	return &ShotgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 1 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *ShotgunCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and its behind immediately.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
@@ -81,14 +82,14 @@ func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			targetGridPos := component.GridPos.Get(closestTarget)
 			component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col, Row: targetGridPos.Row})
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
-			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
+			component.OnHit.SetValue(grid1Entry, l.OnHit)
 			if targetGridPos.Col < 7 {
 				grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 				grid1Entry := ecs.World.Entry(grid1)
 				targetGridPos := component.GridPos.Get(closestTarget)
 				component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col + 1, Row: targetGridPos.Row})
 				component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
-				component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
+				component.OnHit.SetValue(grid1Entry, l.OnHit)
 				component.Transient.Set(grid1Entry, &component.TransientData{Duration: 1 * time.Second, Start: time.Now()})
 			}
 		}

@@ -21,6 +21,7 @@ type LightnigAtkParam struct {
 	Direction int
 	Damage    int
 	Actor     *donburi.Entry
+	OnHit     component.OnAtkHit
 }
 
 func LightningBoltOnHitfunc(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
@@ -54,7 +55,7 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 			Start:    time.Now(),
 			Duration: 200 * time.Millisecond,
 		})
-		component.OnHit.SetValue(entry, LightningBoltOnHitfunc)
+		component.OnHit.SetValue(entry, param.OnHit)
 	}
 }
 
@@ -65,10 +66,11 @@ type LightingBoltCaster struct {
 	CoolDown     time.Duration
 	Damage       int
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
-	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second}
+	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second, OnHit: LightningBoltOnHitfunc}
 }
 func (l *LightingBoltCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
@@ -97,6 +99,7 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			Direction: 1,
 			Actor:     playerId,
 			Damage:    l.GetDamage(),
+			OnHit:     l.OnHit,
 		}
 		NewLigtningAttack(ecs, param)
 		l.nextCooldown = time.Now().Add(l.CoolDown)
