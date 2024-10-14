@@ -73,7 +73,7 @@ func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
 		ensource.SetEn(en - l.Cost)
-		l.nextCooldown = time.Now().Add(l.CoolDown)
+		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 
 		closestTarget := HitScanGetNearestTarget(ecs)
 		if closestTarget != nil {
