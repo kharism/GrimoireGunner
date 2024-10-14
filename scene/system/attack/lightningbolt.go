@@ -102,7 +102,7 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			OnHit:     l.OnHit,
 		}
 		NewLigtningAttack(ecs, param)
-		l.nextCooldown = time.Now().Add(l.CoolDown)
+		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		if l.ModEntry != nil {
 			// l := component.PostAtkModifier.GetValue(l.ModEntry)
 			if l.ModEntry.PostAtk != nil {

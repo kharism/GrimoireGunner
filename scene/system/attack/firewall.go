@@ -87,7 +87,7 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
 	if curEn >= f.Cost {
 		ensource.SetEn(curEn - f.Cost)
-		f.nextCooldown = time.Now().Add(f.Cooldown)
+		f.nextCooldown = time.Now().Add(f.GetCooldownDuration())
 		query := donburi.NewQuery(
 			filter.Contains(
 				archetype.PlayerTag,

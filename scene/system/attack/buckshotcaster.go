@@ -45,7 +45,7 @@ func (l *BuckshotCaster) GetDamage() int {
 func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.Cost {
-		l.nextCooldown = time.Now().Add(l.CoolDown)
+		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		query := donburi.NewQuery(
 			filter.Contains(
 				archetype.PlayerTag,
