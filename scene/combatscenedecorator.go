@@ -89,3 +89,8 @@ func Level1Decorator6(ecs *ecs.ECS, combatscene *CombatScene) {
 
 	enemies.NewHealslime(ecs, 6, 2)
 }
+
+func Level1Decorator7(ecs *ecs.ECS, combatscene *CombatScene) {
+
+	enemies.NewDemon(ecs, 4, 2)
+}

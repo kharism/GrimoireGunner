@@ -96,6 +96,15 @@ var reaper_warmup []byte
 //go:embed images/reaper3.png
 var reaper_cooldown []byte
 
+//go:embed images/demon_1.png
+var demon []byte
+
+//go:embed images/demon_2.png
+var demon_warmup []byte
+
+//go:embed images/demon_3.png
+var demon_cooldown []byte
+
 //go:embed images/slime.png
 var slime []byte
 
@@ -231,6 +240,9 @@ var HammerghoulWarmup *ebiten.Image
 var HammerghoulCooldown *ebiten.Image
 var Slime *ebiten.Image
 var Slime2 *ebiten.Image
+var Demon *ebiten.Image
+var DemonWarmup *ebiten.Image
+var DemonCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -397,6 +409,18 @@ func init() {
 	if Slime2 == nil {
 		imgReader := bytes.NewReader(slime_atk)
 		Slime2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Demon == nil {
+		imgReader := bytes.NewReader(demon)
+		Demon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DemonWarmup == nil {
+		imgReader := bytes.NewReader(demon_warmup)
+		DemonWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DemonCooldown == nil {
+		imgReader := bytes.NewReader(demon_cooldown)
+		DemonCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Reaper == nil {
 		imgReader := bytes.NewReader(reaper)
