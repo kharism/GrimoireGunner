@@ -43,7 +43,7 @@ func PushbackOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	component.Health.Get(receiver).HP -= damage
 	if receiver.HasComponent(component.GridPos) {
 		receiverPos := component.GridPos.Get(receiver)
-		if receiverPos.Col < 7 {
+		if receiverPos.Col < 7 && validMove(ecs, receiverPos.Row, receiverPos.Col+1) {
 			receiverPos.Col += 1
 			scrPos := component.ScreenPos.Get(receiver)
 			scrPos.X = 0
