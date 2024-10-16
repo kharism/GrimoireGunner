@@ -40,6 +40,10 @@ func init() {
 		level1Decorator2,
 		level1Decorator3,
 		level1Decorator4,
+		level1Decorator5,
+		level1Decorator6,
+		level1Decorator7,
+		level1Decorator8,
 	}
 }
 func RandCombatDecorator() CombatSceneDecorator {
@@ -78,19 +82,23 @@ func level1Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewReaper(ecs, 4, 2)
 }
 
-func Level1Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
+func level1Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 4,
 		Row: 2,
 	})
 	enemies.NewHammerghoul(ecs, 5, 2)
 }
-func Level1Decorator6(ecs *ecs.ECS, combatscene *CombatScene) {
+func level1Decorator6(ecs *ecs.ECS, combatscene *CombatScene) {
 
 	enemies.NewHealslime(ecs, 6, 2)
 }
 
-func Level1Decorator7(ecs *ecs.ECS, combatscene *CombatScene) {
+func level1Decorator7(ecs *ecs.ECS, combatscene *CombatScene) {
 
+	enemies.NewDemon(ecs, 4, 2)
+}
+func level1Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
+	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
 }

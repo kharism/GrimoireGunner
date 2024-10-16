@@ -118,6 +118,7 @@ var CasterDecorList = []CasterDecor{
 	attack.DecorateWithCooldownReduce,
 	attack.DecorateWithBonus10,
 	attack.DecorateWithCostReducer,
+	attack.DecorateWithTank,
 }
 var decoratedCaster = []loadout.Caster{}
 
