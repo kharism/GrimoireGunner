@@ -45,7 +45,7 @@ func main() {
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
 			attack.NewAtkBonusCaster(),
-			attack.NewPushgunCaster(),
+			attack.DecorateWithPushbackDecorator(attack.NewCannonCaster()),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,
