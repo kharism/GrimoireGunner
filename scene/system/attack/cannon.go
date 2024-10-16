@@ -18,10 +18,11 @@ type CannonCaster struct {
 	nextCooldown time.Time
 	CoolDown     time.Duration
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func NewCannonCaster() *CannonCaster {
-	return &CannonCaster{Cost: 100, nextCooldown: time.Now(), Damage: 80, CoolDown: 1 * time.Second}
+	return &CannonCaster{Cost: 100, nextCooldown: time.Now(), Damage: 80, CoolDown: 1 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *CannonCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front immediately.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
@@ -40,6 +41,13 @@ func (l *CannonCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
 func (l *CannonCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 
@@ -56,7 +64,7 @@ func (l *CannonCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col, Row: targetGridPos.Row})
 			component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 			component.Transient.Set(grid1Entry, &component.TransientData{Start: time.Now(), Duration: 100 * time.Millisecond})
-			component.OnHit.SetValue(grid1Entry, SingleHitProjectile)
+			component.OnHit.SetValue(grid1Entry, l.OnHit)
 		}
 		if l.ModEntry != nil {
 			// l := component.PostAtkModifier.GetValue(l.ModEntry)

@@ -21,10 +21,11 @@ type GatlingCaster struct {
 	nextCooldown     time.Time
 	CooldownDuration time.Duration
 	ModEntry         *loadout.CasterModifierData
+	OnHit            component.OnAtkHit
 }
 
 func NewGatlingCastor() *GatlingCaster {
-	return &GatlingCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second}
+	return &GatlingCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *GatlingCaster) GetDamage() int {
 	if l.ModEntry != nil {
@@ -46,7 +47,7 @@ func (l *GatlingCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		now := time.Now()
 		for i := 0; i < l.ShotAmount; i++ {
-			ev := &addGatlingShot{Damage: l.GetDamage(), Time: now.Add(time.Duration(100*i) * time.Millisecond)}
+			ev := &addGatlingShot{Damage: l.GetDamage(), Time: now.Add(time.Duration(100*i) * time.Millisecond), OnHit: l.OnHit}
 			component.EventQueue.AddEvent(ev)
 		}
 		if l.ModEntry != nil {
@@ -68,12 +69,20 @@ func (l *GatlingCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
 func (l *GatlingCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 
 type addGatlingShot struct {
 	Damage int
 	Time   time.Time
+	OnHit  component.OnAtkHit
 }
 
 func (a *addGatlingShot) Execute(ecs *ecs.ECS) {
@@ -96,7 +105,7 @@ func (a *addGatlingShot) Execute(ecs *ecs.ECS) {
 		Row:    playerGridLoc.Row,
 		Sprite: assets.Projectile1,
 		Damage: a.Damage,
-		OnHit:  SingleHitProjectile,
+		OnHit:  a.OnHit,
 	})
 }
 func (a *addGatlingShot) GetTime() time.Time {

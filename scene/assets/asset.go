@@ -96,6 +96,15 @@ var reaper_warmup []byte
 //go:embed images/reaper3.png
 var reaper_cooldown []byte
 
+//go:embed images/demon_1.png
+var demon []byte
+
+//go:embed images/demon_2.png
+var demon_warmup []byte
+
+//go:embed images/demon_3.png
+var demon_cooldown []byte
+
 //go:embed images/slime.png
 var slime []byte
 
@@ -183,6 +192,9 @@ var medkit_icon []byte
 //go:embed images/icon_shotgun.png
 var shotgun_icon []byte
 
+//go:embed images/icon_pushgun.png
+var pushgun_icon []byte
+
 //go:embed images/icon_battle.png
 var battle_icon []byte
 
@@ -231,6 +243,9 @@ var HammerghoulWarmup *ebiten.Image
 var HammerghoulCooldown *ebiten.Image
 var Slime *ebiten.Image
 var Slime2 *ebiten.Image
+var Demon *ebiten.Image
+var DemonWarmup *ebiten.Image
+var DemonCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -241,6 +256,7 @@ var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
 var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
+var PushgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
@@ -398,6 +414,18 @@ func init() {
 		imgReader := bytes.NewReader(slime_atk)
 		Slime2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Demon == nil {
+		imgReader := bytes.NewReader(demon)
+		Demon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DemonWarmup == nil {
+		imgReader := bytes.NewReader(demon_warmup)
+		DemonWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DemonCooldown == nil {
+		imgReader := bytes.NewReader(demon_cooldown)
+		DemonCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Reaper == nil {
 		imgReader := bytes.NewReader(reaper)
 		Reaper, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -426,6 +454,10 @@ func init() {
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PushgunIcon == nil {
+		imgReader := bytes.NewReader(pushgun_icon)
+		PushgunIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if CannonIcon == nil {
 		imgReader := bytes.NewReader(cannon_icon)

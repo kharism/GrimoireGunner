@@ -27,18 +27,26 @@ type LongSwordCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func (l *LongSwordCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
 func (l *LongSwordCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 
 // cost 2 EN to execute. 80 dmg 2 tiles in front
 func NewLongSwordCaster() *LongSwordCaster {
-	return &LongSwordCaster{Cost: 200, Damage: 80, nextCooldown: time.Now()}
+	return &LongSwordCaster{Cost: 200, Damage: 80, nextCooldown: time.Now(), OnHit: SingleHitProjectile}
 }
 func (l *LongSwordCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\nHit 2 grid in front for %d damage.\nNo cooldown", l.Cost/100, l.GetDamage())
@@ -69,7 +77,20 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 		playerScrLoc := component.ScreenPos.GetValue(playerEntry)
 		playerGridLoc := component.GridPos.GetValue(playerEntry)
-		newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.GetDamage())
+		// newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.GetDamage())
+		param := DamageGridParam{}
+		loc1 := &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1}
+		loc2 := &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 2}
+		param.Locations = []*component.GridPosComponentData{loc1, loc2}
+		param.Damage = []int{l.GetDamage(), l.GetDamage()}
+		param.OnHit = l.OnHit
+
+		param.Fx = assets.NewSwordAtkAnim(assets.SpriteParam{
+			ScreenX: playerScrLoc.X + float64(assets.TileWidth)/2,
+			ScreenY: playerScrLoc.Y - float64(assets.TileHeight),
+			Modulo:  2,
+		})
+		NonProjectileAtk(ecs, param)
 		l.nextCooldown = time.Now().Add(750 * time.Millisecond)
 		if l.ModEntry != nil {
 			// l := component.PostAtkModifier.GetValue(l.ModEntry)

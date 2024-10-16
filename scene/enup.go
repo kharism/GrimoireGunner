@@ -16,7 +16,7 @@ func (h *ENUp) GetDescription() string {
 	return "Add 1 max EN"
 }
 func (h *ENUp) GetName() string {
-	return "HP UP"
+	return "EN UP"
 }
 func (h *ENUp) OnAquireDo(data *SceneData) {
 	data.PlayerMaxHP += 100

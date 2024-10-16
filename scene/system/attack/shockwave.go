@@ -20,17 +20,25 @@ type ShockWaveCaster struct {
 	Damage       int
 	nextCooldown time.Time
 	Cooldown     time.Duration
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
-func (l *ShockWaveCaster) GetModifierEntry() *donburi.Entry {
+func (l *ShockWaveCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *ShockWaveCaster) SetModifier(e *donburi.Entry) {
+func (l *ShockWaveCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 func NewShockwaveCaster() *ShockWaveCaster {
-	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second}
+	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second, OnHit: shockWaveOnAtkHit}
 }
 
 var queryHP = donburi.NewQuery(
@@ -78,8 +86,8 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func (l *ShockWaveCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
@@ -128,7 +136,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			Tx: screenTargetX,
 			Ty: screenTargetY,
 		})
-		component.OnHit.SetValue(shockwaveEntry, shockWaveOnAtkHit)
+		component.OnHit.SetValue(shockwaveEntry, c.OnHit)
 		SPEED := 5.0
 		component.Speed.Set(shockwaveEntry, &component.SpeedData{Vx: SPEED, Vy: 0})
 		component.Damage.Set(shockwaveEntry, &component.DamageData{Damage: c.GetDamage()})
@@ -153,10 +161,10 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		)
 		// shockwaveAnim.MovableImage
 		component.Fx.Set(shockwaveEntry, &component.FxData{Animation: shockwaveAnim})
-		if c.ModEntry != nil && c.ModEntry.HasComponent(loadout.PostAtkModifier) {
-			l := loadout.PostAtkModifier.GetValue(c.ModEntry)
-			if l != nil {
-				l(ecs, ensource)
+		if c.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if c.ModEntry.PostAtk != nil {
+				c.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
@@ -167,11 +175,11 @@ func (l *ShockWaveCaster) ResetCooldown() {
 }
 func (c *ShockWaveCaster) GetCost() int {
 	if c.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(c.ModEntry)
-		if c.Cost+mod.CostModifier < 0 {
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if c.Cost+c.ModEntry.CostModifier < 0 {
 			return 0
 		}
-		return c.Cost + mod.CostModifier
+		return c.Cost + c.ModEntry.CostModifier
 	}
 	return c.Cost
 }
@@ -183,8 +191,8 @@ func (c *ShockWaveCaster) GetCooldown() time.Time {
 }
 func (l *ShockWaveCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(l.ModEntry)
-		return mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Cooldown + l.ModEntry.CooldownModifer
 	}
 	return l.Cooldown
 }

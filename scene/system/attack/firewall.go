@@ -15,7 +15,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 )
 
-func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int) {
+func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit component.OnAtkHit) {
 	sourceScrX, sourceSrcY := assets.GridCoord2Screen(sourceRow, sourceCol)
 	fmt.Println(sourceRow, sourceCol, sourceScrX, sourceSrcY)
 	sourceScrX -= 50
@@ -37,7 +37,7 @@ func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int) {
 			component.Damage.Set(entry, &component.DamageData{Damage: damage})
 			component.GridPos.Set(entry, &component.GridPosComponentData{Col: sourceCol + 4, Row: row})
 			component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 5 * time.Second})
-			component.OnHit.SetValue(entry, OnTowerHit)
+			component.OnHit.SetValue(entry, onAtkHit)
 			flameTower := core.NewMovableImage(assets.FlametowerRaw, core.NewMovableImageParams().
 				WithMoveParam(core.MoveParam{Sx: targetScrX, Sy: targetScrY, Speed: 3}))
 			component.Fx.Set(entry, &component.FxData{Animation: flameTower})
@@ -58,15 +58,23 @@ type FirewallCaster struct {
 	nextCooldown time.Time
 	Cooldown     time.Duration
 	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func NewFirewallCaster() *FirewallCaster {
-	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10}
+	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10, OnHit: OnTowerHit}
 }
 func (l *FirewallCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
 func (l *FirewallCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 func (f *FirewallCaster) GetDamage() int {
@@ -86,7 +94,7 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
 	if curEn >= f.Cost {
 		ensource.SetEn(curEn - f.Cost)
-		f.nextCooldown = time.Now().Add(f.Cooldown)
+		f.nextCooldown = time.Now().Add(f.GetCooldownDuration())
 		query := donburi.NewQuery(
 			filter.Contains(
 				archetype.PlayerTag,
@@ -98,7 +106,7 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			return
 		}
 		gridPos := component.GridPos.Get(playerId)
-		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage)
+		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage, f.OnHit)
 		if f.ModEntry != nil {
 			// l := component.PostAtkModifier.GetValue(f.ModEntry)
 			if f.ModEntry.PostAtk != nil {

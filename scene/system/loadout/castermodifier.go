@@ -3,6 +3,7 @@ package loadout
 import (
 	"time"
 
+	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -14,6 +15,7 @@ type CasterModifierData struct {
 	CostModifier    int
 	SpecialModifier int
 	PostAtk         PostAtkBehaviour
+	OnHit           component.OnAtkHit
 }
 type PostAtkBehaviour func(*ecs.ECS, ENSetGetter)
 

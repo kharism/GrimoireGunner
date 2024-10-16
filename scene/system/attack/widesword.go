@@ -16,22 +16,30 @@ type WideSwordCaster struct {
 	Cost         int
 	Damage       int
 	nextCooldown time.Time
-	ModEntry     *donburi.Entry
+	ModEntry     *loadout.CasterModifierData
+	OnHit        component.OnAtkHit
 }
 
 func NewWideSwordCaster() *WideSwordCaster {
-	return &WideSwordCaster{Cost: 200, Damage: 100, nextCooldown: time.Now()}
+	return &WideSwordCaster{Cost: 200, Damage: 100, nextCooldown: time.Now(), OnHit: OnWideswordHit}
 }
-func (l *WideSwordCaster) GetModifierEntry() *donburi.Entry {
+func (l *WideSwordCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *WideSwordCaster) SetModifier(e *donburi.Entry) {
+func (l *WideSwordCaster) SetModifier(e *loadout.CasterModifierData) {
+	if l.ModEntry != e && e.OnHit != nil {
+		if l.OnHit == nil {
+			l.OnHit = e.OnHit
+		} else {
+			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
+		}
+	}
 	l.ModEntry = e
 }
 func (l *WideSwordCaster) GetDamage() int {
 	if l.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(l.ModEntry)
-		return l.Damage + mod.DamageModifier
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
@@ -55,19 +63,19 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			entry1 = ecs.World.Entry(hitbox1)
 			component.Damage.Set(entry1, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry1, &component.GridPosComponentData{Row: playerGridLoc.Row - 1, Col: playerGridLoc.Col + 1})
-			component.OnHit.SetValue(entry1, OnWideswordHit)
+			component.OnHit.SetValue(entry1, l.OnHit)
 		}
 		hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 		entry2 = ecs.World.Entry(hitbox2)
 		component.Damage.Set(entry2, &component.DamageData{Damage: l.GetDamage()})
 		component.GridPos.Set(entry2, &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1})
-		component.OnHit.SetValue(entry2, OnWideswordHit)
+		component.OnHit.SetValue(entry2, l.OnHit)
 		if playerGridLoc.Row < 3 {
 			hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			entry3 = ecs.World.Entry(hitbox3)
 			component.Damage.Set(entry3, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry3, &component.GridPosComponentData{Row: playerGridLoc.Row + 1, Col: playerGridLoc.Col + 1})
-			component.OnHit.SetValue(entry3, OnWideswordHit)
+			component.OnHit.SetValue(entry3, l.OnHit)
 		}
 		fxEntity := ecs.World.Create(component.Fx)
 		fx := ecs.World.Entry(fxEntity)
@@ -93,10 +101,10 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		})
 		wideSword.FlipHorizontal = true
 		component.Fx.Set(fx, &component.FxData{Animation: wideSword})
-		if l.ModEntry != nil && l.ModEntry.HasComponent(loadout.PostAtkModifier) {
-			l := loadout.PostAtkModifier.GetValue(l.ModEntry)
-			if l != nil {
-				l(ecs, ensource)
+		if l.ModEntry != nil {
+			// l := component.PostAtkModifier.GetValue(l.ModEntry)
+			if l.ModEntry.PostAtk != nil {
+				l.ModEntry.PostAtk(ecs, ensource)
 			}
 		}
 	}
@@ -112,11 +120,11 @@ func OnWideswordHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func (l *WideSwordCaster) GetCost() int {
 	if l.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(l.ModEntry)
-		if l.Cost+mod.CostModifier < 0 {
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		if l.Cost+l.ModEntry.CostModifier < 0 {
 			return 0
 		}
-		return l.Cost + mod.CostModifier
+		return l.Cost + l.ModEntry.CostModifier
 	}
 	return l.Cost
 }
@@ -128,8 +136,8 @@ func (l *WideSwordCaster) GetCooldown() time.Time {
 }
 func (l *WideSwordCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
-		mod := loadout.CasterModifier.Get(l.ModEntry)
-		return mod.CooldownModifer
+		// mod := component.CasterModifier.Get(l.ModEntry)
+		return l.ModEntry.CooldownModifer
 	}
 	return 0
 }
