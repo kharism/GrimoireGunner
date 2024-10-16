@@ -36,10 +36,13 @@ func PushBackNoDmg(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	if receiver.HasComponent(component.GridPos) {
 		receiverPos := component.GridPos.Get(receiver)
 		if receiverPos.Col < 7 {
-			receiverPos.Col += 1
-			scrPos := component.ScreenPos.Get(receiver)
-			scrPos.X = 0
-			scrPos.Y = 0
+			if validMove(ecs, receiverPos.Row, receiverPos.Col+1) {
+				receiverPos.Col += 1
+				scrPos := component.ScreenPos.Get(receiver)
+				scrPos.X = 0
+				scrPos.Y = 0
+			}
+
 		}
 	}
 }
