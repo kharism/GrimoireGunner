@@ -142,7 +142,6 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	// enemies.NewCannoneer(s.ecs, 6, 1)
 	// enemies.NewGatlingGhoul(s.ecs, 4, 1)
 	// enemies.NewReaper(s.ecs, 4, 1)
-	assets.Bg = state.Bg
 
 	loadout.CurLoadOut[0] = state.MainLoadout[0]
 	loadout.CurLoadOut[1] = state.MainLoadout[1] //attack.NewLongSwordCaster()
@@ -160,6 +159,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	} else {
 		s.sandboxMode = true
 	}
+	assets.Bg = state.Bg
 
 	Ensystemrenderer := system.EnergySystem
 	eq := system.EventQueueSystem{}

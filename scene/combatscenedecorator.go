@@ -53,6 +53,7 @@ func RandCombatDecorator() CombatSceneDecorator {
 
 // put in 1 rock and 1 cannoneer and 1 rock
 func level1Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
 		Row: 0,
@@ -62,6 +63,7 @@ func level1Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 
 // put 1 bloombomber
 func level1Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 5,
 		Row: 0,
@@ -72,17 +74,20 @@ func level1Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
 // put 1 gatlinghoul
 func level1Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
 	// enemies.NewGatlingGhoul(ecs, 4, 0)
+	combatscene.data.Bg = assets.BgForrest
 	enemies.NewGatlingGhoul(ecs, 4, 3)
 }
 
 // put 1 gatlinghoul and 1 reaper
 func level1Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
 	// enemies.NewGatlingGhoul(ecs, 4, 0)
+	combatscene.data.Bg = assets.BgForrest
 	enemies.NewGatlingGhoul(ecs, 4, 3)
 	enemies.NewReaper(ecs, 4, 2)
 }
 
 func level1Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
 	LoadBoulder(ecs.World, BoulderParam{
 		Col: 4,
 		Row: 2,
@@ -90,15 +95,16 @@ func level1Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewHammerghoul(ecs, 5, 2)
 }
 func level1Decorator6(ecs *ecs.ECS, combatscene *CombatScene) {
-
+	combatscene.data.Bg = assets.BgForrest
 	enemies.NewHealslime(ecs, 6, 2)
 }
 
 func level1Decorator7(ecs *ecs.ECS, combatscene *CombatScene) {
-
+	combatscene.data.Bg = assets.BgMountain
 	enemies.NewDemon(ecs, 4, 2)
 }
 func level1Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
 	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
 }
