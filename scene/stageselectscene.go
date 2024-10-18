@@ -84,7 +84,7 @@ func GenerateLayout1() *Level {
 		CurNode1 = NewNodeA
 		CurNode2 = NewNodeB
 	}
-	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon}
+	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(level1Decorator9)}
 	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
 	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
 	//upLine :=
