@@ -108,3 +108,7 @@ func level1Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
 }
+func level1Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	enemies.NewSwordwomen(ecs, 5, 1)
+}

@@ -39,6 +39,9 @@ var player1attack []byte
 //go:embed images/magibullet.png
 var projectile1 []byte
 
+//go:embed images/dagger.png
+var projectile2 []byte
+
 //go:embed images/bomb1.png
 var bomb1 []byte
 
@@ -119,6 +122,18 @@ var hammerghoul_warmup []byte
 
 //go:embed images/hammerghoul_atk2.png
 var hammerghoul_cooldown []byte
+
+//go:embed images/swordsman.png
+var swordswomen []byte
+
+//go:embed images/swordsman2.png
+var swordswomen2 []byte
+
+//go:embed images/swordsman3.png
+var swordswomen3 []byte
+
+//go:embed images/swordsman_atk1.png
+var swordswomen4 []byte
 
 //go:embed images/wideslash.png
 var wideslash_fx []byte
@@ -226,6 +241,7 @@ var BgMountain *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
+var Projectile2 *ebiten.Image
 var LightningBolt *ebiten.Image
 var Boulder *ebiten.Image
 var PyroEyes *ebiten.Image
@@ -246,6 +262,10 @@ var Slime2 *ebiten.Image
 var Demon *ebiten.Image
 var DemonWarmup *ebiten.Image
 var DemonCooldown *ebiten.Image
+var Swordswomen *ebiten.Image
+var SwordswomenShoot *ebiten.Image
+var SwordswomenWarmup *ebiten.Image
+var SwordswomenCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -362,6 +382,10 @@ func init() {
 		imgReader := bytes.NewReader(projectile1)
 		Projectile1, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Projectile2 == nil {
+		imgReader := bytes.NewReader(projectile2)
+		Projectile2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if LightningBolt == nil {
 		imgReader := bytes.NewReader(lightningbolt)
 		LightningBolt, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -450,7 +474,22 @@ func init() {
 		imgReader := bytes.NewReader(hammerghoul_cooldown)
 		HammerghoulCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
-
+	if Swordswomen == nil {
+		imgReader := bytes.NewReader(swordswomen)
+		Swordswomen, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SwordswomenShoot == nil {
+		imgReader := bytes.NewReader(swordswomen4)
+		SwordswomenShoot, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SwordswomenWarmup == nil {
+		imgReader := bytes.NewReader(swordswomen2)
+		SwordswomenWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SwordswomenCooldown == nil {
+		imgReader := bytes.NewReader(swordswomen3)
+		SwordswomenCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
