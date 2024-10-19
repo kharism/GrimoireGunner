@@ -32,7 +32,7 @@ func (eq *eventQueue) AddEvent(ev Event) {
 				j = append(j, eq.Queue[i])
 			}
 		}
-		if j[len(j)-1].GetTime().Before(ev.GetTime()) {
+		if j[len(j)-1].GetTime().Before(ev.GetTime()) || j[len(j)-1].GetTime() == ev.GetTime() {
 			j = append(j, ev)
 		}
 	} else {
