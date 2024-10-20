@@ -27,6 +27,9 @@ var tileDmgPng []byte
 //go:embed images/cardtemplate.png
 var cardTemplate []byte
 
+//go:embed images/menu_btn_bg.png
+var menuBg []byte
+
 //go:embed images/cardpick.png
 var cardPick []byte
 
@@ -54,6 +57,9 @@ var lightningbolt []byte
 //go:embed fonts/PixelOperator8-bold.ttf
 var PixelFontTTF []byte
 
+//go:embed "fonts/Unispace Bd.otf"
+var UnispaceBdTTF []byte
+
 //go:embed fonts/monogram.ttf
 var MonogramTTF []byte
 
@@ -62,6 +68,9 @@ var bg_forest []byte
 
 //go:embed images/bg_mountain.png
 var bg_mountain []byte
+
+//go:embed images/opening_screen.png
+var bg_opening []byte
 
 //go:embed images/restbg.png
 var bg_rest []byte
@@ -238,6 +247,8 @@ var BgRest *ebiten.Image
 var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
+var BgOpening *ebiten.Image
+var MenuButtonBg *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
@@ -292,9 +303,11 @@ var DarkerShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
+var UnispaceFont *text.GoTextFaceSource
 
 var FontFace *text.GoTextFace
 var MonogramFace *text.GoTextFace
+var UnispaceFace *text.GoTextFace
 
 var SwordAtkRaw *ebiten.Image
 var ExplosionRaw *ebiten.Image
@@ -343,8 +356,14 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	s3, err := text.NewGoTextFaceSource(bytes.NewReader(UnispaceBdTTF))
+	if err != nil {
+		log.Fatal(err)
+	}
 	MonogramFont = s2
 	PixelFont = s
+	UnispaceFont = s3
+
 	if BlueTile == nil {
 		imgReader := bytes.NewReader(blueTilePng)
 		BlueTile, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -362,6 +381,10 @@ func init() {
 		imgReader := bytes.NewReader(grid_targetted)
 		TargetedGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if MenuButtonBg == nil {
+		imgReader := bytes.NewReader(menuBg)
+		MenuButtonBg, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Player1Stand == nil {
 		imgReader := bytes.NewReader(player1Stand)
 		Player1Stand, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -373,6 +396,10 @@ func init() {
 	if BgRest == nil {
 		imgReader := bytes.NewReader(bg_rest)
 		BgRest, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BgOpening == nil {
+		imgReader := bytes.NewReader(bg_opening)
+		BgOpening, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Bomb1 == nil {
 		imgReader := bytes.NewReader(bomb1)

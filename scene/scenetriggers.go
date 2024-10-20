@@ -9,4 +9,5 @@ const (
 	TriggerToStageSelect
 	TriggerToRest
 	TriggerToShop
+	TriggerToMain
 )
