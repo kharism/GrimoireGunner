@@ -1,6 +1,8 @@
 package scene
 
 import (
+	"os"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -18,7 +20,17 @@ var menus = []string{
 	"New Game",
 	"Exit",
 }
+var menusFunc = []func(){
+	StartGame,
+	Exit,
+}
 
+func StartGame() {
+	MainMenuInstance.sm.ProcessTrigger(TriggerToCombat)
+}
+func Exit() {
+	os.Exit(0)
+}
 func (r *MainMenuScene) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 		r.selectedMenu += 1
@@ -32,7 +44,9 @@ func (r *MainMenuScene) Update() error {
 			r.selectedMenu += 1
 		}
 	}
-
+	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		menusFunc[r.selectedMenu]()
+	}
 	return nil
 }
 
@@ -69,7 +83,8 @@ func init() {
 	}
 }
 func (r *MainMenuScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
-
+	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
+	r.data = state
 }
 func (s *MainMenuScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
