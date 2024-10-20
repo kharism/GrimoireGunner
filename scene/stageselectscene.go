@@ -30,6 +30,8 @@ type LevelNode struct {
 	SelectedStage nextStagePicker
 	// CombatDecor CombatSceneDecorator
 	NextNode []*LevelNode
+	ScrX     float64
+	SrcY     float64
 }
 
 type nextStagePicker interface {
@@ -211,6 +213,8 @@ func (r *StageSelect) Draw(screen *ebiten.Image) {
 				opt := ebiten.DrawImageOptions{
 					GeoM: transform,
 				}
+				d.ScrX = StartPositionX + float64(XDist*idx1)
+				d.SrcY = StartPositionY + float64(YDist*idx2)
 				screen.DrawImage(d.Icon, &opt)
 			} else {
 				opts := &ebiten.DrawRectShaderOptions{
@@ -306,7 +310,7 @@ func (r *StageSelect) Load(state *SceneData, manager stagehand.SceneController[*
 	)
 	startY := StartPositionY
 	if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
-		if len(curLevel.NextNode) == 1 {
+		if len(curLevel.NextNode) == 1 && curLevel.NextNode[0].Id != "AA" {
 			startY += float64(YDist)
 		}
 	}
