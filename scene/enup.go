@@ -19,6 +19,6 @@ func (h *ENUp) GetName() string {
 	return "EN UP"
 }
 func (h *ENUp) OnAquireDo(data *SceneData) {
-	data.PlayerMaxHP += 100
-	data.PlayerHP += 100
+	data.PlayerMaxEn += 100
+	data.PlayerCurrEn += 100
 }
