@@ -14,6 +14,7 @@ import (
 
 type damageSystem struct {
 	DamagableQuery *donburi.Query
+	isGameOver     bool
 
 	DamagingQuery *donburi.Query
 }
@@ -78,10 +79,35 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			}
 
 			if component.Health.Get(damageableEntity).HP <= 0 {
+
 				playerEnt, _ := archetype.PlayerTag.First(ecs.World)
-				if playerEnt == damageableEntity {
+				if playerEnt == damageableEntity && !s.isGameOver {
+					s.isGameOver = true
 					//TODO: game over screen
 					//trigger game over here
+					stgClrDim := assets.GameOver.Bounds()
+					movableImg := core.NewMovableImage(assets.GameOver,
+						core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+							Sx:    float64(-stgClrDim.Dx()),
+							Sy:    float64(300 + stgClrDim.Dy()/2),
+							Speed: 10}))
+					movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
+						Tx:    float64(600 - stgClrDim.Dx()/2 - 60),
+						Ty:    float64(300 + stgClrDim.Dy()/2),
+						Speed: 10,
+					}))
+					movableImg.Done = func() {
+						s.isGameOver = false
+						PlayerAttackSystem.State = GameOverState
+
+					}
+					//turn off attack system
+					PlayerAttackSystem.State = DoNothingState
+					//attach the stageclear to fx system
+					stgDone := ecs.World.Create(component.Anouncement)
+					component.Anouncement.Set(ecs.World.Entry(stgDone), &component.FxData{
+						Animation: movableImg,
+					})
 				} else {
 					// destroy anim
 					scrPos := component.ScreenPos.GetValue(damageableEntity)
@@ -122,8 +148,8 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						//turn off attack system
 						PlayerAttackSystem.State = DoNothingState
 						//attach the stageclear to fx system
-						stgDone := ecs.World.Create(component.Fx)
-						component.Fx.Set(ecs.World.Entry(stgDone), &component.FxData{
+						stgDone := ecs.World.Create(component.Anouncement)
+						component.Anouncement.Set(ecs.World.Entry(stgDone), &component.FxData{
 							Animation: movableImg,
 						})
 

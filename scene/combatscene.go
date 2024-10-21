@@ -121,8 +121,14 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	s.data = state
 	if !RegisterCombatClear {
 		events.CombatClearEvent.Subscribe(s.world, func(w donburi.World, event events.CombatClearData) {
-			RegisterCombatClear = false
-			s.sm.ProcessTrigger(TriggerToReward)
+			if event.IsGameOver {
+				RegisterCombatClear = false
+				s.sm.ProcessTrigger(TriggerToMain)
+			} else {
+				RegisterCombatClear = false
+				s.sm.ProcessTrigger(TriggerToReward)
+			}
+
 		})
 		RegisterCombatClear = true
 	}
@@ -176,6 +182,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		AddSystem(eq.Update).
 		AddSystem(system.EnemyAI.Update).
 		AddSystem(system.UpdateFx).
+		AddSystem(system.UpdateAnouncement).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
 		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
@@ -183,6 +190,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		AddRenderer(layers.LayerDebug, system.DebugRenderer.DrawDebug).
 		AddRenderer(layers.LayerUI, Ensystemrenderer.DrawEnBar).
 		AddRenderer(layers.LayerUI, system.RenderLoadOut).
+		AddRenderer(layers.LayerUI, system.RenderAnouncement).
 		AddRenderer(layers.LayerHP, system.HPRenderer.DrawHP)
 
 }

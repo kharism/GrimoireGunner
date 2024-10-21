@@ -237,6 +237,9 @@ var darkerShader []byte
 //go:embed images/stageclear.png
 var stageclear []byte
 
+//go:embed images/gameover_basic.png
+var gameover []byte
+
 var BlueTile *ebiten.Image
 var RedTile *ebiten.Image
 var DamageGrid *ebiten.Image
@@ -248,6 +251,7 @@ var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
 var BgOpening *ebiten.Image
+var GameOver *ebiten.Image
 var MenuButtonBg *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
@@ -380,6 +384,10 @@ func init() {
 	if TargetedGrid == nil {
 		imgReader := bytes.NewReader(grid_targetted)
 		TargetedGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if GameOver == nil {
+		imgReader := bytes.NewReader(gameover)
+		GameOver, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if MenuButtonBg == nil {
 		imgReader := bytes.NewReader(menuBg)

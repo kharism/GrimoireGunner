@@ -103,6 +103,13 @@ func CombatClearState(ecs *ecs.ECS, s *playerAttackSystem) {
 	}
 
 }
+func GameOverState(ecs *ecs.ECS, s *playerAttackSystem) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeyW) || inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		events.CombatClearEvent.Publish(ecs.World, events.CombatClearData{IsGameOver: true})
+		events.CombatClearEvent.ProcessEvents(ecs.World)
+	}
+
+}
 func (s *playerAttackSystem) Update(ecs *ecs.ECS) {
 	s.State(ecs, s)
 }
