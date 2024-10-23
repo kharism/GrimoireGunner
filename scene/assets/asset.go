@@ -327,6 +327,17 @@ var StageClear *ebiten.Image
 var CardTemplate *ebiten.Image
 var CardPick *ebiten.Image
 
+// audio stuff
+
+//go:embed bgm/test_melody_orchestra.mp3
+var Menumusic []byte
+
+//go:embed bgm/test1.mp3
+var BattleMusic []byte
+
+//go:embed bgm/upbeat.mp3
+var IntermissionMusic []byte
+
 var TileWidth int
 var TileHeight int
 

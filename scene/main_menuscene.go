@@ -1,6 +1,7 @@
 package scene
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,6 +15,8 @@ type MainMenuScene struct {
 	sm           *stagehand.SceneDirector[*SceneData]
 	data         *SceneData
 	selectedMenu int
+	musicPlayer  *assets.AudioPlayer
+	loopMusic    bool
 }
 
 var menus = []string{
@@ -32,6 +35,10 @@ func Exit() {
 	os.Exit(0)
 }
 func (r *MainMenuScene) Update() error {
+	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {
+		r.musicPlayer.AudioPlayer().Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 		r.selectedMenu += 1
 		if r.selectedMenu == len(menus) {
@@ -85,10 +92,25 @@ func init() {
 func (r *MainMenuScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
+	r.loopMusic = true
+	if r.musicPlayer == nil {
+		var err error
+		r.musicPlayer, err = assets.NewAudioPlayer(assets.Menumusic, assets.TypeMP3)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		r.musicPlayer.AudioPlayer().Play()
+	} else {
+		// s.musicPlayer.audioPlayer.Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
 }
 func (s *MainMenuScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
 }
 func (s *MainMenuScene) Unload() *SceneData {
+	s.loopMusic = false
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	return s.data
 }
