@@ -1,6 +1,8 @@
 package scene
 
 import (
+	"fmt"
+
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
@@ -26,10 +28,16 @@ type CombatScene struct {
 
 	sandboxMode bool
 	// grid store entity id or 0 if no entity occupy the cell
-	entitygrid [4][8]int64
+	entitygrid  [4][8]int64
+	musicPlayer *assets.AudioPlayer
+	loopMusic   bool
 }
 
 func (c *CombatScene) Update() error {
+	if c.loopMusic && !c.musicPlayer.AudioPlayer().IsPlaying() {
+		c.musicPlayer.AudioPlayer().Rewind()
+		c.musicPlayer.AudioPlayer().Play()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		c.debugPause = !c.debugPause
 	}
@@ -164,6 +172,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		s.sandboxMode = false
 	} else {
 		s.sandboxMode = true
+		s.musicPlayer = nil
 	}
 	assets.Bg = state.Bg
 
@@ -171,6 +180,23 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	eq := system.EventQueueSystem{}
 	system.PlayerAttackSystem.PlayerIndex = playerEntity
 	system.PlayerAttackSystem.State = system.CombatState
+	s.loopMusic = true
+	if s.musicPlayer == nil {
+		var err error
+		if s.sandboxMode {
+			s.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+		} else {
+			s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic, assets.TypeMP3)
+		}
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		s.musicPlayer.AudioPlayer().Play()
+	} else {
+		// s.musicPlayer.audioPlayer.Rewind()
+		s.musicPlayer.AudioPlayer().Play()
+	}
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
@@ -223,5 +249,8 @@ func (s *CombatScene) Unload() *SceneData {
 	if s.data.SubLoadout2[1] != nil {
 		s.data.SubLoadout2[1].ResetCooldown()
 	}
+	s.loopMusic = false
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	return s.data
 }
