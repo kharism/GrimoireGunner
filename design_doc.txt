@@ -8,4 +8,7 @@ Make sure each sprite is using center bottom as starting point before any transl
 
 VFX stuff does not follow above limitation. Just use screen pos on top left instead
 
-any damage is done by component.OnAtkHit. If something must be done to attack target 
+any damage is done by component.OnAtkHit. If something must be done to attack target
+
+to encourage players to juggle their weapon make sure to make the cooldown of initial weapon takes longer than the EN recovery.
+We also encourage players to finish fast by putting stake and increase difficulties the longer the battle takes
