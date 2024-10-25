@@ -115,6 +115,9 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 					}
 					// destroy anim
 					scrPos := component.ScreenPos.GetValue(damageableEntity)
+					if gridPos.Row < 0 || gridPos.Col < 0 {
+						return
+					}
 					gridMap[gridPos.Row][gridPos.Col] = nil
 					ecs.World.Remove(damageableEntity.Entity())
 					explosionAnim := assets.NewExplosionAnim(assets.SpriteParam{

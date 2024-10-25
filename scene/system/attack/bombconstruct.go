@@ -45,15 +45,10 @@ func (l *BombConstructCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		ensource.SetEn(en - l.GetCost())
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		playerGridPos, _ := GetPlayerGridPos(ecs)
-		bombEntity := archetype.NewConstruct(ecs.World, assets.Bomb2)
-		bombEntry := ecs.World.Entry(*bombEntity)
-		bombEntry.AddComponent(component.OnDestroy)
-		bombEntry.AddComponent(component.OnHit)
 
-		bombGridPos := component.GridPos.Get(bombEntry)
 		if !validMove(ecs, playerGridPos.Row, playerGridPos.Col+4) {
 			// entry := getEntryAtGridPos(ecs, playerGridPos.Row, playerGridPos.Col+4)
-			dmgEntity := ecs.World.Create(component.GridPos, component.Damage)
+			dmgEntity := ecs.World.Create(component.GridPos, component.Damage, component.OnHit)
 			dmgEntry := ecs.World.Entry(dmgEntity)
 			component.GridPos.Set(dmgEntry, &component.GridPosComponentData{
 				Col: playerGridPos.Col + 4,
@@ -62,8 +57,15 @@ func (l *BombConstructCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.Damage.Set(dmgEntry, &component.DamageData{
 				Damage: 200,
 			})
+			component.OnHit.SetValue(dmgEntry, SingleHitProjectile)
 			return
 		}
+		bombEntity := archetype.NewConstruct(ecs.World, assets.Bomb2)
+		bombEntry := ecs.World.Entry(*bombEntity)
+		bombEntry.AddComponent(component.OnDestroy)
+		bombEntry.AddComponent(component.OnHit)
+
+		bombGridPos := component.GridPos.Get(bombEntry)
 		bombGridPos.Col = playerGridPos.Col + 4
 		bombGridPos.Row = playerGridPos.Row
 		component.OnDestroy.SetValue(bombEntry, onBombDestroyed)
