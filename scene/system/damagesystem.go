@@ -109,6 +109,10 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						Animation: movableImg,
 					})
 				} else {
+					// trigger on destroy if it has any
+					if damageableEntity.HasComponent(component.OnDestroy) {
+						component.OnDestroy.GetValue(damageableEntity)(ecs, damageableEntity)
+					}
 					// destroy anim
 					scrPos := component.ScreenPos.GetValue(damageableEntity)
 					gridMap[gridPos.Row][gridPos.Col] = nil
