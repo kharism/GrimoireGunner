@@ -216,9 +216,16 @@ func GenerateCard(caster ItemInterface) *ebiten.Image {
 func (r *RewardScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
-	casterPick[0] = GenerateReward()
-	casterPick[1] = GenerateReward()
-	casterPick[2] = GenerateReward()
+	if state.rewards == nil {
+		casterPick[0] = GenerateReward()
+		casterPick[1] = GenerateReward()
+		casterPick[2] = GenerateReward()
+	} else {
+		casterPick[0] = state.rewards[0]
+		casterPick[1] = state.rewards[1]
+		casterPick[2] = state.rewards[2]
+	}
+
 	cards = []*core.MovableImage{nil, nil, nil}
 
 	card1 := GenerateCard(casterPick[0])

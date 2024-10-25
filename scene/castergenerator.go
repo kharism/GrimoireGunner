@@ -19,12 +19,20 @@ func GenerateReward() ItemInterface {
 		attack.NewHealCaster(),
 		attack.NewGatlingCastor(),
 		attack.NewLightningBolCaster(),
+		attack.NewBombConstructCaster(),
+		attack.NewAtkBonusCaster(),
+		attack.NewPushgunCaster(),
 		&Medkit{},
 		&HPUp{},
 		&ENUp{},
 	}
 	rnd := rand.Int() % len(items)
 	return items[rnd]
+}
+
+func DecorateCaster(caster loadout.Caster) loadout.Caster {
+	rnd := rand.Int() % len(CasterDecorList)
+	return CasterDecorList[rnd](caster)
 }
 func GenerateCaster() loadout.Caster {
 	casters := []loadout.Caster{
@@ -38,6 +46,9 @@ func GenerateCaster() loadout.Caster {
 		attack.NewHealCaster(),
 		attack.NewGatlingCastor(),
 		attack.NewLightningBolCaster(),
+		attack.NewBombConstructCaster(),
+		attack.NewAtkBonusCaster(),
+		attack.NewPushgunCaster(),
 	}
 
 	rnd := rand.Int() % len(casters)
