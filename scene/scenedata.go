@@ -28,5 +28,8 @@ type SceneData struct {
 	SceneDecor   CombatSceneDecorator
 	CurrentLevel *LevelNode
 
+	//predetermined rewards
+	rewards []ItemInterface
+
 	Bg *ebiten.Image
 }

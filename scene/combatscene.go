@@ -30,6 +30,7 @@ type CombatScene struct {
 	// grid store entity id or 0 if no entity occupy the cell
 	entitygrid  [4][8]int64
 	musicPlayer *assets.AudioPlayer
+	rewards     []ItemInterface
 	loopMusic   bool
 }
 
@@ -170,6 +171,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	if state.SceneDecor != nil {
 		state.SceneDecor(s.ecs, s)
 		s.sandboxMode = false
+		s.musicPlayer = nil
 	} else {
 		s.sandboxMode = true
 		s.musicPlayer = nil
@@ -229,6 +231,7 @@ func (s *CombatScene) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 func (s *CombatScene) Unload() *SceneData {
 	// your unload code
 	s.data.MainLoadout = loadout.CurLoadOut[:]
+	s.data.rewards = s.rewards
 	if s.data.MainLoadout[0] != nil {
 		s.data.MainLoadout[0].ResetCooldown()
 	}
