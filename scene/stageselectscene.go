@@ -40,7 +40,8 @@ type nextStagePicker interface {
 	GetIcon() *ebiten.Image
 }
 type Level struct {
-	Root *LevelNode
+	Root      *LevelNode
+	BossLevel *LevelNode
 }
 
 func GenerateLayout1() *Level {
@@ -89,6 +90,7 @@ func GenerateLayout1() *Level {
 	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(level1Decorator9)}
 	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
 	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
+	LevelLayout1.BossLevel = &BossNode
 	//upLine :=
 	return LevelLayout1
 }
@@ -309,12 +311,19 @@ func (r *StageSelect) Load(state *SceneData, manager stagehand.SceneController[*
 		}),
 	)
 	startY := StartPositionY
-	if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
-		if len(curLevel.NextNode) == 1 && curLevel.NextNode[0].Id != "AA" {
-			startY += float64(YDist)
+	if curLevel != nil {
+		if len(tiers[curLevel.Tier]) > 1 && tiers[curLevel.Tier][1] == curLevel {
+			if len(curLevel.NextNode) == 1 && curLevel.NextNode[0].Id != "AA" {
+				startY += float64(YDist)
+			}
 		}
+		stagePick.SetPos(StartPositionX+float64(XDist*(curLevel.Tier+1)), startY)
+	} else {
+		r.data.CurrentLevel = &LevelNode{
+			NextNode: []*LevelNode{r.data.LevelLayout.Root},
+		}
+		stagePick.SetPos(StartPositionX, startY)
 	}
-	stagePick.SetPos(StartPositionX+float64(XDist*(curLevel.Tier+1)), startY)
 
 }
 func (s *StageSelect) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
