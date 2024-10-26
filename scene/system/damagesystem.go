@@ -59,8 +59,11 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 		// fmt.Println(e.Entity(), gridPos, gridPos.Row, gridPos.Col, health.Name)
 		gridMap[gridPos.Row][gridPos.Col] = e
 	})
-
+	damagingEntries := []*donburi.Entry{}
 	s.DamagingQuery.Each(ecs.World, func(e *donburi.Entry) {
+		damagingEntries = append(damagingEntries, e)
+	})
+	for _, e := range damagingEntries {
 		gridPos := component.GridPos.Get(e)
 		if gridMap[gridPos.Row][gridPos.Col] != nil {
 			damageableEntity := gridMap[gridPos.Row][gridPos.Col]
@@ -166,6 +169,6 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			}
 			// mycomponent.Health.Get(damageableEntity).HP -= damage
 		}
-	})
+	}
 
 }
