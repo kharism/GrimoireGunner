@@ -107,20 +107,19 @@ func (s *swapPayload) Swap(r *InventoryScene) {
 					newInv = append(newInv, v)
 				}
 			}
+
 			r.data.Inventory = newInv
 			// update invlist
 			ItemSlot = []*core.MovableImage{}
 			for inventoryIdx, j := range r.data.Inventory {
-				if vv, ok := j.(loadout.Caster); ok {
-					c := GenerateCard(vv)
-					dim := c.Bounds()
-					newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
-						Sx: 23 + float64(inventoryIdx*(dim.Dx()+30)),
-						Sy: CardStartY + 2,
-					}))
-					ItemSlot = append(ItemSlot, newMvImage)
-					itemIdx = 0
-				}
+				c := GenerateCard(j)
+				dim := c.Bounds()
+				newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+					Sx: 23 + float64(inventoryIdx*(dim.Dx()+30)),
+					Sy: CardStartY + 2,
+				}))
+				ItemSlot = append(ItemSlot, newMvImage)
+				itemIdx = 0
 				// GenerateCard()
 			}
 		}
@@ -140,7 +139,7 @@ func MoveCursorLeftRightLoadout(data *SceneData, LR int) {
 		return
 	}
 	inventoryDesc = GetDescOfLoadout(data)
-	targetX := float64(ArrXposLoadout[loadoutIdx])
+	targetX := float64(ArrXposLoadout[loadoutIdx]) - 4
 	cardPickInventory.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
 		Tx: targetX, Ty: targetY, Speed: 6,
 	}))
@@ -229,16 +228,16 @@ func (r *InventoryScene) Update() error {
 	}
 	if cardPickInventory == nil {
 		if len(r.data.Inventory) > 0 && itemCursorYPos == 1 {
-			cardPickInventory = core.NewMovableImage(assets.CardPick, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+			cardPickInventory = core.NewMovableImage(assets.CardPickRed, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
 				Sx: 20 - 5,
 				Sy: CardStartY - 10,
 			}))
 			itemCursorYPos = 1
 		} else {
-			cardPickInventory = core.NewMovableImage(assets.CardPick, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
-				Sx: 140 - 2,
-				Sy: 100 - 2,
-			}).WithScale(&core.ScaleParam{Sx: float64(34.0 / 195), Sy: float64(34.0 / 250.0)}))
+			cardPickInventory = core.NewMovableImage(assets.CardPickRed, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+				Sx: 140 - 4,
+				Sy: 100 - 4,
+			}).WithScale(&core.ScaleParam{Sx: float64(40.0 / 195), Sy: float64(40.0 / 250.0)}))
 			itemCursorYPos = 0
 		}
 
@@ -246,10 +245,10 @@ func (r *InventoryScene) Update() error {
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyUp) {
 		if itemCursorYPos == 1 {
 			itemCursorYPos = 0
-			targetX := ArrXposLoadout[loadoutIdx]
-			targetY := 100.0
-			scaleX := float64(32.0 / 195.0)
-			scaleY := float64(32.0 / 250.0)
+			targetX := ArrXposLoadout[loadoutIdx] - 4
+			targetY := 100.0 - 4
+			scaleX := float64(40.0 / 195.0)
+			scaleY := float64(40.0 / 250.0)
 			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: -0.02, SpeedY: -0.03}
 			scaleAnimation.Apply(cardPickInventory)
 			anim := core.NewMoveAnimationFromParam(core.MoveParam{
@@ -473,6 +472,37 @@ func (r *InventoryScene) Draw(screen *ebiten.Image) {
 
 	if cardPickInventory != nil {
 		cardPickInventory.Draw(screen)
+	}
+	if swapPayloadInstance.source != nil {
+		if swapPayloadInstance.source.itemCursorYPos == 0 {
+			// draw white box on loadout
+			geom := ebiten.GeoM{}
+			// posX, posY := cardPickInventory.GetPos()
+			targetX := ArrXposLoadout[swapPayloadInstance.source.XPos] - 4
+			targetY := 100.0 - 4
+			scaleX := float64(40.0 / 195.0)
+			scaleY := float64(40.0 / 250.0)
+			geom.Scale(scaleX, scaleY)
+			geom.Translate(targetX, targetY)
+			opt := &ebiten.DrawImageOptions{
+				GeoM: geom,
+			}
+			screen.DrawImage(assets.CardPick, opt)
+		} else {
+			// draw white box on inventory
+			geom := ebiten.GeoM{}
+			// posX, posY := cardPickInventory.GetPos()
+			targetX := 20.0 - 2
+			targetY := CardStartY - 2
+			scaleX := 1.0
+			scaleY := 1.0
+			geom.Scale(scaleX, scaleY)
+			geom.Translate(targetX, targetY)
+			opt := &ebiten.DrawImageOptions{
+				GeoM: geom,
+			}
+			screen.DrawImage(assets.CardPick, opt)
+		}
 	}
 	// ItemSlot = []*ebiten.Image{}
 	for _, j := range ItemSlot {
