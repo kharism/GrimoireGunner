@@ -33,6 +33,9 @@ var menuBg []byte
 //go:embed images/cardpick.png
 var cardPick []byte
 
+//go:embed images/cardpick_red.png
+var cardPick_red []byte
+
 //go:embed images/basicsprite2.png
 var player1Stand []byte
 
@@ -334,6 +337,7 @@ var HealFx *ebiten.Image
 var StageClear *ebiten.Image
 var CardTemplate *ebiten.Image
 var CardPick *ebiten.Image
+var CardPickRed *ebiten.Image
 
 // audio stuff
 
@@ -686,6 +690,10 @@ func init() {
 	if CardPick == nil {
 		imgReader := bytes.NewReader(cardPick)
 		CardPick, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if CardPickRed == nil {
+		imgReader := bytes.NewReader(cardPick_red)
+		CardPickRed, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if SwordAtkRaw == nil {
 		imgReader := bytes.NewReader(sword_fx)

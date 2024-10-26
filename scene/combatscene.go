@@ -46,6 +46,12 @@ func (c *CombatScene) Update() error {
 		c.sm.ProcessTrigger(TriggerToInventory)
 	}
 	if c.sandboxMode && inpututil.IsKeyJustPressed(ebiten.KeyTab) {
+		if len(c.data.CurrentLevel.NextNode) == 0 {
+			// generate new level
+			c.data.LevelLayout = GenerateLayout1()
+
+			c.data.CurrentLevel = nil //c.data.LevelLayout.Root
+		}
 		c.sm.ProcessTrigger(TriggerToStageSelect)
 	}
 	if c.debugPause {
