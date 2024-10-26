@@ -22,7 +22,7 @@ type CannonCaster struct {
 }
 
 func NewCannonCaster() *CannonCaster {
-	return &CannonCaster{Cost: 100, nextCooldown: time.Now(), Damage: 80, CoolDown: 1 * time.Second, OnHit: SingleHitProjectile}
+	return &CannonCaster{Cost: 100, nextCooldown: time.Now(), Damage: 80, CoolDown: 3 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *CannonCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front immediately.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())

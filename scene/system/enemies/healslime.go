@@ -1,7 +1,6 @@
 package enemies
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -129,7 +128,7 @@ type SlimeShoot struct {
 func (s *SlimeShoot) Execute(ecs *ecs.ECS) {
 	gridData, _ := attack.GetPlayerGridPos(ecs)
 
-	fmt.Println(gridData.Col, gridData.Row)
+	// fmt.Println(gridData.Col, gridData.Row)
 	bullet := ecs.World.Create(component.Fx)
 	scrX, srcY := assets.GridCoord2Screen(s.StartRow, s.StartCol)
 	bomb := assets.Bomb1

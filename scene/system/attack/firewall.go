@@ -17,7 +17,7 @@ import (
 
 func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit component.OnAtkHit) {
 	sourceScrX, sourceSrcY := assets.GridCoord2Screen(sourceRow, sourceCol)
-	fmt.Println(sourceRow, sourceCol, sourceScrX, sourceSrcY)
+	// fmt.Println(sourceRow, sourceCol, sourceScrX, sourceSrcY)
 	sourceScrX -= 50
 	sourceSrcY -= 50
 	for i := 0; i < 4; i++ {
