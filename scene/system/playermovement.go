@@ -3,8 +3,6 @@ package system
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	csg "github.com/kharism/golang-csg/core"
-	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -43,17 +41,19 @@ func ValidMove(ecs *ecs.ECS, row, col int) bool {
 }
 func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 	playerEntry := ecs.World.Entry(*p.PlayerIndex)
-	var targetX, targetY float64
+	// var targetX, targetY float64
+	gridPos := component.GridPos.Get(playerEntry)
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
-		gridPos := component.GridPos.Get(playerEntry)
+
 		if gridPos.Row > 0 {
 			// gridPos.Row -= 1
 			if !ValidMove(ecs, gridPos.Row-1, gridPos.Col) {
 				return
 			}
-			targetX, targetY = assets.GridCoord2Screen(gridPos.Row-1, gridPos.Col)
+			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row-1, gridPos.Col)
 		}
-		component.GridPos.Set(playerEntry, gridPos)
+		gridPos.Row -= 1
+		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
 		gridPos := component.GridPos.Get(playerEntry)
@@ -62,9 +62,10 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row+1, gridPos.Col) {
 				return
 			}
-			targetX, targetY = assets.GridCoord2Screen(gridPos.Row+1, gridPos.Col)
+			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row+1, gridPos.Col)
 		}
-		component.GridPos.Set(playerEntry, gridPos)
+		gridPos.Row += 1
+		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
 		gridPos := component.GridPos.Get(playerEntry)
@@ -73,9 +74,13 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row, gridPos.Col-1) {
 				return
 			}
-			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col-1)
+			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col-1)
 		}
-		component.GridPos.Set(playerEntry, gridPos)
+		gridPos.Col -= 1
+		if gridPos.Col <= -1 {
+			gridPos.Col = 0
+		}
+		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
 		gridPos := component.GridPos.Get(playerEntry)
@@ -84,42 +89,47 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row, gridPos.Col+1) {
 				return
 			}
-			targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
+			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		}
-		component.GridPos.Set(playerEntry, gridPos)
+		gridPos.Col += 1
+		// component.GridPos.Set(playerEntry, gridPos)
 	}
-	screenPos := component.ScreenPos.Get(playerEntry)
-	if targetX != 0 && targetY != 0 {
-		p.isAnim = true
-		component.TargetLocation.Set(playerEntry, &component.MoveTargetData{Tx: targetX, Ty: targetY})
-		vx := targetX - screenPos.X
-		vy := targetY - screenPos.Y
-		if vx != 0 || vy != 0 {
-			speedVector := csg.NewVector(vx, vy, 0)
-			speedVector = speedVector.Normalize().MultiplyScalar(DefaultSpeed)
-			component.Speed.Set(playerEntry, &component.SpeedData{Vx: speedVector.X, Vy: speedVector.Y})
-		}
-		component.TargetLocation.Set(playerEntry, &component.MoveTargetData{Tx: targetX, Ty: targetY})
-	}
-	targetLoc := component.TargetLocation.Get(playerEntry)
-	speedComponent := component.Speed.Get(playerEntry)
-	screenPos.X += speedComponent.Vx
-	screenPos.Y += speedComponent.Vy
-	component.ScreenPos.Set(playerEntry, screenPos)
-	// fmt.Println(screenPos)
-	if screenPos.X == targetLoc.Tx && screenPos.Y == targetLoc.Ty {
-		i := component.Speed.Get(playerEntry)
-		i.Vx = 0
-		i.Vy = 0
-		p.isAnim = false
-		component.Speed.Set(playerEntry, i)
-		if assets.TileHeight > 0 {
-			col, row := assets.Coord2Grid(targetLoc.Tx, targetLoc.Ty)
-			comp := component.GridPos.Get(playerEntry)
-			comp.Col = col
-			comp.Row = row
-		}
+	// targetX, targetY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
+	scrPos := component.ScreenPos.Get(playerEntry)
+	scrPos.X = 0
+	scrPos.Y = 0
+	// screenPos := component.ScreenPos.Get(playerEntry)
+	// if targetX != 0 && targetY != 0 {
+	// 	p.isAnim = true
+	// 	component.TargetLocation.Set(playerEntry, &component.MoveTargetData{Tx: targetX, Ty: targetY})
+	// 	vx := targetX - screenPos.X
+	// 	vy := targetY - screenPos.Y
+	// 	if vx != 0 || vy != 0 {
+	// 		speedVector := csg.NewVector(vx, vy, 0)
+	// 		speedVector = speedVector.Normalize().MultiplyScalar(DefaultSpeed)
+	// 		component.Speed.Set(playerEntry, &component.SpeedData{Vx: speedVector.X, Vy: speedVector.Y})
+	// 	}
+	// 	component.TargetLocation.Set(playerEntry, &component.MoveTargetData{Tx: targetX, Ty: targetY})
+	// }
+	// targetLoc := component.TargetLocation.Get(playerEntry)
+	// speedComponent := component.Speed.Get(playerEntry)
+	// screenPos.X += speedComponent.Vx
+	// screenPos.Y += speedComponent.Vy
+	// component.ScreenPos.Set(playerEntry, screenPos)
+	// // fmt.Println(screenPos)
+	// if screenPos.X == targetLoc.Tx && screenPos.Y == targetLoc.Ty {
+	// 	i := component.Speed.Get(playerEntry)
+	// 	i.Vx = 0
+	// 	i.Vy = 0
+	// 	p.isAnim = false
+	// 	component.Speed.Set(playerEntry, i)
+	// 	if assets.TileHeight > 0 {
+	// 		col, row := assets.Coord2Grid(targetLoc.Tx, targetLoc.Ty)
+	// 		comp := component.GridPos.Get(playerEntry)
+	// 		comp.Col = col
+	// 		comp.Row = row
+	// 	}
 
-	}
+	// }
 
 }
