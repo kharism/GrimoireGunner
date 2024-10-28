@@ -31,7 +31,7 @@ func (l *BombConstructCaster) GetDamage() int {
 	return l.Damage
 }
 func NewBombConstructCaster() *BombConstructCaster {
-	return &BombConstructCaster{Cost: 200, Damage: 5, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second, OnHit: SingleHitProjectile}
+	return &BombConstructCaster{Cost: 200, Damage: 200, ShotAmount: 10, nextCooldown: time.Now(), CooldownDuration: 3 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *BombConstructCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\nCreate bomb (200HP) which explode for %d damage when destroyed.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.CooldownDuration.Seconds())
