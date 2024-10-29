@@ -78,6 +78,7 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			component.OnHit.SetValue(entry3, l.OnHit)
 		}
 		fxEntity := ecs.World.Create(component.Fx)
+		AtkSfxQueue.QueueSFX(assets.SlashFx)
 		fx := ecs.World.Entry(fxEntity)
 		scrX, scrY := assets.GridCoord2Screen(playerGridLoc.Row-1, playerGridLoc.Col+1)
 		scrX -= 50
