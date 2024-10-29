@@ -76,6 +76,7 @@ func (l *BombConstructCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 func onBombDestroyed(ecs *ecs.ECS, entry *donburi.Entry) {
 	gridPOs := component.GridPos.Get(entry)
 	onHit := component.OnHit.Get(entry)
+	AtkSfxQueue.QueueSFX(assets.ExplosionFx)
 	for col := gridPOs.Col - 1; col <= gridPOs.Col+1; col++ {
 		for row := gridPOs.Row - 1; row <= gridPOs.Row+1; row++ {
 			if col >= 8 || col < 0 || row < 0 || row >= 4 {
@@ -99,6 +100,7 @@ func onBombDestroyed(ecs *ecs.ECS, entry *donburi.Entry) {
 			scrPos.X, scrPos.Y = assets.GridCoord2Screen(row, col)
 			// gridMap[gridPos.Row][gridPos.Col] = nil
 			// ecs.World.Remove(damageableEntity.Entity())
+
 			explosionAnim := assets.NewExplosionAnim(assets.SpriteParam{
 				ScreenX: scrPos.X - float64(assets.TileWidth)/2,
 				ScreenY: scrPos.Y - 75,
