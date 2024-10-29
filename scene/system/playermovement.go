@@ -31,6 +31,9 @@ var QueryHP = donburi.NewQuery(
 // for now it checks another character
 func ValidMove(ecs *ecs.ECS, row, col int) bool {
 	ObstacleExist := false
+	if row < 0 || row > 7 || col < 0 || col > 4 {
+		return false
+	}
 	QueryHP.Each(ecs.World, func(e *donburi.Entry) {
 		pos := component.GridPos.Get(e)
 		if pos.Col == col && pos.Row == row {
@@ -50,9 +53,10 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row-1, gridPos.Col) {
 				return
 			}
+			gridPos.Row -= 1
 			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row-1, gridPos.Col)
 		}
-		gridPos.Row -= 1
+
 		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
@@ -62,9 +66,10 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row+1, gridPos.Col) {
 				return
 			}
+			gridPos.Row += 1
 			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row+1, gridPos.Col)
 		}
-		gridPos.Row += 1
+
 		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
@@ -74,9 +79,10 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row, gridPos.Col-1) {
 				return
 			}
+			gridPos.Col -= 1
 			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col-1)
 		}
-		gridPos.Col -= 1
+
 		if gridPos.Col <= -1 {
 			gridPos.Col = 0
 		}
@@ -89,9 +95,10 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 			if !ValidMove(ecs, gridPos.Row, gridPos.Col+1) {
 				return
 			}
+			gridPos.Col += 1
 			// targetX, targetY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
 		}
-		gridPos.Col += 1
+
 		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	// targetX, targetY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
