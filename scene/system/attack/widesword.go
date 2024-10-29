@@ -58,24 +58,29 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		var entry1 *donburi.Entry
 		var entry2 *donburi.Entry
 		var entry3 *donburi.Entry
+		now := time.Now()
+
 		if playerGridLoc.Row > 0 {
-			hitbox1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
+			hitbox1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 			entry1 = ecs.World.Entry(hitbox1)
 			component.Damage.Set(entry1, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry1, &component.GridPosComponentData{Row: playerGridLoc.Row - 1, Col: playerGridLoc.Col + 1})
 			component.OnHit.SetValue(entry1, l.OnHit)
+			component.Transient.Set(entry1, &component.TransientData{Start: now, Duration: 100 * time.Millisecond})
 		}
-		hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
+		hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 		entry2 = ecs.World.Entry(hitbox2)
 		component.Damage.Set(entry2, &component.DamageData{Damage: l.GetDamage()})
 		component.GridPos.Set(entry2, &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1})
 		component.OnHit.SetValue(entry2, l.OnHit)
+		component.Transient.Set(entry2, &component.TransientData{Start: now, Duration: 100 * time.Millisecond})
 		if playerGridLoc.Row < 3 {
-			hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
+			hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 			entry3 = ecs.World.Entry(hitbox3)
 			component.Damage.Set(entry3, &component.DamageData{Damage: l.GetDamage()})
 			component.GridPos.Set(entry3, &component.GridPosComponentData{Row: playerGridLoc.Row + 1, Col: playerGridLoc.Col + 1})
 			component.OnHit.SetValue(entry3, l.OnHit)
+			component.Transient.Set(entry3, &component.TransientData{Start: now, Duration: 100 * time.Millisecond})
 		}
 		fxEntity := ecs.World.Create(component.Fx)
 		AtkSfxQueue.QueueSFX(assets.SlashFx)
@@ -88,15 +93,7 @@ func (l *WideSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			ScreenY: scrY,
 			Modulo:  5,
 			Done: func() {
-				if entry1 != nil {
-					ecs.World.Remove(entry1.Entity())
-				}
-				if entry2 != nil {
-					ecs.World.Remove(entry2.Entity())
-				}
-				if entry3 != nil {
-					ecs.World.Remove(entry3.Entity())
-				}
+
 				ecs.World.Remove(fxEntity)
 			},
 		})
