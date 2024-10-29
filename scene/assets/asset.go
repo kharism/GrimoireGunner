@@ -358,6 +358,15 @@ var MenuMove []byte
 //go:embed sfx/magibullet.mp3
 var MagibulletFx []byte
 
+//go:embed sfx/impact.mp3
+var ImpactFx []byte
+
+//go:embed sfx/explosion.mp3
+var ExplosionFx []byte
+
+//go:embed sfx/swosh.mp3
+var SlashFx []byte
+
 var TileWidth int
 var TileHeight int
 

@@ -90,6 +90,7 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			ScreenY: playerScrLoc.Y - float64(assets.TileHeight),
 			Modulo:  2,
 		})
+		AtkSfxQueue.QueueSFX(assets.SlashFx)
 		NonProjectileAtk(ecs, param)
 		l.nextCooldown = time.Now().Add(750 * time.Millisecond)
 		if l.ModEntry != nil {
