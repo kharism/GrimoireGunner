@@ -350,6 +350,14 @@ var BattleMusic []byte
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
 
+// SFX
+
+//go:embed sfx/menu.mp3
+var MenuMove []byte
+
+//go:embed sfx/magibullet.mp3
+var MagibulletFx []byte
+
 var TileWidth int
 var TileHeight int
 

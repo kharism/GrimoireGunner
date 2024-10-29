@@ -25,7 +25,7 @@ func NewCombatNextStage(decorator CombatSceneDecorator) *CombatSceneNextStage {
 	if decorator != nil {
 		return &CombatSceneNextStage{decorator: decorator}
 	}
-	return &CombatSceneNextStage{decorator: RandCombatDecorator()}
+	return &CombatSceneNextStage{decorator: RandCombatDecorator1()}
 }
 
 type RestSceneNextStage struct {

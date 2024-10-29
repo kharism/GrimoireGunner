@@ -46,7 +46,7 @@ func init() {
 		level1Decorator8,
 	}
 }
-func RandCombatDecorator() CombatSceneDecorator {
+func RandCombatDecorator1() CombatSceneDecorator {
 	i := rand.Int() % len(Decorators)
 	return Decorators[i]
 }
@@ -124,4 +124,15 @@ func level1Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewSwordwomen(ecs, 5, 1)
+}
+
+func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = []ItemInterface{
+		DecorateCaster(GenerateCaster()),
+		DecorateCaster(GenerateCaster()),
+		DecorateCaster(GenerateCaster()),
+	}
+	enemies.NewGatlingGhoul(ecs, 6, 1)
+	enemies.NewDemon(ecs, 4, 2)
 }

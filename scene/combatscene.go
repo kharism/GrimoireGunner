@@ -9,6 +9,8 @@ import (
 	"github.com/kharism/grimoiregunner/scene/events"
 	"github.com/kharism/grimoiregunner/scene/layers"
 	"github.com/kharism/grimoiregunner/scene/system"
+	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/grimoiregunner/scene/system/enemies"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -39,6 +41,9 @@ func (c *CombatScene) Update() error {
 		c.musicPlayer.AudioPlayer().Rewind()
 		c.musicPlayer.AudioPlayer().Play()
 	}
+	if c.musicPlayer != nil {
+		c.musicPlayer.Update()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		c.debugPause = !c.debugPause
 	}
@@ -47,6 +52,7 @@ func (c *CombatScene) Update() error {
 	}
 	if c.sandboxMode && inpututil.IsKeyJustPressed(ebiten.KeyTab) {
 		if len(c.data.CurrentLevel.NextNode) == 0 {
+			c.data.Level += 1
 			// generate new level
 			c.data.LevelLayout = GenerateLayout1()
 
@@ -201,6 +207,9 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 			fmt.Println(err.Error())
 		}
 		s.musicPlayer.AudioPlayer().Play()
+		// set interfaces for sfx
+		attack.AtkSfxQueue = s.musicPlayer
+		enemies.EnemySfxQueue = s.musicPlayer
 	} else {
 		// s.musicPlayer.audioPlayer.Rewind()
 		s.musicPlayer.AudioPlayer().Play()
