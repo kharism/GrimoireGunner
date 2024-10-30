@@ -14,15 +14,26 @@ import (
 )
 
 type RewardScene struct {
-	data *SceneData
-	sm   *stagehand.SceneDirector[*SceneData]
+	data        *SceneData
+	sm          *stagehand.SceneDirector[*SceneData]
+	musicPlayer *assets.AudioPlayer
+	loopMusic   bool
 }
 
 func (r *RewardScene) Update() error {
+	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {
+		r.musicPlayer.AudioPlayer().Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
+	if r.musicPlayer != nil {
+		r.musicPlayer.Update()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		currentPick = (currentPick + 1) % 3
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		if currentPick == 0 {
 			currentPick = 2
 		} else {
@@ -31,6 +42,7 @@ func (r *RewardScene) Update() error {
 
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		for i := 0; i < len(cards); i++ {
 			if i == currentPick {
 				moveAnim := core.NewMoveAnimationFromParam(core.MoveParam{Tx: CardStartX + 800, Ty: CardStartY, Speed: 20})
@@ -234,6 +246,16 @@ func (r *RewardScene) Load(state *SceneData, manager stagehand.SceneController[*
 	cards[1] = core.NewMovableImage(card2, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: CardStartX + CardDistX, Sy: CardPicStartY}))
 	card3 := GenerateCard(casterPick[2])
 	cards[2] = core.NewMovableImage(card3, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: CardStartX + 2*CardDistX, Sy: CardPicStartY}))
+
+	r.loopMusic = true
+	var err error
+	if r.musicPlayer == nil {
+		r.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		r.musicPlayer.AudioPlayer().Play()
+	}
 }
 func (s *RewardScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
@@ -242,6 +264,9 @@ func (s *RewardScene) Unload() *SceneData {
 	// your unload code
 	s.data.CurrentLevel.SelectedStage = nil
 	s.data.SceneDecor = nil
-
+	s.loopMusic = false
+	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	return s.data
 }

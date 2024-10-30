@@ -367,6 +367,9 @@ var ExplosionFx []byte
 //go:embed sfx/swosh.mp3
 var SlashFx []byte
 
+//go:embed sfx/cursor_move.mp3
+var CursorFx []byte
+
 var TileWidth int
 var TileHeight int
 

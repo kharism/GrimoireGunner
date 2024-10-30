@@ -199,6 +199,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		var err error
 		if s.sandboxMode {
 			s.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+			s.musicPlayer.AudioPlayer().SetPosition(s.data.MusicSeek)
 		} else {
 			s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic, assets.TypeMP3)
 		}
@@ -268,6 +269,7 @@ func (s *CombatScene) Unload() *SceneData {
 		s.data.SubLoadout2[1].ResetCooldown()
 	}
 	s.loopMusic = false
+	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
 	s.musicPlayer.AudioPlayer().Rewind()
 	s.musicPlayer.AudioPlayer().Pause()
 	return s.data

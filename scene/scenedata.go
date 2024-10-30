@@ -1,6 +1,8 @@
 package scene
 
 import (
+	"time"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
@@ -30,6 +32,8 @@ type SceneData struct {
 
 	//predetermined rewards
 	rewards []ItemInterface
+
+	MusicSeek time.Duration
 
 	Bg *ebiten.Image
 }
