@@ -39,17 +39,22 @@ func (r *MainMenuScene) Update() error {
 		r.musicPlayer.AudioPlayer().Rewind()
 		r.musicPlayer.AudioPlayer().Play()
 	}
+	if r.musicPlayer != nil {
+		r.musicPlayer.Update()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 		r.selectedMenu += 1
 		if r.selectedMenu == len(menus) {
 			r.selectedMenu -= 1
 		}
+		r.musicPlayer.QueueSFX(assets.MenuMove)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
 		r.selectedMenu -= 1
 		if r.selectedMenu == -1 {
 			r.selectedMenu += 1
 		}
+		r.musicPlayer.QueueSFX(assets.MenuMove)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		menusFunc[r.selectedMenu]()
@@ -92,7 +97,7 @@ func init() {
 func (r *MainMenuScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
-	r.loopMusic = true
+	r.loopMusic = false
 	if r.musicPlayer == nil {
 		var err error
 		r.musicPlayer, err = assets.NewAudioPlayer(assets.Menumusic, assets.TypeMP3)

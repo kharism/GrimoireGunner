@@ -6,6 +6,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -57,7 +58,10 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 		gridPos := component.GridPos.Get(e)
 		// health := mycomponent.Health.Get(e)
 		// fmt.Println(e.Entity(), gridPos, gridPos.Row, gridPos.Col, health.Name)
-		gridMap[gridPos.Row][gridPos.Col] = e
+		if gridPos.Row >= 0 && gridPos.Row <= 3 && gridPos.Col >= 0 && gridPos.Row <= 7 {
+			gridMap[gridPos.Row][gridPos.Col] = e
+		}
+
 	})
 	damagingEntries := []*donburi.Entry{}
 	s.DamagingQuery.Each(ecs.World, func(e *donburi.Entry) {
@@ -74,6 +78,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			before := (!isZero && invisTime.Before(time.Now()))
 			if isZero || before {
 				onhit(ecs, e, damageableEntity)
+				attack.AtkSfxQueue.QueueSFX(assets.ImpactFx)
 				AddHitAnim(ecs, damageableEntity.Entity())
 				if component.Health.Get(damageableEntity).OnTakeDamage != nil {
 					damageParam := component.DamageDetail{}
@@ -116,6 +121,7 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 					if damageableEntity.HasComponent(component.OnDestroy) {
 						component.OnDestroy.GetValue(damageableEntity)(ecs, damageableEntity)
 					}
+					attack.AtkSfxQueue.QueueSFX(assets.ExplosionFx)
 					// destroy anim
 					scrPos := component.ScreenPos.GetValue(damageableEntity)
 					if gridPos.Row < 0 || gridPos.Col < 0 {

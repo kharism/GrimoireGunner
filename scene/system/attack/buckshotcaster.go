@@ -62,6 +62,7 @@ func (l *BuckshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		if !ok {
 			return
 		}
+		AtkSfxQueue.QueueSFX(assets.ShotgunFx)
 		gridPos := component.GridPos.Get(playerId)
 		grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 		grid1Entry := ecs.World.Entry(grid1)

@@ -2,6 +2,7 @@ package scene
 
 import (
 	"errors"
+	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -18,6 +19,8 @@ type InventoryScene struct {
 	sm             *stagehand.SceneDirector[*SceneData]
 	cursorIsMoving bool
 	moveLR         MoveCursorState
+	musicPlayer    *assets.AudioPlayer
+	loopMusic      bool
 }
 
 var itemCursorYPos int // fill this with 0 or 1. 0 means the loadout, 1 means the items
@@ -204,10 +207,18 @@ func GetDescOfItem(data *SceneData) string {
 }
 
 func (r *InventoryScene) Update() error {
+	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {
+		r.musicPlayer.AudioPlayer().Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
+	if r.musicPlayer != nil {
+		r.musicPlayer.Update()
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
 		r.sm.ProcessTrigger(TriggerToCombat)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		if swapPayloadInstance.source == nil {
 			swapPayloadInstance.source = &positionSwap{itemCursorYPos: itemCursorYPos}
 			if itemCursorYPos == 0 {
@@ -243,6 +254,7 @@ func (r *InventoryScene) Update() error {
 
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		if itemCursorYPos == 1 {
 			itemCursorYPos = 0
 			targetX := ArrXposLoadout[loadoutIdx] - 4
@@ -264,6 +276,7 @@ func (r *InventoryScene) Update() error {
 		}
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyDown) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		if itemCursorYPos == 0 && len(r.data.Inventory) > 0 {
 			itemCursorYPos = 1
 			targetX := 20.0 - 2
@@ -285,6 +298,7 @@ func (r *InventoryScene) Update() error {
 		}
 	}
 	if !r.cursorIsMoving && itemCursorYPos == 0 && inpututil.IsKeyJustPressed(ebiten.KeyE) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		item := GetItem(&positionSwap{0, loadoutIdx}, r.data)
 		SetItem(&positionSwap{0, loadoutIdx}, r, nil)
 		r.data.Inventory = append(r.data.Inventory, item)
@@ -305,9 +319,11 @@ func (r *InventoryScene) Update() error {
 
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		r.moveLR(r.data, +1)
 	}
 	if !r.cursorIsMoving && inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+		r.musicPlayer.QueueSFX(assets.CursorFx)
 		r.moveLR(r.data, -1)
 	}
 	cardPickInventory.Update()
@@ -576,11 +592,26 @@ func (r *InventoryScene) Load(state *SceneData, manager stagehand.SceneControlle
 		}
 		// GenerateCard()
 	}
+	r.loopMusic = true
+	var err error
+	if r.musicPlayer == nil {
+		r.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		r.musicPlayer.AudioPlayer().SetPosition(r.data.MusicSeek)
+		r.musicPlayer.AudioPlayer().Play()
+		// set interfaces for sfx
+	}
 	// fmt.Println("Load Inventory")
 }
 func (s *InventoryScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
 }
 func (s *InventoryScene) Unload() *SceneData {
+	s.loopMusic = false
+	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	return s.data
 }

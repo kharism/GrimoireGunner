@@ -93,6 +93,7 @@ func (l *FirewallCaster) GetName() string {
 func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
 	if curEn >= f.Cost {
+		AtkSfxQueue.QueueSFX(assets.HitscanFx)
 		ensource.SetEn(curEn - f.Cost)
 		f.nextCooldown = time.Now().Add(f.GetCooldownDuration())
 		query := donburi.NewQuery(

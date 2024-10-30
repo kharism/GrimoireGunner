@@ -98,6 +98,7 @@ func (a *addGatlingShot) Execute(ecs *ecs.ECS) {
 	}
 	// playerScrLoc := component.ScreenPos.GetValue(playerEntry)
 	playerGridLoc := component.GridPos.GetValue(playerEntry)
+	AtkSfxQueue.QueueSFX(assets.MagibulletFx)
 	archetype.NewProjectile(ecs.World, archetype.ProjectileParam{
 		Vx:     15,
 		Vy:     0,

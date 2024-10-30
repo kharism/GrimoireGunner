@@ -36,10 +36,12 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		if time.Now().Sub(timerDelay) > 200*time.Millisecond {
 			playerId := ecs.World.Entry(*s.PlayerIndex)
 			gridPos := component.GridPos.Get(playerId)
+			attack.AtkSfxQueue.QueueSFX(assets.MagibulletFx)
 			component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 			s.returnToStandby = time.Now().Add(500 * time.Millisecond)
 			attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 25)
 			timerDelay = time.Now()
+
 		}
 
 	}

@@ -350,6 +350,38 @@ var BattleMusic []byte
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
 
+// SFX
+
+//go:embed sfx/menu.mp3
+var MenuMove []byte
+
+//go:embed sfx/magibullet.mp3
+var MagibulletFx []byte
+
+//go:embed sfx/impact.mp3
+var ImpactFx []byte
+
+//go:embed sfx/explosion.mp3
+var ExplosionFx []byte
+
+//go:embed sfx/swosh.mp3
+var SlashFx []byte
+
+//go:embed sfx/cursor_move.mp3
+var CursorFx []byte
+
+//go:embed sfx/shotgun.mp3
+var ShotgunFx []byte
+
+//go:embed sfx/hitscan.mp3
+var HitscanFx []byte
+
+//go:embed sfx/heal.mp3
+var HealsFx []byte
+
+//go:embed sfx/lightning.mp3
+var LightningFx []byte
+
 var TileWidth int
 var TileHeight int
 

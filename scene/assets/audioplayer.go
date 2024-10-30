@@ -3,6 +3,7 @@ package assets
 import (
 	"bytes"
 	"io"
+	"log"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -27,6 +28,7 @@ type AudioPlayer struct {
 	volume128 int
 
 	musicType musicType
+	playSfx   bool
 }
 type musicType int
 
@@ -50,8 +52,11 @@ func (p *AudioPlayer) Close() error {
 func (p *AudioPlayer) Update() error {
 	select {
 	case p.seBytes = <-p.seCh:
-		close(p.seCh)
-		p.seCh = nil
+		// fmt.Println("SFX detected")
+		// close(p.seCh)
+		// p.playSfx = true
+
+		// p.seCh = nil
 	default:
 	}
 	p.PlaySEIfNeeded()
@@ -62,18 +67,35 @@ func (p *AudioPlayer) ShouldPlaySE() bool {
 		// Bytes for the SE is not loaded yet.
 		return false
 	}
-	return false
+	// fmt.Println(p.seCh)
+	return p.seCh != nil
 }
 
 func (p *AudioPlayer) PlaySEIfNeeded() {
-	// if !p.shouldPlaySE() {
-	// 	return
-	// }
-	// sePlayer := p.audioContext.NewPlayerFromBytes(p.seBytes)
-	// sePlayer.Play()
+	if !p.ShouldPlaySE() {
+		return
+	}
+	sePlayer := p.audioContext.NewPlayerFromBytes(p.seBytes)
+	sePlayer.Play()
+	p.seBytes = nil
+}
+func (p *AudioPlayer) QueueSFX(param []byte) {
+	go func() {
+		s, err := mp3.DecodeWithoutResampling(bytes.NewReader(param))
+		// p.seCh <- param
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		b, err := io.ReadAll(s)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		p.seCh <- b
+	}()
 
 }
-
 func NewAudioPlayer(audioByte []byte, musicType musicType) (*AudioPlayer, error) {
 	type audioStream interface {
 		io.ReadSeeker
@@ -108,7 +130,7 @@ func NewAudioPlayer(audioByte []byte, musicType musicType) (*AudioPlayer, error)
 		audioContext: audioContext,
 		audioPlayer:  p,
 		total:        time.Second * time.Duration(s.Length()) / bytesPerSample / sampleRate,
-		volume128:    32,
+		volume128:    2,
 		seCh:         make(chan []byte),
 		seBytes:      []byte{},
 		musicType:    musicType,

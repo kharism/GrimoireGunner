@@ -52,6 +52,7 @@ func (l *HealCaster) ResetCooldown() {
 func (l *HealCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.GetCost() {
+		AtkSfxQueue.QueueSFX(assets.HealsFx)
 		ensource.SetEn(en - l.GetCost())
 		l.nextCooldown = time.Now().Add(l.CooldownDuration)
 

@@ -94,6 +94,7 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				archetype.PlayerTag,
 			),
 		)
+		AtkSfxQueue.QueueSFX(assets.LightningFx)
 
 		playerId, ok := query.First(ecs.World)
 		if !ok {

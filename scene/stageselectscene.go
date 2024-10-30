@@ -21,6 +21,8 @@ type StageSelect struct {
 	data        *SceneData
 	sm          *stagehand.SceneDirector[*SceneData]
 	LevelLayout *Level
+	musicPlayer *assets.AudioPlayer
+	loopMusic   bool
 }
 type LevelNode struct {
 	Id string
@@ -49,7 +51,7 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(nil),
+			SelectedStage: NewCombatNextStage(level1Decorator7),
 			Icon:          assets.BattleIcon,
 		},
 	}
@@ -233,7 +235,13 @@ func (r *StageSelect) Draw(screen *ebiten.Image) {
 	stagePick.Draw(screen)
 }
 func (r *StageSelect) Update() error {
-
+	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {
+		r.musicPlayer.AudioPlayer().Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
+	if r.musicPlayer != nil {
+		r.musicPlayer.Update()
+	}
 	curLevel := r.data.CurrentLevel
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 		stageCursorIndex += 1
@@ -324,6 +332,17 @@ func (r *StageSelect) Load(state *SceneData, manager stagehand.SceneController[*
 		}
 		stagePick.SetPos(StartPositionX, startY)
 	}
+	r.loopMusic = true
+	var err error
+	if r.musicPlayer == nil {
+		r.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		r.musicPlayer.AudioPlayer().SetPosition(r.data.MusicSeek)
+		r.musicPlayer.AudioPlayer().Play()
+		// set interfaces for sfx
+	}
 
 }
 func (s *StageSelect) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -336,6 +355,10 @@ func (s *StageSelect) Unload() *SceneData {
 		pickedStage.SelectedStage.DecorSceneData(s.data)
 		// s.data.SceneDecor = pickedStage.CombatDecor
 	}
+	s.loopMusic = false
+	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	// s.data.CurrentLevel = tiers[s.data.CurrentLevel.Tier][stageCursorIndex]
 	return s.data
 }

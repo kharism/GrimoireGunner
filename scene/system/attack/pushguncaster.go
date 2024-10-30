@@ -96,6 +96,7 @@ func (l *PushgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	if en >= l.Cost {
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		closestTarget := HitScanGetNearestTarget(ecs)
+		AtkSfxQueue.QueueSFX(assets.HitscanFx)
 		if closestTarget != nil {
 			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Transient)
 			grid1Entry := ecs.World.Entry(grid1)

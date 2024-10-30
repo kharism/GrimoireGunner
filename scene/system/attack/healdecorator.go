@@ -43,6 +43,7 @@ func DecorateWithHeal(caster loadout.Caster) loadout.Caster {
 func AddHeal(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
 	gridPos, playerEnt := GetPlayerGridPos(ecs)
 	healthComp := component.Health.Get(playerEnt)
+	AtkSfxQueue.QueueSFX(assets.HealsFx)
 	if healthComp.HP+5 < healthComp.MaxHP {
 		healthComp.HP += 5
 	} else {
