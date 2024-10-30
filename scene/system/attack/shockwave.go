@@ -38,7 +38,7 @@ func (l *ShockWaveCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewShockwaveCaster() *ShockWaveCaster {
-	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 2 * time.Second, OnHit: shockWaveOnAtkHit}
+	return &ShockWaveCaster{Cost: 200, nextCooldown: time.Now(), Damage: 40, Cooldown: 6 * time.Second, OnHit: shockWaveOnAtkHit}
 }
 
 var queryHP = donburi.NewQuery(

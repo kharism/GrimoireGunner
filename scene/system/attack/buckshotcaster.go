@@ -38,7 +38,7 @@ func (l *BuckshotCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewBuckshotCaster() *BuckshotCaster {
-	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 2 * time.Second, OnHit: SingleHitProjectile}
+	return &BuckshotCaster{Cost: 200, nextCooldown: time.Now(), Damage: 150, CoolDown: 6 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *BuckshotCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage in T-shaped cone in front. Hit the target in front 3 times\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())

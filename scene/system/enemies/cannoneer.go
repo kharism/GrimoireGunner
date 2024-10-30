@@ -33,6 +33,7 @@ func NewCannoneer(ecs *ecs.ECS, col, row int) {
 
 var CURRENT_STRATEGY = "CurrMove"
 var WARM_UP = "WarmUp"
+var CUR_DMG = "CurDMG"
 
 // check whether there are obstacle on row-col grid
 // for now it checks another character

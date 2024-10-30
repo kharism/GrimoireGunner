@@ -3,23 +3,27 @@ module github.com/kharism/grimoiregunner
 go 1.22.0
 
 require (
-	github.com/hajimehoshi/ebiten/v2 v2.7.8
+	github.com/hajimehoshi/ebiten/v2 v2.8.1
 	github.com/joelschutz/stagehand v1.1.1
 	github.com/kharism/golang-csg v0.0.0-20220829085131-457731c503f8
 	github.com/yohamta/donburi v1.4.4
 )
 
-require github.com/hajimehoshi/ebiten v1.12.12 // indirect
+require (
+	github.com/ebitengine/oto/v3 v3.3.1 // indirect
+	github.com/hajimehoshi/ebiten v1.12.12 // indirect
+	github.com/hajimehoshi/go-mp3 v0.3.4 // indirect
+)
 
 require (
-	github.com/ebitengine/gomobile v0.0.0-20240518074828-e86332849895 // indirect
+	github.com/ebitengine/gomobile v0.0.0-20240911145611-4856209ac325 // indirect
 	github.com/ebitengine/hideconsole v1.0.0 // indirect
-	github.com/ebitengine/purego v0.7.1 // indirect
-	github.com/go-text/typesetting v0.1.1-0.20240325125605-c7936fe59984 // indirect
+	github.com/ebitengine/purego v0.8.0 // indirect
+	github.com/go-text/typesetting v0.2.0 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
-	github.com/kharism/hanashi v0.0.0-20240817234202-5440be114052
-	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	github.com/kharism/hanashi v0.0.0-20240906235352-bb52398f942c
+	golang.org/x/image v0.20.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 )

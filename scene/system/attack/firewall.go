@@ -62,7 +62,7 @@ type FirewallCaster struct {
 }
 
 func NewFirewallCaster() *FirewallCaster {
-	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 2 * time.Second, Damage: 10, OnHit: OnTowerHit}
+	return &FirewallCaster{Cost: 200, nextCooldown: time.Now(), Cooldown: 6 * time.Second, Damage: 10, OnHit: OnTowerHit}
 }
 func (l *FirewallCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry

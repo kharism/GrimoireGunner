@@ -14,13 +14,14 @@ func NewGatlingGhoul(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Gatlingghoul)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 800, Name: "Gatlinghoul"})
+	component.Health.Set(entry, &component.HealthData{HP: 400, Name: "Gatlinghoul"})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
 	data := map[string]any{}
 	data[ALREADY_FIRED] = false
 	data[WARM_UP] = nil
 	data[CURRENT_STRATEGY] = ""
+	data[CUR_DMG] = 20
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: GatlinghoulRoutine, Memory: data})
 }
 
@@ -32,6 +33,7 @@ var scanOrder1 = [16][2]int{
 
 func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
+	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {
 		memory[CURRENT_STRATEGY] = "WAIT"
 		memory[WARM_UP] = time.Now().Add(2 * time.Second)
@@ -62,7 +64,7 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 				entry := ecs_.World.Entry(entityDust)
 				jj := scanOrder1[curIdx]
 				component.GridPos.Set(entry, &component.GridPosComponentData{Row: jj[0], Col: jj[1]})
-				component.Damage.Set(entry, &component.DamageData{Damage: 20})
+				component.Damage.Set(entry, &component.DamageData{Damage: dmg})
 				component.OnHit.SetValue(entry, GatlingGhoulOnAtkHit)
 				component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 200 * time.Millisecond})
 				screenX, screenY := assets.GridCoord2Screen(jj[0], jj[1])
@@ -99,7 +101,7 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 
 			}
 		} else if curIdx == 16 {
-
+			memory[CUR_DMG] = dmg + 10
 		}
 	}
 }

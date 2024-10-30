@@ -45,7 +45,7 @@ func main() {
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
 			attack.NewGatlingCastor(),
-			attack.NewHealCaster(),
+			attack.NewCannonCaster(),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,

@@ -36,7 +36,7 @@ func (l *PushgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewPushgunCaster() *PushgunCaster {
-	return &PushgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 1 * time.Second, OnHit: PushbackOnHit}
+	return &PushgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 3 * time.Second, OnHit: PushbackOnHit}
 }
 func PushbackOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	damage := component.Damage.Get(projectile).Damage

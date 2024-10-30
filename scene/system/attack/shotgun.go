@@ -35,7 +35,7 @@ func (l *ShotgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	l.ModEntry = e
 }
 func NewShotgunCaster() *ShotgunCaster {
-	return &ShotgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 1 * time.Second, OnHit: SingleHitProjectile}
+	return &ShotgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 3 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *ShotgunCaster) GetDescription() string {
 	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and its behind immediately.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())

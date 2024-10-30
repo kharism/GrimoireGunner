@@ -70,7 +70,7 @@ type LightingBoltCaster struct {
 }
 
 func NewLightningBolCaster() *LightingBoltCaster {
-	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 5 * time.Second, OnHit: LightningBoltOnHitfunc}
+	return &LightingBoltCaster{Cost: 300, Damage: 60, nextCooldown: time.Now(), CoolDown: 8 * time.Second, OnHit: LightningBoltOnHitfunc}
 }
 func (l *LightingBoltCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
