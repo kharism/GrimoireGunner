@@ -370,6 +370,18 @@ var SlashFx []byte
 //go:embed sfx/cursor_move.mp3
 var CursorFx []byte
 
+//go:embed sfx/shotgun.mp3
+var ShotgunFx []byte
+
+//go:embed sfx/hitscan.mp3
+var HitscanFx []byte
+
+//go:embed sfx/heal.mp3
+var HealsFx []byte
+
+//go:embed sfx/lightning.mp3
+var LightningFx []byte
+
 var TileWidth int
 var TileHeight int
 

@@ -110,7 +110,7 @@ func (c *ShockWaveCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				archetype.PlayerTag,
 			),
 		)
-
+		AtkSfxQueue.QueueSFX(assets.HitscanFx)
 		playerId, ok := query.First(ecs.World)
 		if !ok {
 			return

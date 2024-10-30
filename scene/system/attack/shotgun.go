@@ -81,7 +81,7 @@ func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	if en >= l.Cost {
 		ensource.SetEn(en - l.Cost)
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
-
+		AtkSfxQueue.QueueSFX(assets.HitscanFx)
 		closestTarget := HitScanGetNearestTarget(ecs)
 		if closestTarget != nil {
 			grid1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
@@ -97,7 +97,7 @@ func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				component.GridPos.Set(grid1Entry, &component.GridPosComponentData{Col: targetGridPos.Col + 1, Row: targetGridPos.Row})
 				component.Damage.Set(grid1Entry, &component.DamageData{Damage: l.GetDamage()})
 				component.OnHit.SetValue(grid1Entry, l.OnHit)
-				component.Transient.Set(grid1Entry, &component.TransientData{Duration: 1 * time.Second, Start: time.Now()})
+				component.Transient.Set(grid1Entry, &component.TransientData{Duration: 300 * time.Millisecond, Start: time.Now()})
 			}
 		}
 		if l.ModEntry != nil {
