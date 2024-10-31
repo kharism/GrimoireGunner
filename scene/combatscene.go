@@ -229,8 +229,9 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		AddSystem(system.UpdateAnouncement).
 		AddRenderer(layers.LayerBackground, system.DrawBg).
 		AddRenderer(layers.LayerGrid, system.GridRenderer.DrawGrid).
-		AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
-		AddRenderer(layers.LayerFx, system.RenderFx).
+		// AddRenderer(layers.LayerCharacter, system.CharacterRenderer.DrawCharacter).
+		// AddRenderer(layers.LayerFx, system.RenderFx).
+		AddRenderer(layers.LayerCharacter, system.UnifiedRenderer).
 		AddRenderer(layers.LayerDebug, system.DebugRenderer.DrawDebug).
 		AddRenderer(layers.LayerUI, Ensystemrenderer.DrawEnBar).
 		AddRenderer(layers.LayerUI, system.RenderLoadOut).
