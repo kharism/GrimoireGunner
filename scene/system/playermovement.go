@@ -45,6 +45,9 @@ func ValidMove(ecs *ecs.ECS, row, col int) bool {
 func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 	playerEntry := ecs.World.Entry(*p.PlayerIndex)
 	// var targetX, targetY float64
+	if !playerEntry.HasComponent(component.GridPos) {
+		return
+	}
 	gridPos := component.GridPos.Get(playerEntry)
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
 
@@ -102,6 +105,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 		// component.GridPos.Set(playerEntry, gridPos)
 	}
 	// targetX, targetY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col+1)
+	if !playerEntry.HasComponent(component.ScreenPos) {
+		return
+	}
 	scrPos := component.ScreenPos.Get(playerEntry)
 	scrPos.X = 0
 	scrPos.Y = 0

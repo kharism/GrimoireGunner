@@ -34,7 +34,10 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		),
 	)
 
-	playerEntry, _ := query.First(ecs.World)
+	playerEntry, ok := query.First(ecs.World)
+	if !ok {
+		return
+	}
 	playerSprite := component.Sprite.Get(playerEntry).Image
 	playerScrPos := component.ScreenPos.Get(playerEntry)
 	bounds := playerSprite.Bounds()
