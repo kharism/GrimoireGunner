@@ -24,10 +24,12 @@ func NewSwordwomen(ecs *ecs.ECS, col, row int) {
 	data[WARM_UP] = nil
 	data[CURRENT_STRATEGY] = ""
 	data[MOVE_COUNT] = 0
+	data[CUR_DMG] = 50
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: SwordwomenRoutine, Memory: data})
 }
 func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
+	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {
 		memory[CURRENT_STRATEGY] = "WAIT"
 		component.Sprite.Set(entity, &component.SpriteData{Image: assets.Swordswomen})
@@ -89,7 +91,7 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					Vy:     0,
 					Col:    gridPos.Col - 1,
 					Row:    gridPos.Row,
-					Damage: 20,
+					Damage: dmg - 30,
 					Sprite: assets.Projectile1,
 					OnHit:  attack.SingleHitProjectile,
 				})
@@ -107,7 +109,7 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 						Vy:     0,
 						Col:    gridPos.Col - 1,
 						Row:    rows[i],
-						Damage: 20,
+						Damage: dmg - 30,
 						Sprite: assets.Projectile2,
 						OnHit:  attack.SingleHitProjectile,
 					})
@@ -155,6 +157,7 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 
 			} else {
 				memory[CURRENT_STRATEGY] = "WAIT"
+				memory[CUR_DMG] = dmg + 10
 				memory[WARM_UP] = time.Now().Add(800 * time.Millisecond)
 			}
 		}
@@ -170,19 +173,19 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			if gridPos.Row > 0 {
 				hitbox1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 				entry1 = ecs.World.Entry(hitbox1)
-				component.Damage.Set(entry1, &component.DamageData{Damage: 70})
+				component.Damage.Set(entry1, &component.DamageData{Damage: dmg + 20})
 				component.GridPos.Set(entry1, &component.GridPosComponentData{Row: gridPos.Row - 1, Col: gridPos.Col - 1})
 				component.OnHit.SetValue(entry1, onReaperHit)
 			}
 			hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			entry2 = ecs.World.Entry(hitbox2)
-			component.Damage.Set(entry2, &component.DamageData{Damage: 70})
+			component.Damage.Set(entry2, &component.DamageData{Damage: dmg + 20})
 			component.GridPos.Set(entry2, &component.GridPosComponentData{Row: gridPos.Row, Col: gridPos.Col - 1})
 			component.OnHit.SetValue(entry2, onReaperHit)
 			if gridPos.Row < 3 {
 				hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 				entry3 = ecs.World.Entry(hitbox3)
-				component.Damage.Set(entry3, &component.DamageData{Damage: 70})
+				component.Damage.Set(entry3, &component.DamageData{Damage: dmg + 20})
 				component.GridPos.Set(entry3, &component.GridPosComponentData{Row: gridPos.Row + 1, Col: gridPos.Col - 1})
 				component.OnHit.SetValue(entry3, onReaperHit)
 			}

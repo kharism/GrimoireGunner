@@ -22,6 +22,7 @@ func NewReaper(ecs *ecs.ECS, col, row int) {
 	data[ALREADY_FIRED] = false
 	data[WARM_UP] = nil
 	data[CURRENT_STRATEGY] = ""
+	data[CUR_DMG] = 20
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: ReaperRoutine, Memory: data})
 }
 
@@ -29,6 +30,7 @@ var ORIPOS = "OriPos"
 
 func ReaperRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
+	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {
 		memory[CURRENT_STRATEGY] = "WAIT"
 		memory[WARM_UP] = time.Now().Add(3 * time.Second)
@@ -98,21 +100,21 @@ func ReaperRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			if reaperGridPos.Row > 0 {
 				hitbox1 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 				entry1 = ecs.World.Entry(hitbox1)
-				component.Damage.Set(entry1, &component.DamageData{Damage: 20})
+				component.Damage.Set(entry1, &component.DamageData{Damage: dmg})
 				component.GridPos.Set(entry1, &component.GridPosComponentData{Row: reaperGridPos.Row - 1, Col: reaperGridPos.Col - 1})
 				component.OnHit.SetValue(entry1, onReaperHit)
 			}
 
 			hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 			entry2 = ecs.World.Entry(hitbox2)
-			component.Damage.Set(entry2, &component.DamageData{Damage: 20})
+			component.Damage.Set(entry2, &component.DamageData{Damage: dmg})
 			component.GridPos.Set(entry2, &component.GridPosComponentData{Row: reaperGridPos.Row, Col: reaperGridPos.Col - 1})
 			component.OnHit.SetValue(entry2, onReaperHit)
 
 			if reaperGridPos.Row < 3 {
 				hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit)
 				entry3 = ecs.World.Entry(hitbox3)
-				component.Damage.Set(entry3, &component.DamageData{Damage: 20})
+				component.Damage.Set(entry3, &component.DamageData{Damage: dmg})
 				component.GridPos.Set(entry3, &component.GridPosComponentData{Row: reaperGridPos.Row + 1, Col: reaperGridPos.Col - 1})
 				component.OnHit.SetValue(entry3, onReaperHit)
 			}
@@ -148,6 +150,7 @@ func ReaperRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			scrPos := component.ScreenPos.Get(entity)
 			scrPos.X = 0
 			scrPos.Y = 0
+			memory[CUR_DMG] = dmg + 10
 			component.Sprite.Get(entity).Image = assets.Reaper
 		}
 	}

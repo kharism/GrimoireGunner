@@ -21,11 +21,13 @@ func NewHammerghoul(ecs *ecs.ECS, col, row int) {
 	data := map[string]any{}
 	data[CURRENT_STRATEGY] = ""
 	data[WARM_UP] = nil
+	data[CUR_DMG] = 50
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: HammerGhoulRoutine, Memory: data})
 }
 
 func HammerGhoulRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
+	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {
 		memory[CURRENT_STRATEGY] = "WAIT"
 		memory[WARM_UP] = time.Now().Add(3 * time.Second)
@@ -45,7 +47,7 @@ func HammerGhoulRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			startCol := gridPos.Col - 1
 			for ; startCol >= 0; startCol-- {
 				ff := time.Duration(200 * (gridPos.Col - 1 - startCol))
-				CreateMovingExplosion(ecs, startCol, gridPos.Row, time.Now().Add(ff*time.Millisecond))
+				CreateMovingExplosion(ecs, dmg, startCol, gridPos.Row, time.Now().Add(ff*time.Millisecond))
 			}
 
 		}
@@ -60,9 +62,10 @@ func OnAtkHitExplosion(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 
 type createExplosionQueue struct {
-	row  int
-	col  int
-	time time.Time
+	row    int
+	col    int
+	time   time.Time
+	damage int
 }
 
 func (c *createExplosionQueue) Execute(ecs *ecs.ECS) {
@@ -76,7 +79,7 @@ func (c *createExplosionQueue) Execute(ecs *ecs.ECS) {
 	})
 
 	component.Damage.Set(entry1, &component.DamageData{
-		Damage: 50,
+		Damage: c.damage,
 	})
 	component.GridPos.Set(entry1, &component.GridPosComponentData{Row: c.row, Col: c.col})
 	anim.Done = func() {
@@ -89,10 +92,10 @@ func (c *createExplosionQueue) Execute(ecs *ecs.ECS) {
 func (c *createExplosionQueue) GetTime() time.Time {
 	return c.time
 }
-func CreateMovingExplosion(ecs *ecs.ECS, col, row int, time time.Time) {
+func CreateMovingExplosion(ecs *ecs.ECS, dmg, col, row int, time time.Time) {
 	if col == -1 {
 		return
 	}
-	j := &createExplosionQueue{row: row, col: col, time: time}
+	j := &createExplosionQueue{row: row, col: col, time: time, damage: dmg}
 	component.EventQueue.AddEvent(j)
 }

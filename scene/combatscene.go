@@ -83,8 +83,9 @@ func (c *CombatScene) Draw(screen *ebiten.Image) {
 	c.ecs.DrawLayer(layers.LayerCharacter, screen)
 	c.ecs.DrawLayer(layers.LayerFx, screen)
 	c.ecs.DrawLayer(layers.LayerHP, screen)
-	c.ecs.DrawLayer(layers.LayerDebug, screen)
+
 	c.ecs.DrawLayer(layers.LayerUI, screen)
+	c.ecs.DrawLayer(layers.LayerDebug, screen)
 
 	if c.sandboxMode {
 
@@ -270,6 +271,11 @@ func (s *CombatScene) Unload() *SceneData {
 		s.data.SubLoadout2[1].ResetCooldown()
 	}
 	s.loopMusic = false
+	player, _ := archetype.PlayerTag.First(s.ecs.World)
+	pp := component.Health.Get(player)
+	s.data.PlayerHP = pp.HP
+	s.data.PlayerMaxHP = pp.MaxHP
+
 	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
 	s.musicPlayer.AudioPlayer().Rewind()
 	s.musicPlayer.AudioPlayer().Pause()

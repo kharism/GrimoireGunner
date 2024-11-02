@@ -26,6 +26,7 @@ func NewDemon(ecs *ecs.ECS, col, row int) {
 	data[WARM_UP] = nil
 	data[CURRENT_STRATEGY] = ""
 	data[MOVE_COUNT] = 0
+	data[CUR_DMG] = 0 //it actualy damage bonus
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: DemonRoutine, Memory: data})
 }
 
@@ -75,6 +76,7 @@ func DemonRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			DemonAttack(ecs, entity)
 			memory[CURRENT_STRATEGY] = "WAIT"
 			memory[WARM_UP] = time.Now().Add(1 * time.Second)
+			memory[CUR_DMG] = memory[CUR_DMG].(int) + 10
 		}
 	}
 }
@@ -102,6 +104,7 @@ func shockWaveOnAtkHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func DemonAttack(ecs *ecs.ECS, entry *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entry).Memory
+	bonusDmg := memory[CUR_DMG].(int)
 	demonPos := component.GridPos.Get(entry)
 	demonScreenPosX, demonScreenPosY := assets.GridCoord2Screen(demonPos.Row, demonPos.Col)
 	playerPos, _ := attack.GetPlayerGridPos(ecs)
@@ -109,7 +112,7 @@ func DemonAttack(ecs *ecs.ECS, entry *donburi.Entry) {
 	if math.Abs(float64(playerPos.Col-demonPos.Col)) <= 1 {
 		if math.Abs(float64(playerPos.Row-demonPos.Row)) <= 1 {
 			// wide swing
-			DAMAGE := 50
+			DAMAGE := 50 + bonusDmg
 			var entry1 *donburi.Entry
 			var entry2 *donburi.Entry
 			var entry3 *donburi.Entry
@@ -157,7 +160,7 @@ func DemonAttack(ecs *ecs.ECS, entry *donburi.Entry) {
 			component.Fx.Set(fxEntry, &component.FxData{Animation: wideSlash})
 		} else {
 			// column wide attack
-			DAMAGE := 40
+			DAMAGE := 40 + bonusDmg
 			for i := 0; i < 4; i++ {
 				targetScrX, targetScrY := assets.GridCoord2Screen(i, playerCol)
 				targetScrX -= 50
@@ -177,7 +180,7 @@ func DemonAttack(ecs *ecs.ECS, entry *donburi.Entry) {
 		memory[WARM_UP] = time.Now().Add(time.Second)
 	} else {
 		// ranged atk
-		DAMAGE := 30
+		DAMAGE := 30 + bonusDmg
 		shockwave := ecs.World.Create(
 			component.GridPos,
 			component.ScreenPos,
