@@ -32,9 +32,12 @@ func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit 
 		movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{Tx: targetScrX, Ty: targetScrY, Speed: 10}))
 		movableImg.Done = func() {
 			ecs.World.Remove(fx)
-			entity := ecs.World.Create(component.Damage, component.GridPos, component.Transient, component.OnHit, component.Fx)
+			entity := ecs.World.Create(component.Burner, component.Damage, component.GridPos, component.Transient, component.OnHit, component.Fx)
 			entry := ecs.World.Entry(entity)
 			component.Damage.Set(entry, &component.DamageData{Damage: damage})
+			component.Burner.Set(entry, &component.BurnerData{
+				Damage: damage,
+			})
 			component.GridPos.Set(entry, &component.GridPosComponentData{Col: sourceCol + 4, Row: row})
 			component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 5 * time.Second})
 			component.OnHit.SetValue(entry, onAtkHit)
@@ -46,10 +49,10 @@ func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit 
 	}
 }
 func OnTowerHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
-	health := component.Health.Get(receiver)
-	damage := component.Damage.Get(projectile)
-	health.HP -= damage.Damage
-	health.InvisTime = time.Now().Add(1 * time.Second)
+	// health := component.Health.Get(receiver)
+	// damage := component.Damage.Get(projectile)
+	// health.HP -= damage.Damage
+	// health.InvisTime = time.Now().Add(1 * time.Second)
 }
 
 type FirewallCaster struct {
