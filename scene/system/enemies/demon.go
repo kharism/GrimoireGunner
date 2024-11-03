@@ -165,12 +165,15 @@ func DemonAttack(ecs *ecs.ECS, entry *donburi.Entry) {
 				targetScrX, targetScrY := assets.GridCoord2Screen(i, playerCol)
 				targetScrX -= 50
 				targetScrY -= 100
-				entity := ecs.World.Create(component.Damage, component.GridPos, component.Transient, component.OnHit, component.Fx)
+				entity := ecs.World.Create(component.Burner, component.Damage, component.GridPos, component.Transient, component.Fx)
 				entry := ecs.World.Entry(entity)
+				component.Burner.Set(entry, &component.BurnerData{
+					Damage: DAMAGE,
+				})
 				component.Damage.Set(entry, &component.DamageData{Damage: DAMAGE})
 				component.GridPos.Set(entry, &component.GridPosComponentData{Col: playerCol, Row: i})
 				component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 5 * time.Second})
-				component.OnHit.SetValue(entry, attack.OnTowerHit)
+				// component.OnHit.SetValue(entry, attack.OnTowerHit)
 				flameTower := core.NewMovableImage(assets.FlametowerRaw, core.NewMovableImageParams().
 					WithMoveParam(core.MoveParam{Sx: targetScrX, Sy: targetScrY, Speed: 3}))
 				component.Fx.Set(entry, &component.FxData{Animation: flameTower})
