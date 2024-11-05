@@ -51,7 +51,7 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(nil),
+			SelectedStage: NewCombatNextStage(level2Decorator1),
 			Icon:          assets.BattleIcon,
 		},
 	}
@@ -65,7 +65,7 @@ func GenerateLayout1() *Level {
 		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
 		CurNode1.NextNode = append(CurNode1.NextNode, NewNodeA)
 		CurNode2.NextNode = append(CurNode2.NextNode, NewNodeB)
-		if i == 3 {
+		if i == 2 {
 			if rand.Int()%2 == 0 {
 				NewNodeA.SelectedStage = &RestSceneNextStage{}
 				NewNodeB.SelectedStage = &WorkshopSceneNextStage{}
@@ -81,6 +81,8 @@ func GenerateLayout1() *Level {
 			if rand.Int()%2 == 0 {
 				//create line from lower path to uper path
 				CurNode2.NextNode = append(CurNode2.NextNode, NewNodeA)
+				// sort this
+				CurNode2.NextNode[0], CurNode2.NextNode[1] = CurNode2.NextNode[1], CurNode2.NextNode[0]
 			} else {
 				//create line from upper path to lower path
 				CurNode1.NextNode = append(CurNode1.NextNode, NewNodeB)

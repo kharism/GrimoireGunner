@@ -7,6 +7,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/enemies"
+	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -112,10 +113,16 @@ func level1Decorator7(ecs *ecs.ECS, combatscene *CombatScene) {
 }
 func level1Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
-	combatscene.rewards = []ItemInterface{
-		DecorateCaster(GenerateCaster()),
-		DecorateCaster(GenerateCaster()),
-		DecorateCaster(GenerateCaster()),
+	combatscene.rewards = []ItemInterface{}
+	for i := 0; i < 3; i++ {
+		var temp loadout.Caster
+		for {
+			temp = DecorateCaster(GenerateCaster())
+			if temp != nil {
+				break
+			}
+		}
+		combatscene.rewards = append(combatscene.rewards, temp)
 	}
 	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
@@ -128,11 +135,23 @@ func level1Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
 
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
-	combatscene.rewards = []ItemInterface{
-		DecorateCaster(GenerateCaster()),
-		DecorateCaster(GenerateCaster()),
-		DecorateCaster(GenerateCaster()),
+	combatscene.rewards = []ItemInterface{}
+	for i := 0; i < 3; i++ {
+		var temp loadout.Caster
+		for {
+			temp = DecorateCaster(GenerateCaster())
+			if temp != nil {
+				break
+			}
+		}
+		combatscene.rewards = append(combatscene.rewards, temp)
 	}
+
 	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
+}
+func level2Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewPoacher(ecs, 6, 1)
 }

@@ -84,6 +84,9 @@ var bg_rest []byte
 //go:embed images/workbench.png
 var bg_workbench []byte
 
+//go:embed images/beartrap.png
+var beartrap []byte
+
 //go:embed images/pyro-eyes.png
 var pyro_eyes []byte
 
@@ -149,6 +152,15 @@ var swordswomen3 []byte
 
 //go:embed images/swordsman_atk1.png
 var swordswomen4 []byte
+
+//go:embed images/poacher.png
+var poacher []byte
+
+//go:embed images/poacher2.png
+var poacher2 []byte
+
+//go:embed images/poacher3.png
+var poacher3 []byte
 
 //go:embed images/wideslash.png
 var wideslash_fx []byte
@@ -255,6 +267,7 @@ var DamageGrid *ebiten.Image
 var TargetedGrid *ebiten.Image
 var Bomb1 *ebiten.Image
 var Bomb2 *ebiten.Image
+var BearTrap *ebiten.Image
 var Bg *ebiten.Image
 var BgRest *ebiten.Image
 var BgWorkbench *ebiten.Image
@@ -291,6 +304,9 @@ var Swordswomen *ebiten.Image
 var SwordswomenShoot *ebiten.Image
 var SwordswomenWarmup *ebiten.Image
 var SwordswomenCooldown *ebiten.Image
+var Poacher *ebiten.Image
+var PoacherWarmup *ebiten.Image
+var PoacherCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -464,6 +480,10 @@ func init() {
 		imgReader := bytes.NewReader(bg_opening)
 		BgOpening, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BearTrap == nil {
+		imgReader := bytes.NewReader(beartrap)
+		BearTrap, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Bomb1 == nil {
 		imgReader := bytes.NewReader(bomb1)
 		Bomb1, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -531,6 +551,18 @@ func init() {
 	if Slime2 == nil {
 		imgReader := bytes.NewReader(slime_atk)
 		Slime2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Poacher == nil {
+		imgReader := bytes.NewReader(poacher)
+		Poacher, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PoacherCooldown == nil {
+		imgReader := bytes.NewReader(poacher2)
+		PoacherCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PoacherWarmup == nil {
+		imgReader := bytes.NewReader(poacher3)
+		PoacherWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Demon == nil {
 		imgReader := bytes.NewReader(demon)

@@ -110,6 +110,7 @@ func GetItem2(pos *positionSwap, data *SceneData) ItemInterface {
 	}
 }
 
+// decorate caster. It can return nil so make sure to check the return
 type CasterDecor func(loadout.Caster) loadout.Caster
 
 var CasterDecorList = []CasterDecor{

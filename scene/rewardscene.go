@@ -155,6 +155,7 @@ func GenerateCard(caster ItemInterface) *ebiten.Image {
 	cardBounds := assets.CardTemplate.Bounds()
 	newImage := ebiten.NewImage(cardBounds.Dx(), cardBounds.Dy())
 	newImage.DrawImage(assets.CardTemplate, &ebiten.DrawImageOptions{})
+	fmt.Println(caster.GetName())
 	icon := caster.GetIcon()
 	geom := ebiten.GeoM{}
 	geom.Scale(2.1, 2.1)
