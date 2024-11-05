@@ -44,7 +44,7 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewGatlingCastor(),
+			attack.NewFirewallCaster(),
 			attack.NewCannonCaster(),
 		},
 		PlayerRow:    1,
@@ -82,6 +82,7 @@ func main() {
 		scene.StageSelectInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.RestSceneInstance, Trigger: scene.TriggerToRest},
+			stagehand.Directive[*scene.SceneData]{Dest: scene.WorkshopSceneInstance, Trigger: scene.TriggerToShop},
 		},
 		scene.RestSceneInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
