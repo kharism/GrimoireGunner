@@ -1,7 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
+	"os"
+	"runtime/pprof"
 
 	"github.com/kharism/grimoiregunner/scene"
 	"github.com/kharism/grimoiregunner/scene/assets"
@@ -31,7 +34,18 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return 1024, 600
 }
 
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+
 func main() {
+	flag.Parse()
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
 	Level := scene.GenerateLayout1()

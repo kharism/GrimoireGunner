@@ -134,7 +134,7 @@ func NewAudioPlayer(audioByte []byte, musicType musicType) (*AudioPlayer, error)
 		audioPlayer:  p,
 		total:        time.Second * time.Duration(s.Length()) / bytesPerSample / sampleRate,
 		volume128:    2,
-		seCh:         make(chan []byte, 8),
+		seCh:         make(chan []byte, 100),
 		seBytes:      []byte{},
 		musicType:    musicType,
 	}
