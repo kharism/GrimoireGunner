@@ -79,6 +79,9 @@ func (p *AudioPlayer) PlaySEIfNeeded() {
 	sePlayer.Play()
 	p.seBytes = nil
 }
+func (p *AudioPlayer) QueueSFXNoSampling(param []byte) {
+	p.seCh <- param
+}
 func (p *AudioPlayer) QueueSFX(param []byte) {
 	go func() {
 		s, err := mp3.DecodeWithoutResampling(bytes.NewReader(param))
@@ -131,7 +134,7 @@ func NewAudioPlayer(audioByte []byte, musicType musicType) (*AudioPlayer, error)
 		audioPlayer:  p,
 		total:        time.Second * time.Duration(s.Length()) / bytesPerSample / sampleRate,
 		volume128:    2,
-		seCh:         make(chan []byte),
+		seCh:         make(chan []byte, 8),
 		seBytes:      []byte{},
 		musicType:    musicType,
 	}
