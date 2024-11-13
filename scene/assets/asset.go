@@ -45,6 +45,9 @@ var player1attack []byte
 //go:embed images/magibullet.png
 var projectile1 []byte
 
+//go:embed images/fx/chargeshot.png
+var chargeshot_projectile []byte
+
 //go:embed images/dagger.png
 var projectile2 []byte
 
@@ -183,6 +186,9 @@ var buckshot_fx []byte
 //go:embed images/fx/flametower.png
 var flametower_fx []byte
 
+//go:embed images/fx_charge.png
+var chargeshot_fx []byte
+
 //go:embed images/fx/hit.png
 var hit_fx []byte
 
@@ -239,6 +245,9 @@ var shotgun_icon []byte
 
 //go:embed images/icon_pushgun.png
 var pushgun_icon []byte
+
+//go:embed images/icon_chargeshot.png
+var chargeshot_icon []byte
 
 //go:embed images/icon_battle.png
 var battle_icon []byte
@@ -326,6 +335,7 @@ var AtkUp *ebiten.Image
 var HPUpIcon *ebiten.Image
 var ENUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
+var ChargeshotIcon *ebiten.Image
 var RestIcon *ebiten.Image
 var WorkbenchIcon *ebiten.Image
 
@@ -349,6 +359,8 @@ var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
 var HealFx *ebiten.Image
+var ChargeshotRaw *ebiten.Image
+var ChargeshotFx *ebiten.Image
 
 var StageClear *ebiten.Image
 var CardTemplate *ebiten.Image
@@ -652,6 +664,11 @@ func init() {
 		imgReader := bytes.NewReader(battle_icon)
 		BattleIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if ChargeshotIcon == nil {
+		imgReader := bytes.NewReader(chargeshot_icon)
+		ChargeshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+
 	if RestIcon == nil {
 		imgReader := bytes.NewReader(rest_icon)
 		RestIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -723,6 +740,14 @@ func init() {
 		imgReader := bytes.NewReader(shockwave_fx)
 		ShockWaveFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if ChargeshotRaw == nil {
+		imgReader := bytes.NewReader(chargeshot_projectile)
+		ChargeshotRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ChargeshotFx == nil {
+		imgReader := bytes.NewReader(chargeshot_fx)
+		ChargeshotFx, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if DustFxRaw == nil {
 		imgReader := bytes.NewReader(dust_fx)
 		DustFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -790,6 +815,21 @@ func NewShockwaveAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageStartY: 0,
 		SubImageWidth:  100,
 		SubImageHeight: 100,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
+func NewChargeShotAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(ChargeshotRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 160,
 		Modulo:         param.Modulo,
 		FrameCount:     5,
 		Done:           param.Done,
