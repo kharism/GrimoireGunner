@@ -78,8 +78,8 @@ func (l *ShotgunCaster) ResetCooldown() {
 }
 func (l *ShotgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
-	if en >= l.Cost {
-		ensource.SetEn(en - l.Cost)
+	if en >= l.GetCost() {
+		ensource.SetEn(en - l.GetCost())
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())
 		AtkSfxQueue.QueueSFX(assets.HitscanFx)
 		closestTarget := HitScanGetNearestTarget(ecs)
