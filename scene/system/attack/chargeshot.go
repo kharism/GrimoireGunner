@@ -55,7 +55,9 @@ func (l *ChargeshotCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 				core.NewMovableImageParams().
 					WithMoveParam(core.MoveParam{Sx: playerScrPosX, Sy: playerScrPosY})),
 		})
+		dd := time.Now().Add(1 * time.Second)
 		component.Transient.Set(chargeFxEntry, &component.TransientData{Start: time.Now(), Duration: 1000 * time.Millisecond, OnRemoveCallback: l.CreateChargedProjectile(ecs, *gridPos)})
+		component.PlayerDataComponent.Get(playerentry).Set("Return2Standby", dd)
 	}
 
 }

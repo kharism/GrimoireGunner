@@ -32,9 +32,11 @@ func DoNothingState(ecs *ecs.ECS, s *playerAttackSystem) {
 
 }
 func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
+	playerId := ecs.World.Entry(*s.PlayerIndex)
+	playerData := component.PlayerDataComponent.Get(playerId)
 	if ebiten.IsKeyPressed(ebiten.KeyE) { //ebiten.IsKeyPressed(ebiten.KeyE) {
 		if time.Now().Sub(timerDelay) > 200*time.Millisecond {
-			playerId := ecs.World.Entry(*s.PlayerIndex)
+			// playerId := ecs.World.Entry(*s.PlayerIndex)
 			gridPos := component.GridPos.Get(playerId)
 			attack.AtkSfxQueue.QueueSFX(assets.MagibulletFx)
 			component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
@@ -46,7 +48,7 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
-		playerId := ecs.World.Entry(*s.PlayerIndex)
+		// playerId := ecs.World.Entry(*s.PlayerIndex)
 		// gridPos := component.GridPos.Get(playerId)
 		// scrPos := component.ScreenPos.Get(playerId)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
@@ -65,10 +67,13 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		}
 
 	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-		playerId := ecs.World.Entry(*s.PlayerIndex)
+
 		// gridPos := component.GridPos.Get(playerId)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
+
+		playerData.Set("Return2Standby", time.Now().Add(500*time.Millisecond))
 		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
 		// attack.NewLigtningAttack(ecs, attack.LightnigAtkParam{
 		// 	StartRow:  gridPos.Row,
@@ -93,7 +98,8 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		loadout.SubLoadOut1 = loadout.SubLoadOut2
 		loadout.SubLoadOut2 = temp
 	}
-	if time.Now().After(s.returnToStandby) {
+	return2Standby := playerData.Get("Return2Standby")
+	if return2Standby != nil && time.Now().After(return2Standby.(time.Time)) {
 		playerId := ecs.World.Entry(*s.PlayerIndex)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Stand})
 	}
