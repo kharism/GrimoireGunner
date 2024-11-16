@@ -180,6 +180,9 @@ var explosion_fx []byte
 //go:embed images/fx/dust.png
 var dust_fx []byte
 
+//go:embed images/fist.png
+var fist_fx []byte
+
 //go:embed images/fx/shockwave.png
 var shockwave_fx []byte
 
@@ -218,6 +221,9 @@ var na_icon []byte
 
 //go:embed images/icon_wall.png
 var wall_icon []byte
+
+//go:embed images/icon_fist.png
+var fist_icon []byte
 
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
@@ -297,6 +303,7 @@ var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Projectile2 *ebiten.Image
 var LightningBolt *ebiten.Image
+var Fist *ebiten.Image
 var Boulder *ebiten.Image
 var PyroEyes *ebiten.Image
 var Cannoneer *ebiten.Image
@@ -345,6 +352,7 @@ var ENUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
 var ChargeshotIcon *ebiten.Image
 var RestIcon *ebiten.Image
+var FistIcon *ebiten.Image
 var WorkbenchIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
@@ -511,6 +519,10 @@ func init() {
 	if Wall == nil {
 		imgReader := bytes.NewReader(wall)
 		Wall, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Fist == nil {
+		imgReader := bytes.NewReader(fist_fx)
+		Fist, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Bomb2 == nil {
 		imgReader := bytes.NewReader(bomb2)
@@ -683,6 +695,10 @@ func init() {
 	if ChargeshotIcon == nil {
 		imgReader := bytes.NewReader(chargeshot_icon)
 		ChargeshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if FistIcon == nil {
+		imgReader := bytes.NewReader(fist_icon)
+		FistIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 
 	if RestIcon == nil {

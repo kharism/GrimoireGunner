@@ -80,13 +80,13 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 				onhit(ecs, e, damageableEntity)
 				attack.AtkSfxQueue.QueueSFX(assets.ImpactFx)
 				AddHitAnim(ecs, damageableEntity.Entity())
-				if component.Health.Get(damageableEntity).OnTakeDamage != nil {
+				if damageableEntity.HasComponent(component.Health) && component.Health.Get(damageableEntity).OnTakeDamage != nil {
 					damageParam := component.DamageDetail{}
 					component.Health.Get(damageableEntity).OnTakeDamage(ecs, damageableEntity, damageParam)
 				}
 			}
 
-			if component.Health.Get(damageableEntity).HP <= 0 {
+			if damageableEntity.HasComponent(component.Health) && component.Health.Get(damageableEntity).HP <= 0 {
 
 				playerEnt, _ := archetype.PlayerTag.First(ecs.World)
 				if playerEnt == damageableEntity && !s.isGameOver {

@@ -87,7 +87,8 @@ func (l *WallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			wallEntity := archetype.NewConstruct(ecs.World, assets.Wall)
 			wallEntry := ecs.World.Entry(*wallEntity)
 			component.GridPos.Set(wallEntry, &component.GridPosComponentData{Col: gridPos.Col + 1, Row: gridPos.Row})
-			component.Health.Set(wallEntry, &component.HealthData{HP: 150})
+			component.Health.Set(wallEntry, &component.HealthData{HP: 150, Name: "Wall"})
+
 		}
 	}
 }
