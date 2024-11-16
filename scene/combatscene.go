@@ -272,10 +272,12 @@ func (s *CombatScene) Unload() *SceneData {
 		s.data.SubLoadout2[1].ResetCooldown()
 	}
 	s.loopMusic = false
-	player, _ := archetype.PlayerTag.First(s.ecs.World)
-	pp := component.Health.Get(player)
-	s.data.PlayerHP = pp.HP
-	s.data.PlayerMaxHP = pp.MaxHP
+	player, ok := archetype.PlayerTag.First(s.ecs.World)
+	if ok {
+		pp := component.Health.Get(player)
+		s.data.PlayerHP = pp.HP
+		s.data.PlayerMaxHP = pp.MaxHP
+	}
 
 	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
 	s.musicPlayer.AudioPlayer().Rewind()
