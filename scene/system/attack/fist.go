@@ -135,5 +135,6 @@ func fistOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	} else {
 		damage := component.Damage.Get(projectile).Damage
 		component.Health.Get(receiver).HP -= damage
+		ecs.World.Remove(projectile.Entity())
 	}
 }
