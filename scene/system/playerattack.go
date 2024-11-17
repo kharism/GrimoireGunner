@@ -41,6 +41,7 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 			attack.AtkSfxQueue.QueueSFX(assets.MagibulletFx)
 			component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 			s.returnToStandby = time.Now().Add(500 * time.Millisecond)
+			playerData.Set("Return2Standby", s.returnToStandby)
 			attack.GenerateMagibullet(ecs, gridPos.Row, gridPos.Col+1, 25)
 			timerDelay = time.Now()
 
@@ -53,6 +54,7 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 		// scrPos := component.ScreenPos.Get(playerId)
 		component.Sprite.Set(playerId, &component.SpriteData{Image: assets.Player1Attack})
 		s.returnToStandby = time.Now().Add(500 * time.Millisecond)
+		playerData.Set("Return2Standby", s.returnToStandby)
 		// attack.NewLongSwordAttack(EnergySystem, ecs, *scrPos, *gridPos)
 		if len(loadout.CurLoadOut) >= 2 && loadout.CurLoadOut[1] != nil {
 			if !loadout.CurLoadOut[1].GetCooldown().IsZero() && loadout.CurLoadOut[1].GetCooldown().Before(time.Now()) {
