@@ -65,10 +65,21 @@ func (a *AnimFromCharacterEntry) Draw(screen *ebiten.Image) {
 	translate := ebiten.GeoM{}
 	translate.Translate(-float64(bound.Dx())/2, -float64(bound.Dy()))
 	translate.Translate(screenPos.X, screenPos.Y)
-	drawOption := &ebiten.DrawImageOptions{
-		GeoM: translate,
+	if a.entry.HasComponent(component.Shader) {
+		opts := &ebiten.DrawRectShaderOptions{
+			GeoM: translate,
+		}
+		opts.Images[0] = sprite
+		shader := component.Shader.Get(a.entry)
+		screen.DrawRectShader(bound.Dx(), bound.Dy(), shader, opts)
+	} else {
+
+		drawOption := &ebiten.DrawImageOptions{
+			GeoM: translate,
+		}
+		screen.DrawImage(sprite, drawOption)
 	}
-	screen.DrawImage(sprite, drawOption)
+
 }
 func AnimationSourceFromHP(entry *donburi.Entry) AnimationSource {
 	return &AnimFromCharacterEntry{entry: entry, counter: 0}
