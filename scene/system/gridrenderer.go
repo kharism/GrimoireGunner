@@ -30,6 +30,7 @@ var GridRenderer = &gridRenderer{
 		filter.Contains(
 			myComponent.Damage,
 			myComponent.GridPos,
+			myComponent.OnHit,
 		),
 	),
 	queryTarget: donburi.NewQuery(

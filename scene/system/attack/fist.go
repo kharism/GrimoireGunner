@@ -99,7 +99,7 @@ func (l *FistCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		posX, posY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col)
 		fxSprite := core.NewMovableImage(assets.Fist,
 			core.NewMovableImageParams().WithMoveParam(core.MoveParam{
-				Sx: posX,
+				Sx: posX - 20,
 				Sy: posY - float64(fistBound.Dy()),
 			}))
 		component.Fx.Set(dmgTile, &component.FxData{

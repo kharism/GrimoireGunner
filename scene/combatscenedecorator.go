@@ -155,3 +155,13 @@ func level2Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewPoacher(ecs, 6, 1)
 }
+func level2Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewYeti(ecs, 6, 1)
+}
+func level2Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewIceslime(ecs, 6, 1)
+}

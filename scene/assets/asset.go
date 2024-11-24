@@ -36,6 +36,9 @@ var cardPick []byte
 //go:embed images/cardpick_red.png
 var cardPick_red []byte
 
+//go:embed images/icicle.png
+var icicle []byte
+
 //go:embed images/basicsprite2.png
 var player1Stand []byte
 
@@ -137,6 +140,15 @@ var slime []byte
 
 //go:embed images/slime2.png
 var slime_atk []byte
+
+//go:embed images/yeti_1.png
+var yeti []byte
+
+//go:embed images/yeti_2.png
+var yeti_warmup []byte
+
+//go:embed images/yeti_3.png
+var yeti_cooldown []byte
 
 //go:embed images/hammerghoul.png
 var hammerghoul []byte
@@ -276,6 +288,9 @@ var dakkaShader []byte
 //go:embed shader/darker.kage
 var darkerShader []byte
 
+//go:embed shader/icy.kage
+var icyShader []byte
+
 //go:embed images/stageclear.png
 var stageclear []byte
 
@@ -302,6 +317,7 @@ var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Projectile2 *ebiten.Image
+var Icicle *ebiten.Image
 var LightningBolt *ebiten.Image
 var Fist *ebiten.Image
 var Boulder *ebiten.Image
@@ -330,6 +346,9 @@ var SwordswomenCooldown *ebiten.Image
 var Poacher *ebiten.Image
 var PoacherWarmup *ebiten.Image
 var PoacherCooldown *ebiten.Image
+var Yeti *ebiten.Image
+var YetiWarmup *ebiten.Image
+var YetiCooldown *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -357,6 +376,7 @@ var WorkbenchIcon *ebiten.Image
 
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
+var IcyShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
@@ -524,6 +544,10 @@ func init() {
 		imgReader := bytes.NewReader(fist_fx)
 		Fist, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Icicle == nil {
+		imgReader := bytes.NewReader(icicle)
+		Icicle, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Bomb2 == nil {
 		imgReader := bytes.NewReader(bomb2)
 		Bomb2, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -652,6 +676,19 @@ func init() {
 		imgReader := bytes.NewReader(swordswomen3)
 		SwordswomenCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Yeti == nil {
+		imgReader := bytes.NewReader(yeti)
+		Yeti, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YetiWarmup == nil {
+		imgReader := bytes.NewReader(yeti_warmup)
+		YetiWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YetiCooldown == nil {
+		imgReader := bytes.NewReader(yeti_cooldown)
+		YetiCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -750,6 +787,9 @@ func init() {
 	}
 	if DarkerShader == nil {
 		DarkerShader, _ = ebiten.NewShader(darkerShader)
+	}
+	if IcyShader == nil {
+		IcyShader, _ = ebiten.NewShader(icyShader)
 	}
 
 	if ExplosionRaw == nil {
