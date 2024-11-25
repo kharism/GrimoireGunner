@@ -1,0 +1,20 @@
+package main
+
+    // the progress of the current render
+    // this number should be the current degree of cooldown progress
+    // shows the degree in radian
+    var Iter float
+    const PI = 3.1415926
+    func Fragment(dstPos vec4, srcPos vec2, _ vec4) vec4 {
+        
+        imgSize := imageSrc0Size()
+        posOrig := imageSrc0Origin()
+        
+        distX := (srcPos.x)-(posOrig.x+(imgSize.x/2))
+        distY := (srcPos.y)-(posOrig.y+(imgSize.y/2))
+        deg_in_rad := atan2(abs(distX),distY)
+        deg := deg_in_rad/(PI)
+        prog := 1-step(Iter,deg)
+        sample := imageSrc0UnsafeAt(srcPos)
+        return vec4(sample.r*prog,sample.g*prog,sample.b*prog,sample.a)
+    }

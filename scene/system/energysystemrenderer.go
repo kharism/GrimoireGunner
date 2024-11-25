@@ -84,7 +84,7 @@ func (e *energySystem) DrawEnBar(ecs *ecs.ECS, screen *ebiten.Image) {
 	barTranslate.Translate(ENBarStartX, ENBarStartY)
 	screen.DrawImage(redBar, &ebiten.DrawImageOptions{GeoM: barTranslate})
 	width := float64(e.CurrentEN) / float64(e.MaxEN) * 200.0
-	if width > 0 {
+	if int(width) > 0 {
 		blueBar := ebiten.NewImage(int(width), 10)
 		blueBar.Fill(color.CMYK{C: 255})
 		screen.DrawImage(blueBar, &ebiten.DrawImageOptions{GeoM: barTranslate})

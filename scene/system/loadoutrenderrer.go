@@ -62,27 +62,35 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 				GeoM: transformation,
 			}
 			opts.Images[0] = icon
+			opts.Uniforms = make(map[string]interface{})
+
 			// bounds := .Bounds()
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts)
+			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			fmt.Println(timeLeftPercentage)
+			opts.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts)
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation2,
 			}
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.CurLoadOut[0].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(LoadOutIconStartX)+10, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			opts2.Uniforms = make(map[string]interface{})
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.CurLoadOut[0].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(LoadOutIconStartX)+10, float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
@@ -122,28 +130,36 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			opts := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
+			opts.Uniforms = make(map[string]interface{})
 			opts.Images[0] = icon
+			vv := float32(loadout.CurLoadOut[1].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			fmt.Println(timeLeftPercentage)
+			opts.Uniforms["Iter"] = float32(timeLeftPercentage)
 			// bounds := .Bounds()
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation2,
 			}
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.CurLoadOut[1].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			opts2.Uniforms = make(map[string]interface{})
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.CurLoadOut[1].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(LoadOutIconStartX+iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts)
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
+
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 			screen.DrawImage(icon, &DrawOp2)
@@ -178,22 +194,26 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
+			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.SubLoadOut1[0].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+2*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			opts2.Uniforms = make(map[string]interface{})
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.SubLoadOut1[0].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(Sub1StartIconX+2*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 		}
@@ -209,25 +229,30 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut1[1].GetCooldown().After(now) {
+			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			// fmt.Println(timeLeftPercentage)
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.SubLoadOut1[1].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+3*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			opts2.Uniforms = make(map[string]interface{})
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.SubLoadOut1[1].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(Sub1StartIconX+3*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 		}
@@ -243,25 +268,31 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut2[0].GetCooldown().After(now) {
+			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			// fmt.Println(timeLeftPercentage)
+
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
+			opts2.Uniforms = make(map[string]interface{})
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.SubLoadOut2[0].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.SubLoadOut2[0].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(Sub1StartIconX+4*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 		}
@@ -277,25 +308,29 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut2[1].GetCooldown().After(now) {
+			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
 			opts2.Images[0] = icon
-			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.DakkaShader, opts2)
-			dist := loadout.SubLoadOut2[1].GetCooldown().Sub(now)
-			textTranslate := ebiten.GeoM{}
-			textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
+			opts2.Uniforms = make(map[string]interface{})
+			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)
+			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts2)
+			// dist := loadout.SubLoadOut2[1].GetCooldown().Sub(now)
+			// textTranslate := ebiten.GeoM{}
+			// textTranslate.Translate(float64(Sub1StartIconX+5*iconBound.Dx()*2+10), float64(LoadOutIconStartY)+float64(iconBound.Dy())*1.5)
 
-			textDrawOpt := text.DrawOptions{
-				LayoutOptions: text.LayoutOptions{
-					PrimaryAlign: text.AlignCenter,
-				},
-				DrawImageOptions: ebiten.DrawImageOptions{
-					GeoM: textTranslate,
-				},
-			}
+			// textDrawOpt := text.DrawOptions{
+			// 	LayoutOptions: text.LayoutOptions{
+			// 		PrimaryAlign: text.AlignCenter,
+			// 	},
+			// 	DrawImageOptions: ebiten.DrawImageOptions{
+			// 		GeoM: textTranslate,
+			// 	},
+			// }
 
-			text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
+			// text.Draw(screen, fmt.Sprintf("%.0fs", dist.Seconds()), MonogramFace, &textDrawOpt)
 		} else {
 			screen.DrawImage(icon, &DrawOp)
 		}
