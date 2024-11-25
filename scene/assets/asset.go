@@ -3,8 +3,10 @@ package assets
 import (
 	"bytes"
 	_ "embed"
+	"fmt"
 	_ "image/jpeg"
 	"log"
+	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -291,6 +293,9 @@ var darkerShader []byte
 //go:embed shader/icy.kage
 var icyShader []byte
 
+//go:embed shader/cooldown.kage
+var cooldownShader []byte
+
 //go:embed images/stageclear.png
 var stageclear []byte
 
@@ -377,6 +382,7 @@ var WorkbenchIcon *ebiten.Image
 var DakkaShader *ebiten.Shader
 var DarkerShader *ebiten.Shader
 var IcyShader *ebiten.Shader
+var CooldownShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
@@ -790,6 +796,13 @@ func init() {
 	}
 	if IcyShader == nil {
 		IcyShader, _ = ebiten.NewShader(icyShader)
+	}
+	if CooldownShader == nil {
+		CooldownShader, err = ebiten.NewShader(cooldownShader)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(-1)
+		}
 	}
 
 	if ExplosionRaw == nil {
