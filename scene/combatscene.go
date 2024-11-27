@@ -219,6 +219,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
+		AddSystem(system.Kamikaze.Update).
 		AddSystem(system.UpdateBurnSystem).
 		AddSystem(system.DamageSystem.Update).
 		AddSystem(system.NPMoveSystem.Update).

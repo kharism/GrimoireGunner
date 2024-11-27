@@ -67,7 +67,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			// bounds := .Bounds()
 			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
 			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
-			fmt.Println(timeLeftPercentage)
+			// fmt.Println(timeLeftPercentage)
 			opts.Uniforms["Iter"] = float32(timeLeftPercentage)
 			screen.DrawRectShader(iconBound.Dx(), iconBound.Dy(), assets.CooldownShader, opts)
 			opts2 := &ebiten.DrawRectShaderOptions{
@@ -134,7 +134,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			opts.Images[0] = icon
 			vv := float32(loadout.CurLoadOut[1].GetCooldown().Sub(now))
 			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
-			fmt.Println(timeLeftPercentage)
+			// fmt.Println(timeLeftPercentage)
 			opts.Uniforms["Iter"] = float32(timeLeftPercentage)
 			// bounds := .Bounds()
 			opts2 := &ebiten.DrawRectShaderOptions{

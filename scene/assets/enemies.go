@@ -89,6 +89,15 @@ var poacher2 []byte
 //go:embed images/poacher3.png
 var poacher3 []byte
 
+//go:embed images/yanma.png
+var yanma1 []byte
+
+//go:embed images/yanma_2.png
+var yanma2 []byte
+
+//go:embed images/yanma_option.png
+var yanma_option []byte
+
 var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
@@ -116,6 +125,9 @@ var PoacherCooldown *ebiten.Image
 var Yeti *ebiten.Image
 var YetiWarmup *ebiten.Image
 var YetiCooldown *ebiten.Image
+var Yanma *ebiten.Image
+var YanmaAttack *ebiten.Image
+var YanmaOption *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -217,5 +229,17 @@ func init() {
 	if YetiCooldown == nil {
 		imgReader := bytes.NewReader(yeti_cooldown)
 		YetiCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Yanma == nil {
+		imgReader := bytes.NewReader(yanma1)
+		Yanma, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YanmaAttack == nil {
+		imgReader := bytes.NewReader(yanma2)
+		YanmaAttack, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YanmaOption == nil {
+		imgReader := bytes.NewReader(yanma_option)
+		YanmaOption, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 }

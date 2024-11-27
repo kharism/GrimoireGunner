@@ -62,6 +62,9 @@ var bomb1 []byte
 //go:embed images/bomb2.png
 var bomb2 []byte
 
+//go:embed images/bamboo_lance.png
+var bamboo_lance []byte
+
 //go:embed images/boulder.png
 var boulder []byte
 
@@ -228,6 +231,7 @@ var TargetedGrid *ebiten.Image
 var Bomb1 *ebiten.Image
 var Bomb2 *ebiten.Image
 var BearTrap *ebiten.Image
+var BambooLance *ebiten.Image
 var Wall *ebiten.Image
 var Bg *ebiten.Image
 var BgRest *ebiten.Image
@@ -433,6 +437,10 @@ func init() {
 	if Bomb1 == nil {
 		imgReader := bytes.NewReader(bomb1)
 		Bomb1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BambooLance == nil {
+		imgReader := bytes.NewReader(bamboo_lance)
+		BambooLance, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Wall == nil {
 		imgReader := bytes.NewReader(wall)
