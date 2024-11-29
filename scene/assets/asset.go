@@ -316,6 +316,9 @@ var BattleMusic []byte
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
 
+//go:embed bgm/fanfare3.mp3
+var Fanfare []byte
+
 // SFX
 
 //go:embed sfx/menu.mp3

@@ -14,10 +14,14 @@ import (
 )
 
 type damageSystem struct {
-	DamagableQuery *donburi.Query
-	isGameOver     bool
-
-	DamagingQuery *donburi.Query
+	DamagableQuery      *donburi.Query
+	isGameOver          bool
+	DamageEventConsumer DamageEventConsumer
+	DamagingQuery       *donburi.Query
+}
+type DamageEventConsumer interface {
+	OnCombatClear()
+	OnGameOver()
 }
 
 var DamageSystem = &damageSystem{
@@ -146,7 +150,9 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						enemyCount += 1
 					})
 					if enemyCount == 0 {
-
+						if s.DamageEventConsumer != nil {
+							s.DamageEventConsumer.OnCombatClear()
+						}
 						stgClrDim := assets.StageClear.Bounds()
 						movableImg := core.NewMovableImage(assets.StageClear,
 							core.NewMovableImageParams().WithMoveParam(core.MoveParam{

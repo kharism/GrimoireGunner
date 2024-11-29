@@ -134,6 +134,16 @@ func LoadPlayer(world donburi.World, state *SceneData) *donburi.Entity {
 
 var RegisterCombatClear bool
 
+// play fanfare
+func (s *CombatScene) OnCombatClear() {
+	s.musicPlayer.AudioPlayer().Pause()
+	s.musicPlayer, _ = assets.NewAudioPlayer(assets.Fanfare, assets.TypeMP3)
+	s.loopMusic = false
+	s.musicPlayer.AudioPlayer().Play()
+}
+func (s *CombatScene) OnGameOver() {
+
+}
 func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*SceneData]) {
 	// your load code
 	s.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
@@ -216,6 +226,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 		// s.musicPlayer.audioPlayer.Rewind()
 		s.musicPlayer.AudioPlayer().Play()
 	}
+	system.DamageSystem.DamageEventConsumer = s
 	// attack.GenerateMagibullet(s.ecs, 1, 5, -15)
 	s.ecs.
 		AddSystem(system.NewPlayerMoveSystem(playerEntity).Update).
