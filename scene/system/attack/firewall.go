@@ -15,7 +15,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 )
 
-func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit component.OnAtkHit) {
+func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit component.OnAtkHit, elements component.Elemental) {
 	sourceScrX, sourceSrcY := assets.GridCoord2Screen(sourceRow, sourceCol)
 	// fmt.Println(sourceRow, sourceCol, sourceScrX, sourceSrcY)
 	sourceScrX -= 50
@@ -32,15 +32,17 @@ func NewFirewallAttack(ecs *ecs.ECS, sourceRow, sourceCol, damage int, onAtkHit 
 		movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{Tx: targetScrX, Ty: targetScrY, Speed: 10}))
 		movableImg.Done = func() {
 			ecs.World.Remove(fx)
-			entity := ecs.World.Create(component.Burner, component.Damage, component.GridPos, component.Transient, component.OnHit, component.Fx)
+			entity := ecs.World.Create(component.Burner, component.Elements, component.Damage, component.GridPos, component.Transient, component.Fx)
 			entry := ecs.World.Entry(entity)
 			component.Damage.Set(entry, &component.DamageData{Damage: damage})
 			component.Burner.Set(entry, &component.BurnerData{
-				Damage: damage,
+				Damage:  damage,
+				Element: elements,
 			})
+			component.Elements.SetValue(entry, elements)
 			component.GridPos.Set(entry, &component.GridPosComponentData{Col: sourceCol + 4, Row: row})
 			component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 5 * time.Second})
-			component.OnHit.SetValue(entry, onAtkHit)
+			// component.OnHit.SetValue(entry, onAtkHit)
 			flameTower := core.NewMovableImage(assets.FlametowerRaw, core.NewMovableImageParams().
 				WithMoveParam(core.MoveParam{Sx: targetScrX, Sy: targetScrY, Speed: 3}))
 			component.Fx.Set(entry, &component.FxData{Animation: flameTower})
@@ -93,6 +95,12 @@ func (l *FirewallCaster) GetDescription() string {
 func (l *FirewallCaster) GetName() string {
 	return "Firewall"
 }
+func (f *FirewallCaster) GetElement() component.Elemental {
+	if f.ModEntry != nil {
+		return f.ModEntry.Element
+	}
+	return component.FIRE
+}
 func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	curEn := ensource.GetEn()
 	if curEn >= f.Cost {
@@ -110,7 +118,7 @@ func (f *FirewallCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			return
 		}
 		gridPos := component.GridPos.Get(playerId)
-		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage, f.OnHit)
+		NewFirewallAttack(ecs, gridPos.Row, gridPos.Col, f.Damage, f.OnHit, f.GetElement())
 		if f.ModEntry != nil {
 			// l := component.PostAtkModifier.GetValue(f.ModEntry)
 			if f.ModEntry.PostAtk != nil {

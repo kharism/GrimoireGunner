@@ -3,10 +3,8 @@ package assets
 import (
 	"bytes"
 	_ "embed"
-	"fmt"
 	_ "image/jpeg"
 	"log"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -28,6 +26,9 @@ var tileDmgPng []byte
 
 //go:embed images/cardtemplate.png
 var cardTemplate []byte
+
+//go:embed images/double_damage.png
+var double_damage []byte
 
 //go:embed images/menu_btn_bg.png
 var menuBg []byte
@@ -206,18 +207,6 @@ var rest_icon []byte
 //go:embed images/icon_firewall.png
 var firewall_icon []byte
 
-//go:embed shader/dakka.kage
-var dakkaShader []byte
-
-//go:embed shader/darker.kage
-var darkerShader []byte
-
-//go:embed shader/icy.kage
-var icyShader []byte
-
-//go:embed shader/cooldown.kage
-var cooldownShader []byte
-
 //go:embed images/stageclear.png
 var stageclear []byte
 
@@ -240,6 +229,7 @@ var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
 var BgOpening *ebiten.Image
 var GameOver *ebiten.Image
+var DoubleDamage *ebiten.Image
 var MenuButtonBg *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
@@ -274,11 +264,6 @@ var ChargeshotIcon *ebiten.Image
 var RestIcon *ebiten.Image
 var FistIcon *ebiten.Image
 var WorkbenchIcon *ebiten.Image
-
-var DakkaShader *ebiten.Shader
-var DarkerShader *ebiten.Shader
-var IcyShader *ebiten.Shader
-var CooldownShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
@@ -461,6 +446,10 @@ func init() {
 		imgReader := bytes.NewReader(bomb2)
 		Bomb2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if DoubleDamage == nil {
+		imgReader := bytes.NewReader(double_damage)
+		DoubleDamage, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Projectile1 == nil {
 		imgReader := bytes.NewReader(projectile1)
 		Projectile1, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -590,22 +579,6 @@ func init() {
 	if NAIcon == nil {
 		imgReader := bytes.NewReader(na_icon)
 		NAIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
-	}
-	if DakkaShader == nil {
-		DakkaShader, _ = ebiten.NewShader(dakkaShader)
-	}
-	if DarkerShader == nil {
-		DarkerShader, _ = ebiten.NewShader(darkerShader)
-	}
-	if IcyShader == nil {
-		IcyShader, _ = ebiten.NewShader(icyShader)
-	}
-	if CooldownShader == nil {
-		CooldownShader, err = ebiten.NewShader(cooldownShader)
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(-1)
-		}
 	}
 
 	if ExplosionRaw == nil {

@@ -12,6 +12,7 @@ type HealthData struct {
 	MaxHP        int
 	Name         string
 	InvisTime    time.Time
+	Element      Elemental
 	OnTakeDamage OnTakeDamageFunc
 	BeforeRemove BeforeRemoveCallback
 }

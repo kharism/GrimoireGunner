@@ -58,7 +58,7 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewWallCaster(),
+			attack.NewFirewallCaster(),
 			attack.NewChargeshotCaster(),
 		},
 		PlayerRow:    1,

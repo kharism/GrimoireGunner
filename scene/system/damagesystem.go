@@ -40,6 +40,26 @@ var DamageSystem = &damageSystem{
 	),
 }
 
+func AddDoubleDamageFx(ecs *ecs.ECS, damagedEntity donburi.Entity) {
+	entry := ecs.World.Entry(damagedEntity)
+	screenPos := component.ScreenPos.Get(entry)
+	hitfx := core.NewMovableImage(assets.DoubleDamage,
+		core.NewMovableImageParams().WithMoveParam(
+			core.MoveParam{
+				Sx: screenPos.X - 50,
+				Sy: screenPos.Y - 50,
+			},
+		),
+	)
+	entityFx := ecs.World.Create(component.Fx, component.Transient)
+	entryFx := ecs.World.Entry(entityFx)
+	component.Fx.Set(entryFx, &component.FxData{hitfx})
+	component.Transient.Set(entryFx, &component.TransientData{
+		Start:    time.Now(),
+		Duration: 300 * time.Millisecond,
+	})
+}
+
 // add hit animation to damagedEntity. Assuming the hit animation is 128x128
 func AddHitAnim(ecs *ecs.ECS, damagedEntity donburi.Entity) {
 	entry := ecs.World.Entry(damagedEntity)
@@ -80,8 +100,20 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			invisTime := component.Health.Get(damageableEntity).InvisTime
 			isZero := invisTime.IsZero()
 			before := (!isZero && invisTime.Before(time.Now()))
+			Health := component.Health.Get(damageableEntity)
 			if isZero || before {
+				f := e.HasComponent(component.Elements)
+				if f && Health.Element != component.NEUTRAL {
+					jj := component.Elements.GetValue(e)
+					if component.IsDoubleDamage(jj, Health.Element) {
+						dmg := component.Damage.Get(e).Damage
+						Health.HP -= dmg
+						AddDoubleDamageFx(ecs, damageableEntity.Entity())
+						// onhit(ecs, e, damageableEntity)
+					}
+				}
 				onhit(ecs, e, damageableEntity)
+
 				attack.AtkSfxQueue.QueueSFX(assets.ImpactFx)
 				AddHitAnim(ecs, damageableEntity.Entity())
 				if damageableEntity.HasComponent(component.Health) && component.Health.Get(damageableEntity).OnTakeDamage != nil {

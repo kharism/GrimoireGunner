@@ -17,7 +17,8 @@ func NewHealslime(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Slime)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "HealSlime"})
+	entry.AddComponent(component.Elements)
+	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "HealSlime", Element: component.WOOD})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
 
