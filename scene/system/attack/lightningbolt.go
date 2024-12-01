@@ -32,15 +32,16 @@ func LightningBoltOnHitfunc(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 	startCol := param.StartCol
-
+	now := time.Now()
 	for i := startCol; i >= 0 && i <= 7; i += param.Direction {
 		entity := ecs.World.Create(
 			component.Damage,
 			component.GridPos,
 			component.OnHit,
 			component.Transient,
-			component.Fx,
 		)
+		lightningFx := ecs.World.Create(component.Fx, component.Transient)
+		lightningFxEntry := ecs.World.Entry(lightningFx)
 		entry := ecs.World.Entry(entity)
 		component.Damage.Set(entry, &component.DamageData{Damage: param.Damage})
 		component.GridPos.Set(entry, &component.GridPosComponentData{Row: param.StartRow, Col: i})
@@ -50,9 +51,13 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 			NewMovableImageParams().
 			WithMoveParam(core.MoveParam{Sx: scrX - (float64(assets.TileWidth) / 2), Sy: scrY - float64(fxHeight)}))
 		anim1.Done = func() {}
-		component.Fx.Set(entry, &component.FxData{Animation: anim1})
+		component.Fx.Set(lightningFxEntry, &component.FxData{Animation: anim1})
 		component.Transient.Set(entry, &component.TransientData{
-			Start:    time.Now(),
+			Start:    now,
+			Duration: 200 * time.Millisecond,
+		})
+		component.Transient.Set(lightningFxEntry, &component.TransientData{
+			Start:    now,
 			Duration: 200 * time.Millisecond,
 		})
 		component.OnHit.SetValue(entry, param.OnHit)
