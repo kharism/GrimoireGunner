@@ -20,6 +20,7 @@ type LightnigAtkParam struct {
 	//+1 to create lightning on right of starting point, and -1 to create on left
 	Direction int
 	Damage    int
+	Element   component.Elemental
 	Actor     *donburi.Entry
 	OnHit     component.OnAtkHit
 }
@@ -39,11 +40,13 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 			component.GridPos,
 			component.OnHit,
 			component.Transient,
+			component.Elements,
 		)
 		lightningFx := ecs.World.Create(component.Fx, component.Transient)
 		lightningFxEntry := ecs.World.Entry(lightningFx)
 		entry := ecs.World.Entry(entity)
 		component.Damage.Set(entry, &component.DamageData{Damage: param.Damage})
+		component.Elements.SetValue(entry, param.Element)
 		component.GridPos.Set(entry, &component.GridPosComponentData{Row: param.StartRow, Col: i})
 		scrX, scrY := assets.GridCoord2Screen(param.StartRow, i)
 		fxHeight := assets.LightningBolt.Bounds().Dy()
@@ -80,6 +83,12 @@ func NewLightningBolCaster() *LightingBoltCaster {
 func (l *LightingBoltCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
+func (f *LightingBoltCaster) GetElement() component.Elemental {
+	if f.ModEntry != nil {
+		return f.ModEntry.Element
+	}
+	return component.ELEC
+}
 func (l *LightingBoltCaster) SetModifier(e *loadout.CasterModifierData) {
 	if l.ModEntry != e && e.OnHit != nil {
 		if l.OnHit == nil {
@@ -113,6 +122,7 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			Actor:     playerId,
 			Damage:    l.GetDamage(),
 			OnHit:     l.OnHit,
+			Element:   l.GetElement(),
 		}
 		NewLigtningAttack(ecs, param)
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())

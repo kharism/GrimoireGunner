@@ -57,6 +57,9 @@ var chargeshot_projectile []byte
 //go:embed images/dagger.png
 var projectile2 []byte
 
+//go:embed images/elec_sphere.png
+var elec_sphere []byte
+
 //go:embed images/bomb1.png
 var bomb1 []byte
 
@@ -90,6 +93,9 @@ var bg_forest []byte
 //go:embed images/bg_mountain.png
 var bg_mountain []byte
 
+//go:embed images/bg_cave.png
+var bg_cave []byte
+
 //go:embed images/opening_screen.png
 var bg_opening []byte
 
@@ -101,9 +107,6 @@ var bg_workbench []byte
 
 //go:embed images/beartrap.png
 var beartrap []byte
-
-//go:embed images/pyro-eyes.png
-var pyro_eyes []byte
 
 //go:embed images/wideslash.png
 var wideslash_fx []byte
@@ -134,6 +137,9 @@ var chargeshot_fx []byte
 
 //go:embed images/fx/hit.png
 var hit_fx []byte
+
+//go:embed images/fx/flamethrower.png
+var flamethrower_fx []byte
 
 //go:embed images/fx/heal.png
 var heal_fx []byte
@@ -221,12 +227,14 @@ var Bomb1 *ebiten.Image
 var Bomb2 *ebiten.Image
 var BearTrap *ebiten.Image
 var BambooLance *ebiten.Image
+var Flamehtrower *ebiten.Image
 var Wall *ebiten.Image
 var Bg *ebiten.Image
 var BgRest *ebiten.Image
 var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
+var BgCave *ebiten.Image
 var BgOpening *ebiten.Image
 var GameOver *ebiten.Image
 var DoubleDamage *ebiten.Image
@@ -235,11 +243,11 @@ var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Projectile2 *ebiten.Image
+var ElecSphere *ebiten.Image
 var Icicle *ebiten.Image
 var LightningBolt *ebiten.Image
 var Fist *ebiten.Image
 var Boulder *ebiten.Image
-var PyroEyes *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -442,6 +450,14 @@ func init() {
 		imgReader := bytes.NewReader(icicle)
 		Icicle, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Flamehtrower == nil {
+		imgReader := bytes.NewReader(flamethrower_fx)
+		Flamehtrower, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ElecSphere == nil {
+		imgReader := bytes.NewReader(elec_sphere)
+		ElecSphere, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Bomb2 == nil {
 		imgReader := bytes.NewReader(bomb2)
 		Bomb2, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -478,13 +494,13 @@ func init() {
 		imgReader := bytes.NewReader(bg_workbench)
 		BgWorkbench, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BgCave == nil {
+		imgReader := bytes.NewReader(bg_cave)
+		BgCave, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if DamageGrid == nil {
 		imgReader := bytes.NewReader(tileDmgPng)
 		DamageGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
-	}
-	if PyroEyes == nil {
-		imgReader := bytes.NewReader(pyro_eyes)
-		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 
 	if LongSwordIcon == nil {
