@@ -23,6 +23,10 @@ func GenerateReward() ItemInterface {
 		attack.NewAtkBonusCaster(),
 		attack.NewPushgunCaster(),
 		attack.NewChargeshotCaster(),
+		attack.NewBambooLanceCaster(),
+		attack.NewSporeBombCaster(),
+		attack.NewWallCaster(),
+		attack.NewFist(),
 		&Medkit{},
 		&HPUp{},
 		&ENUp{},
@@ -51,6 +55,10 @@ func GenerateCaster() loadout.Caster {
 		attack.NewBombConstructCaster(),
 		attack.NewAtkBonusCaster(),
 		attack.NewPushgunCaster(),
+		attack.NewBambooLanceCaster(),
+		attack.NewSporeBombCaster(),
+		attack.NewWallCaster(),
+		attack.NewFist(),
 	}
 
 	rnd := rand.Int() % len(casters)

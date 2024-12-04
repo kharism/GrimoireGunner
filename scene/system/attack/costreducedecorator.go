@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -29,6 +30,12 @@ func DecorateWithCostReducer(caster loadout.Caster) loadout.Caster {
 	} else {
 		return nil
 	}
+}
+func (l *CostReducerDecor) GetElement() component.Elemental {
+	if vv, ok := l.caster.(loadout.ElementalCaster); ok {
+		return vv.GetElement()
+	}
+	return component.NEUTRAL
 }
 func (l *CostReducerDecor) GetModifierEntry() *loadout.CasterModifierData {
 	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {

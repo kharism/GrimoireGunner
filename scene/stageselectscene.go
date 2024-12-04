@@ -44,6 +44,7 @@ type nextStagePicker interface {
 type Level struct {
 	Root      *LevelNode
 	BossLevel *LevelNode
+	BossName  string
 }
 
 func GenerateLayout1() *Level {
@@ -51,7 +52,7 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(level2Decorator7),
+			SelectedStage: NewCombatNextStage(nil),
 			Icon:          assets.BattleIcon,
 		},
 	}
@@ -91,10 +92,67 @@ func GenerateLayout1() *Level {
 		CurNode1 = NewNodeA
 		CurNode2 = NewNodeB
 	}
-	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(level1Decorator9)}
+	bossDecorator, bossName := RandBossDecorator1()
+	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(bossDecorator)}
 	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
 	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
 	LevelLayout1.BossLevel = &BossNode
+	LevelLayout1.BossName = bossName
+	//upLine :=
+	return LevelLayout1
+}
+
+func GenerateLayout2() *Level {
+	var LevelLayout1 = &Level{
+		Root: &LevelNode{
+			Id:            "0",
+			Tier:          0,
+			SelectedStage: NewCombatNextStage(RandCombatDecorator2()),
+			Icon:          assets.BattleIcon,
+		},
+	}
+	CurNode1 := &LevelNode{Id: "1", Tier: 1, SelectedStage: NewCombatNextStage(RandCombatDecorator2()), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	CurNode2 := &LevelNode{Id: "2", Tier: 1, SelectedStage: NewCombatNextStage(RandCombatDecorator2()), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	LevelLayout1.Root.NextNode = []*LevelNode{
+		CurNode1, CurNode2,
+	}
+	for i := 0; i < 4; i++ {
+		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
+		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
+		CurNode1.NextNode = append(CurNode1.NextNode, NewNodeA)
+		CurNode2.NextNode = append(CurNode2.NextNode, NewNodeB)
+		if i == 2 {
+			if rand.Int()%2 == 0 {
+				NewNodeA.SelectedStage = &RestSceneNextStage{}
+				NewNodeB.SelectedStage = &WorkshopSceneNextStage{}
+			} else {
+				NewNodeA.SelectedStage = &WorkshopSceneNextStage{}
+				NewNodeB.SelectedStage = &RestSceneNextStage{}
+			}
+			NewNodeA.Icon = NewNodeA.SelectedStage.GetIcon()
+			NewNodeB.Icon = NewNodeB.SelectedStage.GetIcon()
+		}
+		if rand.Int()%10 <= 3 {
+			// add cros section
+			if rand.Int()%2 == 0 {
+				//create line from lower path to uper path
+				CurNode2.NextNode = append(CurNode2.NextNode, NewNodeA)
+				// sort this
+				CurNode2.NextNode[0], CurNode2.NextNode[1] = CurNode2.NextNode[1], CurNode2.NextNode[0]
+			} else {
+				//create line from upper path to lower path
+				CurNode1.NextNode = append(CurNode1.NextNode, NewNodeB)
+			}
+		}
+		CurNode1 = NewNodeA
+		CurNode2 = NewNodeB
+	}
+	bossDecorator, bossName := RandBossDecorator1()
+	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(bossDecorator)}
+	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
+	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
+	LevelLayout1.BossLevel = &BossNode
+	LevelLayout1.BossName = bossName
 	//upLine :=
 	return LevelLayout1
 }

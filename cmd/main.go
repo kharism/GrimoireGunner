@@ -59,7 +59,7 @@ func main() {
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
 			attack.NewFirewallCaster(),
-			attack.NewChargeshotCaster(),
+			attack.DecorateWithBonus10(attack.NewSporeBombCaster()),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,

@@ -25,7 +25,7 @@ func NewBambooLanceCaster() *BambooLanceCaster {
 	return &BambooLanceCaster{Cost: 100, nextCooldown: time.Now(), Damage: 150, CoolDown: 6 * time.Second, OnHit: SingleHitProjectile}
 }
 func (l *BambooLanceCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\n%d Hit target in the last column for %d damage.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
+	return fmt.Sprintf("Cost:%d EN\nHit target in the last column for %d damage.\nCooldown %.1fs", l.Cost/100, l.Damage, l.CoolDown.Seconds())
 }
 func (l *BambooLanceCaster) GetName() string {
 	return "BambooLance"
@@ -47,6 +47,9 @@ func (l *BambooLanceCaster) SetModifier(e *loadout.CasterModifierData) {
 		} else {
 			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
 		}
+	}
+	if l.GetElement() != component.NEUTRAL && e.Element == component.NEUTRAL {
+		e.Element = l.GetElement()
 	}
 	l.ModEntry = e
 }

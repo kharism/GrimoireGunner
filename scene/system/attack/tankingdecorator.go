@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -40,6 +41,12 @@ func (l *TankingCastDecor) GetModifierEntry() *loadout.CasterModifierData {
 		return cc.GetModifierEntry()
 	}
 	return nil
+}
+func (l *TankingCastDecor) GetElement() component.Elemental {
+	if vv, ok := l.caster.(loadout.ElementalCaster); ok {
+		return vv.GetElement()
+	}
+	return component.NEUTRAL
 }
 func (l *TankingCastDecor) SetModifier(e *loadout.CasterModifierData) {
 	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {

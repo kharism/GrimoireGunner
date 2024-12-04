@@ -80,6 +80,9 @@ func (l *FirewallCaster) SetModifier(e *loadout.CasterModifierData) {
 			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
 		}
 	}
+	if l.GetElement() != component.NEUTRAL && e.Element == component.NEUTRAL {
+		e.Element = l.GetElement()
+	}
 	l.ModEntry = e
 }
 func (f *FirewallCaster) GetDamage() int {
