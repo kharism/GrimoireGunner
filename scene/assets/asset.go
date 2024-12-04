@@ -132,6 +132,9 @@ var buckshot_fx []byte
 //go:embed images/fx/flametower.png
 var flametower_fx []byte
 
+//go:embed images/fx/spore.png
+var spore_fx []byte
+
 //go:embed images/fx_charge.png
 var chargeshot_fx []byte
 
@@ -171,11 +174,17 @@ var fist_icon []byte
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
 
+//go:embed images/icon_sporebomb.png
+var sporebomb_icon []byte
+
 //go:embed images/icon_bomb.png
 var bomb_icon []byte
 
 //go:embed images/icon_cannon.png
 var cannon_icon []byte
+
+//go:embed images/icon_bamboo_lance.png
+var bamboolance_icon []byte
 
 //go:embed images/icon_heal.png
 var heal_icon []byte
@@ -264,7 +273,9 @@ var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
+var BambooLanceIcon *ebiten.Image
 var AtkUp *ebiten.Image
+var SporebombIcon *ebiten.Image
 var HPUpIcon *ebiten.Image
 var ENUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
@@ -289,6 +300,7 @@ var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
+var SporeRaw *ebiten.Image
 var HealFx *ebiten.Image
 var ChargeshotRaw *ebiten.Image
 var ChargeshotFx *ebiten.Image
@@ -515,6 +527,10 @@ func init() {
 		imgReader := bytes.NewReader(bomb_icon)
 		BombIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BambooLanceIcon == nil {
+		imgReader := bytes.NewReader(bamboolance_icon)
+		BambooLanceIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if CannonIcon == nil {
 		imgReader := bytes.NewReader(cannon_icon)
 		CannonIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -522,6 +538,10 @@ func init() {
 	if WallIcon == nil {
 		imgReader := bytes.NewReader(wall_icon)
 		WallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SporebombIcon == nil {
+		imgReader := bytes.NewReader(sporebomb_icon)
+		SporebombIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShotgunIcon == nil {
 		imgReader := bytes.NewReader(shotgun_icon)
@@ -613,6 +633,10 @@ func init() {
 		imgReader := bytes.NewReader(buckshot_fx)
 		BuckShotRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if SporeRaw == nil {
+		imgReader := bytes.NewReader(spore_fx)
+		SporeRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if ShockWaveFxRaw == nil {
 		imgReader := bytes.NewReader(shockwave_fx)
 		ShockWaveFxRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -685,6 +709,21 @@ type SpriteParam struct {
 func NewShockwaveAnim(param SpriteParam) *core.AnimatedImage {
 	return &core.AnimatedImage{
 		MovableImage: core.NewMovableImage(ShockWaveFxRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 100,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
+func NewSporeAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(SporeRaw,
 			core.NewMovableImageParams().
 				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
 		),
