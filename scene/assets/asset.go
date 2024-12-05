@@ -316,7 +316,13 @@ var CardPickRed *ebiten.Image
 var Menumusic []byte
 
 //go:embed bgm/test1.mp3
-var BattleMusic []byte
+var BattleMusic1 []byte
+
+//go:embed bgm/area12-131883.mp3
+var BattleMusic2 []byte
+
+//go:embed bgm/chiptune-grooving-142242.mp3
+var BattleMusic3 []byte
 
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
