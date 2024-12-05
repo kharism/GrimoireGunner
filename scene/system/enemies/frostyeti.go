@@ -7,15 +7,18 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
+	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
-func NewYeti(ecs *ecs.ECS, col, row int) {
+func NewFrostYeti(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Yeti)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
+	entry.AddComponent(component.Shader)
 	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yeti", Element: component.WATER})
+	component.Shader.Set(entry, assets.IcyShader)
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
@@ -25,10 +28,9 @@ func NewYeti(ecs *ecs.ECS, col, row int) {
 	data[CURRENT_STRATEGY] = ""
 	data[MOVE_COUNT] = 0
 	data[CUR_DMG] = 50
-	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: YetiRoutine, Memory: data})
+	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: FYetiRoutine, Memory: data})
 }
-
-func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
+func FYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
 	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {
@@ -79,13 +81,21 @@ func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			}
 
 			if playerGrid.Col == gridPos.Col-1 {
+
 				memory[CURRENT_STRATEGY] = "WARM_UP_MELEE"
 				component.Sprite.Get(entity).Image = assets.YetiWarmup
 				memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+
 			} else {
-				memory[CURRENT_STRATEGY] = "SUMMON_CONSTRUCT"
-				// component.Sprite.Get(entity).Image = assets.YetiWarmup
-				memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+				if hp > 200 {
+					memory[CURRENT_STRATEGY] = "SUMMON_CONSTRUCT"
+					// component.Sprite.Get(entity).Image = assets.YetiWarmup
+					memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+				} else {
+					memory[CURRENT_STRATEGY] = "WARM_UP_AVALANCHE"
+					component.Sprite.Get(entity).Image = assets.YetiWarmup2
+					memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+				}
 			}
 
 		}
@@ -107,6 +117,32 @@ func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 
 		}
 	}
+	if memory[CURRENT_STRATEGY] == "WARM_UP_AVALANCHE" {
+		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
+			component.Sprite.Get(entity).Image = assets.YetiCooldown2
+			playerPos, _ := attack.GetPlayerGridPos(ecs)
+			now := time.Now()
+			for col := playerPos.Col - 1; col <= playerPos.Col+1; col++ {
+				for row := playerPos.Row - 1; row <= playerPos.Row+1; row++ {
+					if col < 0 || col > 7 || row < 0 || row > 3 {
+						continue
+					}
+					target := ecs.World.Create(component.GridPos, component.Damage, component.GridTarget, component.Transient)
+					t := ecs.World.Entry(target)
+					component.GridPos.Set(t, &component.GridPosComponentData{Col: col, Row: row})
+					component.Damage.Set(t, &component.DamageData{Damage: dmg})
+					component.Transient.Set(t, &component.TransientData{
+						Start:            now,
+						Duration:         200 * time.Millisecond,
+						OnRemoveCallback: CreateAvalance,
+					})
+					// component.GridPos.Set(t,&component.GridPosComponentData{Col:col,Row: row})
+				}
+			}
+			memory[CURRENT_STRATEGY] = "MOVE"
+			memory[WARM_UP] = time.Now().Add(800 * time.Millisecond)
+		}
+	}
 	if memory[CURRENT_STRATEGY] == "WARM_UP_MELEE" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			component.Sprite.Get(entity).Image = assets.YetiCooldown
@@ -125,28 +161,36 @@ func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	}
 }
 
-func YetiOnPunchHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
-	if receiver.HasComponent(archetype.ConstructTag) {
-		newDamage := component.Health.Get(receiver).HP
-		receiver.RemoveComponent(component.Health)
-		receiver.AddComponent(component.Damage)
-		receiver.AddComponent(archetype.ProjectileTag)
-		receiver.AddComponent(component.Speed)
-		receiver.AddComponent(component.OnHit)
-		receiver.AddComponent(component.TargetLocation)
-		screenPos := component.ScreenPos.Get(receiver)
-		screenPos.X = 0
-		screenPos.Y = 0
-
-		component.Damage.Set(receiver, &component.DamageData{Damage: newDamage})
-		component.OnHit.SetValue(receiver, attack.SingleHitProjectile)
-		component.Speed.Set(receiver, &component.SpeedData{
-			Vx: -5,
-			Vy: 0,
+func CreateAvalance(ecs *ecs.ECS, entry *donburi.Entry) {
+	gridPos := component.GridPos.Get(entry)
+	scrX, scrY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col)
+	startY := scrY - 300
+	dmg := component.Damage.Get(entry).Damage
+	anim := core.NewMovableImage(
+		assets.Icicle,
+		core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+			Sx: scrX,
+			Sy: startY,
+		}).WithScale(&core.ScaleParam{Sx: 1, Sy: -1}),
+	)
+	anim.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{Tx: scrX, Ty: scrY, Speed: 5}))
+	fxentity := ecs.World.Create(component.Fx)
+	fx := ecs.World.Entry(fxentity)
+	component.Fx.Set(fx, &component.FxData{
+		Animation: anim,
+	})
+	anim.Done = func() {
+		ecs.World.Remove(fxentity)
+		jj := ecs.World.Create(component.GridPos, component.Damage, component.Elements, component.Transient, component.OnHit)
+		gridDmg := ecs.World.Entry(jj)
+		component.GridPos.Set(gridDmg, gridPos)
+		component.Damage.Set(gridDmg, &component.DamageData{
+			Damage: dmg,
 		})
-	} else {
-		damage := component.Damage.Get(projectile).Damage
-		component.Health.Get(receiver).HP -= damage
-		ecs.World.Remove(projectile.Entity())
+		component.Elements.SetValue(gridDmg, component.WATER)
+		component.Transient.Set(gridDmg, &component.TransientData{
+			Start:    time.Now(),
+			Duration: 100 * time.Millisecond,
+		})
 	}
 }

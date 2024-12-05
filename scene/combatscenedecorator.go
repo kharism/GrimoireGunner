@@ -64,10 +64,12 @@ func init() {
 	OptBoss1 = []CombatSceneDecorator{
 		level1OptBoss1,
 		level1OptBoss2,
+		level1OptBoss3,
 	}
 	OptBoss1Name = []string{
 		"Ellone",
 		"Yanman",
+		"Joji",
 	}
 }
 func RandCombatDecorator1() CombatSceneDecorator {
@@ -169,6 +171,11 @@ func level1OptBoss2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = nil
 	enemies.NewYanman(ecs, 6, 1)
+}
+func level1OptBoss3(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewFrostYeti(ecs, 6, 1)
 }
 func level1Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest

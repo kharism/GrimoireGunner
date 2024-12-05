@@ -59,6 +59,12 @@ var yeti_warmup []byte
 //go:embed images/yeti_3.png
 var yeti_cooldown []byte
 
+//go:embed images/yeti_4.png
+var yeti_warmup_2 []byte
+
+//go:embed images/yeti_5.png
+var yeti_cooldown_2 []byte
+
 //go:embed images/hammerghoul.png
 var hammerghoul []byte
 
@@ -139,6 +145,8 @@ var PyroEyesWarmup *ebiten.Image
 var Yeti *ebiten.Image
 var YetiWarmup *ebiten.Image
 var YetiCooldown *ebiten.Image
+var YetiWarmup2 *ebiten.Image
+var YetiCooldown2 *ebiten.Image
 var Yanma *ebiten.Image
 var YanmaAttack *ebiten.Image
 var YanmaOption *ebiten.Image
@@ -245,6 +253,14 @@ func init() {
 	if YetiCooldown == nil {
 		imgReader := bytes.NewReader(yeti_cooldown)
 		YetiCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YetiWarmup2 == nil {
+		imgReader := bytes.NewReader(yeti_warmup_2)
+		YetiWarmup2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YetiCooldown2 == nil {
+		imgReader := bytes.NewReader(yeti_cooldown_2)
+		YetiCooldown2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Yanma == nil {
 		imgReader := bytes.NewReader(yanma1)
