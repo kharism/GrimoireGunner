@@ -14,6 +14,7 @@ type CasterModifierData struct {
 	CooldownModifer time.Duration
 	CostModifier    int
 	SpecialModifier int
+	Element         component.Elemental
 	PostAtk         PostAtkBehaviour
 	OnHit           component.OnAtkHit
 }

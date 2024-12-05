@@ -27,9 +27,10 @@ func UpdateBurnSystem(ecs *ecs.ECS) {
 	for _, val := range damageble {
 		gridPos := component.GridPos.GetValue(val)
 		if burnerMap[gridPos] != nil {
+			burnerData := component.Burner.Get(burnerMap[gridPos])
 			if !val.HasComponent(component.Burned) {
 				val.AddComponent(component.Burned)
-				burnerData := component.Burner.Get(burnerMap[gridPos])
+
 				burnedData := &component.BurnedData{
 					NextBurn:   time.Now(),
 					BurnDamage: burnerData.Damage,
@@ -41,8 +42,9 @@ func UpdateBurnSystem(ecs *ecs.ECS) {
 			if time.Now().After(burnedData.NextBurn) {
 				burnedData.NextBurn = time.Now().Add(400 * time.Millisecond)
 				// inflict burn damage here
-				burnDamageTile := ecs.World.Create(component.GridPos, component.Damage, component.OnHit, component.Transient)
+				burnDamageTile := ecs.World.Create(component.GridPos, component.Elements, component.Damage, component.OnHit, component.Transient)
 				entry := ecs.World.Entry(burnDamageTile)
+				component.Elements.SetValue(entry, burnerData.Element)
 				component.Transient.Set(entry, &component.TransientData{Start: time.Now(), Duration: 300 * time.Millisecond})
 				component.GridPos.Set(entry, &component.GridPosComponentData{Col: gridPos.Col, Row: gridPos.Row})
 				component.Damage.Set(entry, &component.DamageData{Damage: burnedData.BurnDamage})

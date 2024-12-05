@@ -15,7 +15,7 @@ func NewYeti(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Yeti)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yeti"})
+	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yeti", Element: component.WATER})
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})

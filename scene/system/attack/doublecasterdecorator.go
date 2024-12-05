@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -42,6 +43,12 @@ func (a *Add2ndShotEvent) Execute(ecs *ecs.ECS) {
 }
 func (a *Add2ndShotEvent) GetTime() time.Time {
 	return a.time
+}
+func (l *DoubleCastDecor) GetElement() component.Elemental {
+	if vv, ok := l.caster.(loadout.ElementalCaster); ok {
+		return vv.GetElement()
+	}
+	return component.NEUTRAL
 }
 func DoubleCast(caster loadout.Caster) func(*ecs.ECS, loadout.ENSetGetter) {
 	return func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {

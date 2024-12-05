@@ -17,7 +17,8 @@ func NewHealslime(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Slime)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "HealSlime"})
+	entry.AddComponent(component.Elements)
+	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "HealSlime", Element: component.WOOD})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
 
@@ -176,12 +177,13 @@ func (s *SlimeShoot) Execute(ecs *ecs.ECS) {
 	)
 	anim.Done = func() {
 		Damage := s.Damage
-		damageGrid := ecs.World.Create(component.GridPos, component.Damage, component.Transient, component.OnHit)
+		damageGrid := ecs.World.Create(component.GridPos, component.Elements, component.Damage, component.Transient, component.OnHit)
 		dd := ecs.World.Entry(damageGrid)
 		component.GridPos.Set(dd, &component.GridPosComponentData{Col: targCol, Row: targRow})
 		component.Damage.Set(dd, &component.DamageData{
 			Damage: Damage,
 		})
+		component.Elements.SetValue(dd, component.WOOD)
 		component.OnHit.SetValue(dd, onHealSlimeHit)
 		component.Transient.Set(dd, &component.TransientData{
 			Start:    time.Now(),

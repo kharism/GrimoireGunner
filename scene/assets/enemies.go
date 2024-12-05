@@ -59,6 +59,12 @@ var yeti_warmup []byte
 //go:embed images/yeti_3.png
 var yeti_cooldown []byte
 
+//go:embed images/yeti_4.png
+var yeti_warmup_2 []byte
+
+//go:embed images/yeti_5.png
+var yeti_cooldown_2 []byte
+
 //go:embed images/hammerghoul.png
 var hammerghoul []byte
 
@@ -98,6 +104,18 @@ var yanma2 []byte
 //go:embed images/yanma_option.png
 var yanma_option []byte
 
+//go:embed images/pyro-eyes.png
+var pyro_eyes []byte
+
+//go:embed images/pyro-eyes_2.png
+var pyro_eyes_2 []byte
+
+//go:embed images/lightning_imp_1.png
+var lightning_imp_1 []byte
+
+//go:embed images/lightning_imp_2.png
+var lightning_imp_2 []byte
+
 var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
@@ -122,12 +140,18 @@ var SwordswomenCooldown *ebiten.Image
 var Poacher *ebiten.Image
 var PoacherWarmup *ebiten.Image
 var PoacherCooldown *ebiten.Image
+var PyroEyes *ebiten.Image
+var PyroEyesWarmup *ebiten.Image
 var Yeti *ebiten.Image
 var YetiWarmup *ebiten.Image
 var YetiCooldown *ebiten.Image
+var YetiWarmup2 *ebiten.Image
+var YetiCooldown2 *ebiten.Image
 var Yanma *ebiten.Image
 var YanmaAttack *ebiten.Image
 var YanmaOption *ebiten.Image
+var LightningImp *ebiten.Image
+var LightningImpWarmup *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -230,6 +254,14 @@ func init() {
 		imgReader := bytes.NewReader(yeti_cooldown)
 		YetiCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if YetiWarmup2 == nil {
+		imgReader := bytes.NewReader(yeti_warmup_2)
+		YetiWarmup2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if YetiCooldown2 == nil {
+		imgReader := bytes.NewReader(yeti_cooldown_2)
+		YetiCooldown2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Yanma == nil {
 		imgReader := bytes.NewReader(yanma1)
 		Yanma, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -241,5 +273,21 @@ func init() {
 	if YanmaOption == nil {
 		imgReader := bytes.NewReader(yanma_option)
 		YanmaOption, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PyroEyes == nil {
+		imgReader := bytes.NewReader(pyro_eyes)
+		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PyroEyesWarmup == nil {
+		imgReader := bytes.NewReader(pyro_eyes_2)
+		PyroEyesWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningImp == nil {
+		imgReader := bytes.NewReader(lightning_imp_1)
+		LightningImp, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningImpWarmup == nil {
+		imgReader := bytes.NewReader(lightning_imp_2)
+		LightningImpWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 }

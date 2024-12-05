@@ -3,10 +3,8 @@ package assets
 import (
 	"bytes"
 	_ "embed"
-	"fmt"
 	_ "image/jpeg"
 	"log"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -28,6 +26,9 @@ var tileDmgPng []byte
 
 //go:embed images/cardtemplate.png
 var cardTemplate []byte
+
+//go:embed images/double_damage.png
+var double_damage []byte
 
 //go:embed images/menu_btn_bg.png
 var menuBg []byte
@@ -55,6 +56,9 @@ var chargeshot_projectile []byte
 
 //go:embed images/dagger.png
 var projectile2 []byte
+
+//go:embed images/elec_sphere.png
+var elec_sphere []byte
 
 //go:embed images/bomb1.png
 var bomb1 []byte
@@ -89,6 +93,9 @@ var bg_forest []byte
 //go:embed images/bg_mountain.png
 var bg_mountain []byte
 
+//go:embed images/bg_cave.png
+var bg_cave []byte
+
 //go:embed images/opening_screen.png
 var bg_opening []byte
 
@@ -100,9 +107,6 @@ var bg_workbench []byte
 
 //go:embed images/beartrap.png
 var beartrap []byte
-
-//go:embed images/pyro-eyes.png
-var pyro_eyes []byte
 
 //go:embed images/wideslash.png
 var wideslash_fx []byte
@@ -128,11 +132,17 @@ var buckshot_fx []byte
 //go:embed images/fx/flametower.png
 var flametower_fx []byte
 
+//go:embed images/fx/spore.png
+var spore_fx []byte
+
 //go:embed images/fx_charge.png
 var chargeshot_fx []byte
 
 //go:embed images/fx/hit.png
 var hit_fx []byte
+
+//go:embed images/fx/flamethrower.png
+var flamethrower_fx []byte
 
 //go:embed images/fx/heal.png
 var heal_fx []byte
@@ -164,11 +174,17 @@ var fist_icon []byte
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
 
+//go:embed images/icon_sporebomb.png
+var sporebomb_icon []byte
+
 //go:embed images/icon_bomb.png
 var bomb_icon []byte
 
 //go:embed images/icon_cannon.png
 var cannon_icon []byte
+
+//go:embed images/icon_bamboo_lance.png
+var bamboolance_icon []byte
 
 //go:embed images/icon_heal.png
 var heal_icon []byte
@@ -206,18 +222,6 @@ var rest_icon []byte
 //go:embed images/icon_firewall.png
 var firewall_icon []byte
 
-//go:embed shader/dakka.kage
-var dakkaShader []byte
-
-//go:embed shader/darker.kage
-var darkerShader []byte
-
-//go:embed shader/icy.kage
-var icyShader []byte
-
-//go:embed shader/cooldown.kage
-var cooldownShader []byte
-
 //go:embed images/stageclear.png
 var stageclear []byte
 
@@ -232,24 +236,27 @@ var Bomb1 *ebiten.Image
 var Bomb2 *ebiten.Image
 var BearTrap *ebiten.Image
 var BambooLance *ebiten.Image
+var Flamehtrower *ebiten.Image
 var Wall *ebiten.Image
 var Bg *ebiten.Image
 var BgRest *ebiten.Image
 var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
+var BgCave *ebiten.Image
 var BgOpening *ebiten.Image
 var GameOver *ebiten.Image
+var DoubleDamage *ebiten.Image
 var MenuButtonBg *ebiten.Image
 var Player1Stand *ebiten.Image
 var Player1Attack *ebiten.Image
 var Projectile1 *ebiten.Image
 var Projectile2 *ebiten.Image
+var ElecSphere *ebiten.Image
 var Icicle *ebiten.Image
 var LightningBolt *ebiten.Image
 var Fist *ebiten.Image
 var Boulder *ebiten.Image
-var PyroEyes *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -266,7 +273,9 @@ var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
 var BattleIcon *ebiten.Image
 var HealIcon *ebiten.Image
+var BambooLanceIcon *ebiten.Image
 var AtkUp *ebiten.Image
+var SporebombIcon *ebiten.Image
 var HPUpIcon *ebiten.Image
 var ENUpIcon *ebiten.Image
 var MedkitIcon *ebiten.Image
@@ -274,11 +283,6 @@ var ChargeshotIcon *ebiten.Image
 var RestIcon *ebiten.Image
 var FistIcon *ebiten.Image
 var WorkbenchIcon *ebiten.Image
-
-var DakkaShader *ebiten.Shader
-var DarkerShader *ebiten.Shader
-var IcyShader *ebiten.Shader
-var CooldownShader *ebiten.Shader
 
 var PixelFont *text.GoTextFaceSource
 var MonogramFont *text.GoTextFaceSource
@@ -296,6 +300,7 @@ var DustFxRaw *ebiten.Image
 var WideslashRaw *ebiten.Image
 var BuckShotRaw *ebiten.Image
 var FlametowerRaw *ebiten.Image
+var SporeRaw *ebiten.Image
 var HealFx *ebiten.Image
 var ChargeshotRaw *ebiten.Image
 var ChargeshotFx *ebiten.Image
@@ -311,7 +316,13 @@ var CardPickRed *ebiten.Image
 var Menumusic []byte
 
 //go:embed bgm/test1.mp3
-var BattleMusic []byte
+var BattleMusic1 []byte
+
+//go:embed bgm/area12-131883.mp3
+var BattleMusic2 []byte
+
+//go:embed bgm/chiptune-grooving-142242.mp3
+var BattleMusic3 []byte
 
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
@@ -457,9 +468,21 @@ func init() {
 		imgReader := bytes.NewReader(icicle)
 		Icicle, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Flamehtrower == nil {
+		imgReader := bytes.NewReader(flamethrower_fx)
+		Flamehtrower, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ElecSphere == nil {
+		imgReader := bytes.NewReader(elec_sphere)
+		ElecSphere, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if Bomb2 == nil {
 		imgReader := bytes.NewReader(bomb2)
 		Bomb2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DoubleDamage == nil {
+		imgReader := bytes.NewReader(double_damage)
+		DoubleDamage, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Projectile1 == nil {
 		imgReader := bytes.NewReader(projectile1)
@@ -489,13 +512,13 @@ func init() {
 		imgReader := bytes.NewReader(bg_workbench)
 		BgWorkbench, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BgCave == nil {
+		imgReader := bytes.NewReader(bg_cave)
+		BgCave, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if DamageGrid == nil {
 		imgReader := bytes.NewReader(tileDmgPng)
 		DamageGrid, _, _ = ebitenutil.NewImageFromReader(imgReader)
-	}
-	if PyroEyes == nil {
-		imgReader := bytes.NewReader(pyro_eyes)
-		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 
 	if LongSwordIcon == nil {
@@ -510,6 +533,10 @@ func init() {
 		imgReader := bytes.NewReader(bomb_icon)
 		BombIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if BambooLanceIcon == nil {
+		imgReader := bytes.NewReader(bamboolance_icon)
+		BambooLanceIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if CannonIcon == nil {
 		imgReader := bytes.NewReader(cannon_icon)
 		CannonIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -517,6 +544,10 @@ func init() {
 	if WallIcon == nil {
 		imgReader := bytes.NewReader(wall_icon)
 		WallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SporebombIcon == nil {
+		imgReader := bytes.NewReader(sporebomb_icon)
+		SporebombIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShotgunIcon == nil {
 		imgReader := bytes.NewReader(shotgun_icon)
@@ -591,22 +622,6 @@ func init() {
 		imgReader := bytes.NewReader(na_icon)
 		NAIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
-	if DakkaShader == nil {
-		DakkaShader, _ = ebiten.NewShader(dakkaShader)
-	}
-	if DarkerShader == nil {
-		DarkerShader, _ = ebiten.NewShader(darkerShader)
-	}
-	if IcyShader == nil {
-		IcyShader, _ = ebiten.NewShader(icyShader)
-	}
-	if CooldownShader == nil {
-		CooldownShader, err = ebiten.NewShader(cooldownShader)
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(-1)
-		}
-	}
 
 	if ExplosionRaw == nil {
 		imgReader := bytes.NewReader(explosion_fx)
@@ -623,6 +638,10 @@ func init() {
 	if BuckShotRaw == nil {
 		imgReader := bytes.NewReader(buckshot_fx)
 		BuckShotRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SporeRaw == nil {
+		imgReader := bytes.NewReader(spore_fx)
+		SporeRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShockWaveFxRaw == nil {
 		imgReader := bytes.NewReader(shockwave_fx)
@@ -696,6 +715,21 @@ type SpriteParam struct {
 func NewShockwaveAnim(param SpriteParam) *core.AnimatedImage {
 	return &core.AnimatedImage{
 		MovableImage: core.NewMovableImage(ShockWaveFxRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 100,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
+func NewSporeAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(SporeRaw,
 			core.NewMovableImageParams().
 				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
 		),

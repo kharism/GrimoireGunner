@@ -2,6 +2,7 @@ package scene
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
@@ -212,7 +213,16 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 			s.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
 			s.musicPlayer.AudioPlayer().SetPosition(s.data.MusicSeek)
 		} else {
-			s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic, assets.TypeMP3)
+			jj := rand.Int() % 3
+			switch jj {
+			case 0:
+				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic1, assets.TypeMP3)
+			case 1:
+				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic2, assets.TypeMP3)
+			case 2:
+				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic3, assets.TypeMP3)
+			}
+
 		}
 
 		if err != nil {

@@ -8,7 +8,8 @@ import (
 
 // store who gets to burn
 type BurnerData struct {
-	Damage int
+	Damage  int
+	Element Elemental
 }
 
 // store data on who gets burned

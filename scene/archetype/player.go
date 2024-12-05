@@ -16,6 +16,8 @@ func NewPlayer(world donburi.World, sprite *ebiten.Image) *donburi.Entity {
 		// mycomponent.Speed,
 		// mycomponent.TargetLocation,
 		mycomponent.PlayerDataComponent,
+		mycomponent.Elements,
+		// mycomponent.Shader,
 		mycomponent.Sprite, PlayerTag)
 	entId := world.Entry(entity)
 	mycomponent.Sprite.Set(entId, &mycomponent.SpriteData{Image: sprite})

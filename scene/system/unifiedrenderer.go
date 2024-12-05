@@ -71,7 +71,15 @@ func (a *AnimFromCharacterEntry) Draw(screen *ebiten.Image) {
 		}
 		opts.Images[0] = sprite
 		shader := component.Shader.Get(a.entry)
-		screen.DrawRectShader(bound.Dx(), bound.Dy(), shader, opts)
+		if shader != nil {
+			screen.DrawRectShader(bound.Dx(), bound.Dy(), shader, opts)
+		} else {
+			drawOption := &ebiten.DrawImageOptions{
+				GeoM: translate,
+			}
+			screen.DrawImage(sprite, drawOption)
+		}
+
 	} else {
 
 		drawOption := &ebiten.DrawImageOptions{

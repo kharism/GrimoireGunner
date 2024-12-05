@@ -52,6 +52,12 @@ func (l *PushbackDecorator) GetModifierEntry() *loadout.CasterModifierData {
 	}
 	return nil
 }
+func (l *PushbackDecorator) GetElement() component.Elemental {
+	if vv, ok := l.caster.(loadout.ElementalCaster); ok {
+		return vv.GetElement()
+	}
+	return component.NEUTRAL
+}
 func (l *PushbackDecorator) SetModifier(e *loadout.CasterModifierData) {
 	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
 		cc.SetModifier(e)

@@ -18,7 +18,7 @@ func NewIceslime(ecs *ecs.ECS, col, row int) {
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
 	entry.AddComponent(component.Shader)
-	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "IceSlime"})
+	component.Health.Set(entry, &component.HealthData{HP: 300, MaxHP: 300, Name: "IceSlime", Element: component.WATER})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
 	component.Shader.Set(entry, assets.IcyShader)
@@ -140,11 +140,12 @@ func CreateIcicle(ecs *ecs.ECS, entity *donburi.Entry) {
 	scrY -= 100
 	dmg := component.Damage.Get(entity).Damage
 	fxImg := core.NewMovableImage(assets.Icicle, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: scrX, Sy: scrY}))
-	icicleFx := ecs.World.Create(component.Fx, component.GridPos, component.Damage, component.OnHit, component.Transient)
+	icicleFx := ecs.World.Create(component.Fx, component.GridPos, component.Elements, component.Damage, component.OnHit, component.Transient)
 	iciclefxEnt := ecs.World.Entry(icicleFx)
 	component.Fx.Set(iciclefxEnt, &component.FxData{
 		Animation: fxImg,
 	})
+	component.Elements.SetValue(iciclefxEnt, component.WATER)
 	component.GridPos.Set(iciclefxEnt, gridPos)
 	component.Transient.Set(iciclefxEnt, &component.TransientData{
 		Start:    time.Now(),

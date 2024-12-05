@@ -63,6 +63,12 @@ func AddHeal(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
 func (h *HealDecor) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	h.caster.Cast(ensource, ecs)
 }
+func (l *HealDecor) GetElement() component.Elemental {
+	if vv, ok := l.caster.(loadout.ElementalCaster); ok {
+		return vv.GetElement()
+	}
+	return component.NEUTRAL
+}
 func (l *HealDecor) GetModifierEntry() *loadout.CasterModifierData {
 	if cc, ok := l.caster.(loadout.ModifierGetSetter); ok {
 		return cc.GetModifierEntry()

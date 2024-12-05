@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -21,6 +22,10 @@ type Caster interface {
 
 	GetDescription() string
 	GetName() string
+}
+type ElementalCaster interface {
+	Caster
+	GetElement() component.Elemental
 }
 type ENSetGetter interface {
 	SetEn(val int)

@@ -58,8 +58,8 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewWallCaster(),
-			attack.NewChargeshotCaster(),
+			attack.NewFirewallCaster(),
+			attack.DecorateWithBonus10(attack.NewSporeBombCaster()),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,

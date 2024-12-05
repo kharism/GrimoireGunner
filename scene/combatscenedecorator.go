@@ -33,10 +33,14 @@ func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
 
 type CombatSceneDecorator func(*ecs.ECS, *CombatScene)
 
-var Decorators = []CombatSceneDecorator{}
+var Decorators1 = []CombatSceneDecorator{}
+var Decorators2 = []CombatSceneDecorator{}
+
+var OptBoss1 = []CombatSceneDecorator{}
+var OptBoss1Name = []string{}
 
 func init() {
-	Decorators = []CombatSceneDecorator{
+	Decorators1 = []CombatSceneDecorator{
 		level1Decorator1,
 		level1Decorator2,
 		level1Decorator3,
@@ -45,11 +49,42 @@ func init() {
 		level1Decorator6,
 		level1Decorator7,
 		level1Decorator8,
+		level1Decorator10,
+		level1Decorator11,
+		level1Decorator12,
+	}
+	Decorators2 = []CombatSceneDecorator{
+		level1Decorator10,
+		level1Decorator11,
+		level1Decorator12,
+		level2Decorator1,
+		level2Decorator4,
+		level2Decorator3,
+	}
+	OptBoss1 = []CombatSceneDecorator{
+		level1OptBoss1,
+		level1OptBoss2,
+		level1OptBoss3,
+	}
+	OptBoss1Name = []string{
+		"Ellone",
+		"Yanman",
+		"Joji",
 	}
 }
 func RandCombatDecorator1() CombatSceneDecorator {
-	i := rand.Int() % len(Decorators)
-	return Decorators[i]
+	i := rand.Int() % len(Decorators1)
+	return Decorators1[i]
+}
+
+func RandCombatDecorator2() CombatSceneDecorator {
+	i := rand.Int() % len(Decorators2)
+	return Decorators2[i]
+}
+
+func RandBossDecorator1() (CombatSceneDecorator, string) {
+	i := rand.Int() % len(OptBoss1)
+	return OptBoss1[i], OptBoss1Name[i]
 }
 
 // put in 1 rock and 1 cannoneer and 1 rock
@@ -127,12 +162,36 @@ func level1Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewGatlingGhoul(ecs, 6, 1)
 	enemies.NewDemon(ecs, 4, 2)
 }
-func level1Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
+func level1OptBoss1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewSwordwomen(ecs, 5, 1)
 }
-
+func level1OptBoss2(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewYanman(ecs, 6, 1)
+}
+func level1OptBoss3(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewFrostYeti(ecs, 6, 1)
+}
+func level1Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewPoacher(ecs, 6, 1)
+}
+func level1Decorator11(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewPyroEyes(ecs, 4, 1)
+}
+func level1Decorator12(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewLightningImp(ecs, 4, 1)
+}
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = []ItemInterface{}
@@ -161,12 +220,13 @@ func level2Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewYeti(ecs, 6, 1)
 }
 func level2Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
-	combatscene.data.Bg = assets.BgMountain
+	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
 	enemies.NewIceslime(ecs, 6, 1)
 }
 func level2Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
-	combatscene.data.Bg = assets.BgMountain
+	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
-	enemies.NewYanman(ecs, 6, 1)
+	enemies.NewIceslime(ecs, 6, 1)
+	enemies.NewHealslime(ecs, 4, 2)
 }

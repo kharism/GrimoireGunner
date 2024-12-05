@@ -31,6 +31,19 @@ var timerDelay = time.Now()
 func DoNothingState(ecs *ecs.ECS, s *playerAttackSystem) {
 
 }
+func Element2Shader(el component.Elemental) *ebiten.Shader {
+	switch el {
+	case component.ELEC:
+		return assets.ShockyShader
+	case component.FIRE:
+		return assets.DakkaShader
+	case component.WATER:
+		return assets.IcyShader
+	case component.WOOD:
+		return assets.WoodyShader
+	}
+	return nil
+}
 func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 	playerId := ecs.World.Entry(*s.PlayerIndex)
 	playerData := component.PlayerDataComponent.Get(playerId)
@@ -64,6 +77,20 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 						loadout.CurLoadOut[1] = nil
 					}
 				}
+				if vv, ok := loadout.CurLoadOut[1].(loadout.ElementalCaster); ok {
+					element := vv.GetElement()
+					if element != component.NEUTRAL {
+						component.Health.Get(playerId).Element = element
+						if !playerId.HasComponent(component.Shader) {
+							playerId.AddComponent(component.Shader)
+						}
+						shader := Element2Shader(element)
+						if shader != nil {
+							component.Shader.Set(playerId, shader)
+						}
+					}
+
+				}
 			}
 
 		}
@@ -90,6 +117,20 @@ func CombatState(ecs *ecs.ECS, s *playerAttackSystem) {
 					if vv.GetCharge() == 0 {
 						loadout.CurLoadOut[0] = nil
 					}
+				}
+				if vv, ok := loadout.CurLoadOut[0].(loadout.ElementalCaster); ok {
+					element := vv.GetElement()
+					if element != component.NEUTRAL {
+						component.Health.Get(playerId).Element = element
+						if !playerId.HasComponent(component.Shader) {
+							playerId.AddComponent(component.Shader)
+						}
+						shader := Element2Shader(element)
+						if shader != nil {
+							component.Shader.Set(playerId, shader)
+						}
+					}
+
 				}
 			}
 		}

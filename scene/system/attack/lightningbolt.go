@@ -20,6 +20,7 @@ type LightnigAtkParam struct {
 	//+1 to create lightning on right of starting point, and -1 to create on left
 	Direction int
 	Damage    int
+	Element   component.Elemental
 	Actor     *donburi.Entry
 	OnHit     component.OnAtkHit
 }
@@ -32,17 +33,20 @@ func LightningBoltOnHitfunc(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 }
 func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 	startCol := param.StartCol
-
+	now := time.Now()
 	for i := startCol; i >= 0 && i <= 7; i += param.Direction {
 		entity := ecs.World.Create(
 			component.Damage,
 			component.GridPos,
 			component.OnHit,
 			component.Transient,
-			component.Fx,
+			component.Elements,
 		)
+		lightningFx := ecs.World.Create(component.Fx, component.Transient)
+		lightningFxEntry := ecs.World.Entry(lightningFx)
 		entry := ecs.World.Entry(entity)
 		component.Damage.Set(entry, &component.DamageData{Damage: param.Damage})
+		component.Elements.SetValue(entry, param.Element)
 		component.GridPos.Set(entry, &component.GridPosComponentData{Row: param.StartRow, Col: i})
 		scrX, scrY := assets.GridCoord2Screen(param.StartRow, i)
 		fxHeight := assets.LightningBolt.Bounds().Dy()
@@ -50,9 +54,13 @@ func NewLigtningAttack(ecs *ecs.ECS, param LightnigAtkParam) {
 			NewMovableImageParams().
 			WithMoveParam(core.MoveParam{Sx: scrX - (float64(assets.TileWidth) / 2), Sy: scrY - float64(fxHeight)}))
 		anim1.Done = func() {}
-		component.Fx.Set(entry, &component.FxData{Animation: anim1})
+		component.Fx.Set(lightningFxEntry, &component.FxData{Animation: anim1})
 		component.Transient.Set(entry, &component.TransientData{
-			Start:    time.Now(),
+			Start:    now,
+			Duration: 200 * time.Millisecond,
+		})
+		component.Transient.Set(lightningFxEntry, &component.TransientData{
+			Start:    now,
 			Duration: 200 * time.Millisecond,
 		})
 		component.OnHit.SetValue(entry, param.OnHit)
@@ -75,6 +83,12 @@ func NewLightningBolCaster() *LightingBoltCaster {
 func (l *LightingBoltCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
+func (f *LightingBoltCaster) GetElement() component.Elemental {
+	if f.ModEntry != nil {
+		return f.ModEntry.Element
+	}
+	return component.ELEC
+}
 func (l *LightingBoltCaster) SetModifier(e *loadout.CasterModifierData) {
 	if l.ModEntry != e && e.OnHit != nil {
 		if l.OnHit == nil {
@@ -82,6 +96,9 @@ func (l *LightingBoltCaster) SetModifier(e *loadout.CasterModifierData) {
 		} else {
 			l.OnHit = JoinOnAtkHit(l.OnHit, e.OnHit)
 		}
+	}
+	if l.GetElement() != component.NEUTRAL && e.Element == component.NEUTRAL {
+		e.Element = l.GetElement()
 	}
 	l.ModEntry = e
 }
@@ -108,6 +125,7 @@ func (l *LightingBoltCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 			Actor:     playerId,
 			Damage:    l.GetDamage(),
 			OnHit:     l.OnHit,
+			Element:   l.GetElement(),
 		}
 		NewLigtningAttack(ecs, param)
 		l.nextCooldown = time.Now().Add(l.GetCooldownDuration())

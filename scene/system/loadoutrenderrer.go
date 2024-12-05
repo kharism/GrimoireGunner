@@ -194,7 +194,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
-			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
+			vv := float32(loadout.SubLoadOut1[0].GetCooldown().Sub(now))
 			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
 			opts2.Images[0] = icon
 			opts2.Uniforms = make(map[string]interface{})
@@ -229,8 +229,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut1[1].GetCooldown().After(now) {
-			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
-			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			vv := float32(loadout.SubLoadOut1[1].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.SubLoadOut1[1].GetCooldownDuration()))
 			// fmt.Println(timeLeftPercentage)
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
@@ -268,8 +268,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut2[0].GetCooldown().After(now) {
-			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
-			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			vv := float32(loadout.SubLoadOut2[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.SubLoadOut2[0].GetCooldownDuration()))
 			// fmt.Println(timeLeftPercentage)
 
 			opts2 := &ebiten.DrawRectShaderOptions{
@@ -308,8 +308,8 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 		}
 		now := time.Now()
 		if loadout.SubLoadOut2[1].GetCooldown().After(now) {
-			vv := float32(loadout.CurLoadOut[0].GetCooldown().Sub(now))
-			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			vv := float32(loadout.SubLoadOut2[0].GetCooldown().Sub(now))
+			timeLeftPercentage := 1 - (vv / float32(loadout.SubLoadOut2[0].GetCooldownDuration()))
 			opts2 := &ebiten.DrawRectShaderOptions{
 				GeoM: transformation,
 			}
