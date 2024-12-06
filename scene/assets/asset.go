@@ -213,6 +213,9 @@ var shotgun_icon []byte
 //go:embed images/icon_pushgun.png
 var pushgun_icon []byte
 
+//go:embed images/icon_icespike.png
+var icespike_icon []byte
+
 //go:embed images/icon_chargeshot.png
 var chargeshot_icon []byte
 
@@ -272,6 +275,7 @@ var GatlingIcon *ebiten.Image
 var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
 var FlamethrowerIcon *ebiten.Image
+var IcespikeIcon *ebiten.Image
 var PushgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
@@ -548,6 +552,10 @@ func init() {
 	if WallIcon == nil {
 		imgReader := bytes.NewReader(wall_icon)
 		WallIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if IcespikeIcon == nil {
+		imgReader := bytes.NewReader(icespike_icon)
+		IcespikeIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if SporebombIcon == nil {
 		imgReader := bytes.NewReader(sporebomb_icon)
