@@ -51,6 +51,9 @@ func (p *PlayerMoveSystem) Update(ecs *ecs.ECS) {
 	if playerEntry.HasComponent(component.Root) {
 		return
 	}
+	if playerEntry == nil {
+		return
+	}
 	gridPos := component.GridPos.Get(playerEntry)
 	if !p.isAnim && inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
 
