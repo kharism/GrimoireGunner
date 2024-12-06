@@ -43,11 +43,17 @@ var DamageSystem = &damageSystem{
 func AddDoubleDamageFx(ecs *ecs.ECS, damagedEntity donburi.Entity) {
 	entry := ecs.World.Entry(damagedEntity)
 	screenPos := component.ScreenPos.Get(entry)
+	scrX, scrY := screenPos.X, screenPos.Y
+	if scrX == 0 && scrY == 0 {
+		gridPos := component.GridPos.Get(entry)
+		scrX, scrY = assets.GridCoord2Screen(gridPos.Row, gridPos.Col)
+		scrY -= 50
+	}
 	hitfx := core.NewMovableImage(assets.DoubleDamage,
 		core.NewMovableImageParams().WithMoveParam(
 			core.MoveParam{
-				Sx: screenPos.X - 50,
-				Sy: screenPos.Y - 50,
+				Sx: scrX - 50,
+				Sy: scrY - 50,
 			},
 		),
 	)
@@ -112,7 +118,9 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 						// onhit(ecs, e, damageableEntity)
 					}
 				}
-				onhit(ecs, e, damageableEntity)
+				if onhit != nil {
+					onhit(ecs, e, damageableEntity)
+				}
 
 				attack.AtkSfxQueue.QueueSFX(assets.ImpactFx)
 				AddHitAnim(ecs, damageableEntity.Entity())

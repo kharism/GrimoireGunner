@@ -126,7 +126,7 @@ func SlimeRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			x -= 50
 			y -= 100
 
-			dmg += 10
+			dmg += 1
 			memory[CUR_DMG] = dmg + 10
 
 			anim := core.NewMovableImage(assets.HealFx, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: x, Sy: y}))

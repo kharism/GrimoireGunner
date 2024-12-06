@@ -10,6 +10,7 @@ import (
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
+	"github.com/yohamta/donburi/filter"
 )
 
 func NewFrostYeti(ecs *ecs.ECS, col, row int) {
@@ -95,6 +96,16 @@ func FYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					memory[CURRENT_STRATEGY] = "WARM_UP_AVALANCHE"
 					component.Sprite.Get(entity).Image = assets.YetiWarmup2
 					memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+					filter := donburi.NewQuery(
+						filter.Contains(
+							component.EnemyTag,
+						),
+					)
+					enemyCount := filter.Count(ecs.World)
+					if enemyCount == 1 {
+						NewHealslime(ecs, 4, 0)
+					}
+
 				}
 			}
 
