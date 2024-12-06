@@ -174,6 +174,9 @@ var fist_icon []byte
 //go:embed images/icon_shockwave.png
 var shockwave_icon []byte
 
+//go:embed images/icon_flamethrower.png
+var flamethrower_icon []byte
+
 //go:embed images/icon_sporebomb.png
 var sporebomb_icon []byte
 
@@ -268,6 +271,7 @@ var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
 var CannonIcon *ebiten.Image
 var ShotgunIcon *ebiten.Image
+var FlamethrowerIcon *ebiten.Image
 var PushgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
@@ -548,6 +552,10 @@ func init() {
 	if SporebombIcon == nil {
 		imgReader := bytes.NewReader(sporebomb_icon)
 		SporebombIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if FlamethrowerIcon == nil {
+		imgReader := bytes.NewReader(flamethrower_icon)
+		FlamethrowerIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShotgunIcon == nil {
 		imgReader := bytes.NewReader(shotgun_icon)
