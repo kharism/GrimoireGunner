@@ -17,7 +17,7 @@ func NewYanman(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Yanma)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yanman"})
+	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yanman", Element: component.WOOD})
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
@@ -36,11 +36,12 @@ const OPTION_LIST = "OPT_LIST"
 func BambooAtk(ecs *ecs.ECS, entity *donburi.Entry) {
 	gridPos := component.GridPos.Get(entity)
 	now := time.Now()
-	dmgGridEnt := ecs.World.Create(component.GridPos, component.Damage, component.OnHit, component.Transient)
+	dmgGridEnt := ecs.World.Create(component.GridPos, component.Damage, component.OnHit, component.Transient, component.Elements)
 	dmgGrid := ecs.World.Entry(dmgGridEnt)
 	component.GridPos.Set(dmgGrid, gridPos)
 	component.Damage.Set(dmgGrid, &component.DamageData{Damage: 50})
 	component.OnHit.SetValue(dmgGrid, attack.SingleHitProjectile)
+	component.Elements.SetValue(dmgGrid, component.WOOD)
 	component.Transient.Set(dmgGrid, &component.TransientData{
 		Start:    now,
 		Duration: 300 * time.Millisecond,
@@ -167,9 +168,10 @@ func GenerateYanmaOption(ecs *ecs.ECS, col, row, damage, multiplier int) *donbur
 	yanmaOption := archetype.NewNPC(ecs.World, assets.YanmaOption)
 	entry := ecs.World.Entry(*yanmaOption)
 	component.Health.Set(entry, &component.HealthData{
-		HP:    100,
-		MaxHP: 100,
-		Name:  "YanmaOption",
+		HP:      100,
+		MaxHP:   100,
+		Name:    "YanmaOption",
+		Element: component.WOOD,
 	})
 	component.GridPos.Set(entry, &component.GridPosComponentData{
 		Row: row,
@@ -228,6 +230,8 @@ func YanmaOptionRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 				entity.AddComponent(component.TargetLocation)
 				entity.AddComponent(component.KamikazeTag)
 				entity.AddComponent(component.Damage)
+				entity.AddComponent(component.Elements)
+				component.Elements.SetValue(entity, component.WOOD)
 				component.Speed.Set(entity, &component.SpeedData{
 					Vx: -5,
 					Vy: 0,
