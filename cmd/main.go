@@ -58,8 +58,8 @@ func main() {
 		PlayerMaxEn:   300,
 		PlayerEnRegen: 20,
 		MainLoadout: []loadout.Caster{
-			attack.NewIcespikeCaster(),
-			attack.NewFlamethrowerCaster(),
+			attack.NewShotgunCaster(),
+			attack.NewCannonCaster(),
 		},
 		PlayerRow:    1,
 		PlayerCol:    1,
