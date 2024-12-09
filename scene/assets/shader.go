@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kharism/grimoiregunner/scene/component"
 )
 
 //go:embed shader/dakka.kage
@@ -33,6 +34,19 @@ var CooldownShader *ebiten.Shader
 var WoodyShader *ebiten.Shader
 var ShockyShader *ebiten.Shader
 
+func Element2Shader(el component.Elemental) *ebiten.Shader {
+	switch el {
+	case component.ELEC:
+		return ShockyShader
+	case component.FIRE:
+		return DakkaShader
+	case component.WATER:
+		return IcyShader
+	case component.WOOD:
+		return WoodyShader
+	}
+	return nil
+}
 func init() {
 	if DakkaShader == nil {
 		DakkaShader, _ = ebiten.NewShader(dakkaShader)

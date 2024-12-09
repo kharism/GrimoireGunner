@@ -17,7 +17,7 @@ func NewPoacher(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Poacher)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Poacher"})
+	component.Health.Set(entry, &component.HealthData{HP: 700, MaxHP: 700, Name: "Poacher"})
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
@@ -140,6 +140,9 @@ func PoacherRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		// move in front of player
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			playerPos, _ := attack.GetPlayerGridPos(ecs)
+			if playerPos == nil {
+				return
+			}
 			scrPos := component.ScreenPos.Get(entity)
 			component.Sprite.Get(entity).Image = assets.PoacherWarmup
 			newCol := playerPos.Col + 1

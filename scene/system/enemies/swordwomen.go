@@ -82,6 +82,9 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 
 	}
 	playerPos, _ := attack.GetPlayerGridPos(ecs)
+	if playerPos == nil {
+		return
+	}
 	if memory[CURRENT_STRATEGY] == "ATTACK_RANGED" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			if playerPos.Row == gridPos.Row {

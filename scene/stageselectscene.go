@@ -116,7 +116,7 @@ func GenerateLayout2() *Level {
 	LevelLayout1.Root.NextNode = []*LevelNode{
 		CurNode1, CurNode2,
 	}
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 5; i++ {
 		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
 		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
 		CurNode1.NextNode = append(CurNode1.NextNode, NewNodeA)
@@ -147,7 +147,7 @@ func GenerateLayout2() *Level {
 		CurNode1 = NewNodeA
 		CurNode2 = NewNodeB
 	}
-	bossDecorator, bossName := RandBossDecorator1()
+	bossDecorator, bossName := finalBoss, "WhiteSnake"
 	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(bossDecorator)}
 	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
 	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
@@ -251,7 +251,17 @@ func (r *StageSelect) Draw(screen *ebiten.Image) {
 			PrimaryAlign: text.AlignCenter,
 		},
 	})
-	//TODO: bugfix display
+
+	textTranslate.Reset()
+	textTranslate.Translate(1024, 550)
+	text.Draw(screen, "End of stage boss:"+r.data.LevelLayout.BossName, assets.FontFace, &text.DrawOptions{
+		DrawImageOptions: ebiten.DrawImageOptions{
+			GeoM: textTranslate,
+		},
+		LayoutOptions: text.LayoutOptions{
+			PrimaryAlign: text.AlignEnd,
+		},
+	})
 	for idx1, c := range tiers {
 		for idx2, d := range c {
 			var lineColor color.Color

@@ -55,7 +55,11 @@ func (c *CombatScene) Update() error {
 		if len(c.data.CurrentLevel.NextNode) == 0 {
 			c.data.Level += 1
 			// generate new level
-			c.data.LevelLayout = GenerateLayout1()
+			switch c.data.Level {
+			case 2:
+				c.data.LevelLayout = GenerateLayout2()
+
+			}
 
 			c.data.CurrentLevel = nil //c.data.LevelLayout.Root
 		}

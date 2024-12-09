@@ -54,6 +54,9 @@ func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			hp := component.Health.Get(entity).HP
 			playerGrid, _ := attack.GetPlayerGridPos(ecs)
+			if playerGrid == nil {
+				return
+			}
 			demonPos := component.GridPos.Get(entity)
 			tempRow := playerGrid.Row
 			// default to melee

@@ -2,5 +2,5 @@ package main
 
 func Fragment(position vec4, srcPos vec2, _ vec4) vec4 {	
     sample := imageSrc0UnsafeAt(srcPos)
-	return vec4(sample.r*0.2,sample.g*1.8,sample.b*0.2,sample.a)
+	return vec4(sample.r*0.2,sample.g*1.3,sample.b*0.2,sample.a)
 }

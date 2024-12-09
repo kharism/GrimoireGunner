@@ -18,7 +18,7 @@ func NewFrostYeti(ecs *ecs.ECS, col, row int) {
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
 	entry.AddComponent(component.Shader)
-	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yeti", Element: component.WATER})
+	component.Health.Set(entry, &component.HealthData{HP: 1000, MaxHP: 1000, Name: "Yeti", Element: component.WATER})
 	component.Shader.Set(entry, assets.IcyShader)
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
@@ -57,6 +57,9 @@ func FYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			hp := component.Health.Get(entity).HP
 			playerGrid, _ := attack.GetPlayerGridPos(ecs)
+			if playerGrid == nil {
+				return
+			}
 			demonPos := component.GridPos.Get(entity)
 			tempRow := playerGrid.Row
 			// default to melee
@@ -132,6 +135,9 @@ func FYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			component.Sprite.Get(entity).Image = assets.YetiCooldown2
 			playerPos, _ := attack.GetPlayerGridPos(ecs)
+			if playerPos == nil {
+				return
+			}
 			now := time.Now()
 			for col := playerPos.Col - 1; col <= playerPos.Col+1; col++ {
 				for row := playerPos.Row - 1; row <= playerPos.Row+1; row++ {

@@ -110,6 +110,12 @@ var yanma2 []byte
 //go:embed images/yanma_option.png
 var yanma_option []byte
 
+//go:embed images/wyrm_1.png
+var whitesnake_1 []byte
+
+//go:embed images/wyrm_2.png
+var whitesnake_2 []byte
+
 //go:embed images/pyro-eyes.png
 var pyro_eyes []byte
 
@@ -150,6 +156,8 @@ var PoacherWarmup *ebiten.Image
 var PoacherCooldown *ebiten.Image
 var PyroEyes *ebiten.Image
 var PyroEyesWarmup *ebiten.Image
+var Whitesnake *ebiten.Image
+var WhitesnakeWarmup *ebiten.Image
 var Yeti *ebiten.Image
 var YetiWarmup *ebiten.Image
 var YetiCooldown *ebiten.Image
@@ -229,6 +237,14 @@ func init() {
 	if ReaperCooldown == nil {
 		imgReader := bytes.NewReader(reaper_cooldown)
 		ReaperCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Whitesnake == nil {
+		imgReader := bytes.NewReader(whitesnake_1)
+		Whitesnake, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if WhitesnakeWarmup == nil {
+		imgReader := bytes.NewReader(whitesnake_2)
+		WhitesnakeWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Hammerghoul == nil {
 		imgReader := bytes.NewReader(hammerghoul)

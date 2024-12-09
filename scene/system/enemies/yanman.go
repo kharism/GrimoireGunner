@@ -17,7 +17,7 @@ func NewYanman(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Yanma)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
-	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Yanman", Element: component.WOOD})
+	component.Health.Set(entry, &component.HealthData{HP: 1000, MaxHP: 1000, Name: "Yanman", Element: component.WOOD})
 
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
@@ -87,6 +87,9 @@ func YanmanRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		}
 		memory[OPTION_LIST] = newOptionList
 		playerPos, _ := attack.GetPlayerGridPos(ecs)
+		if playerPos == nil {
+			return
+		}
 		if playerPos.Col == 0 {
 			for i := 0; i < 4; i++ {
 				targetGrid := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)

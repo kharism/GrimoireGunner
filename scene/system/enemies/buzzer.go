@@ -6,7 +6,6 @@ import (
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/component"
-	"github.com/kharism/grimoiregunner/scene/system"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/hanashi/core"
 	"github.com/yohamta/donburi"
@@ -30,6 +29,23 @@ func NewBuzzer(ecs *ecs.ECS, col, row int) {
 	data[OPTION_LIST] = []donburi.Entity{}
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: BuzzerRoutine, Memory: data})
 }
+func NewMiniBuzzer(ecs *ecs.ECS, col, row int) {
+	entity := archetype.NewNPC(ecs.World, assets.Buzzer1)
+	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
+	component.Health.Set(entry, &component.HealthData{HP: 200, MaxHP: 200, Name: "Buzzer", Element: component.ELEC})
+
+	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
+	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
+	data := map[string]any{}
+	data[ALREADY_FIRED] = false
+	data[WARM_UP] = nil
+	data[CURRENT_STRATEGY] = ""
+	data[MOVE_COUNT] = 0
+	data[CUR_DMG] = 50
+	data[OPTION_LIST] = []donburi.Entity{}
+	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: BuzzerRoutine, Memory: data})
+}
 func BuzzerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
 	dmg := memory[CUR_DMG].(int)
@@ -40,6 +56,9 @@ func BuzzerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	}
 	gridPos := component.GridPos.Get(entity)
 	playerPos, _ := attack.GetPlayerGridPos(ecs)
+	if playerPos == nil {
+		return
+	}
 	if memory[CURRENT_STRATEGY] == "WAIT" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			scrPos := component.ScreenPos.Get(entity)
@@ -91,7 +110,7 @@ func TurnToElec(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	if !receiver.HasComponent(component.Shader) {
 		receiver.AddComponent(component.Shader)
 	}
-	shader := system.Element2Shader(component.ELEC)
+	shader := assets.Element2Shader(component.ELEC)
 	if shader != nil {
 		component.Shader.Set(receiver, shader)
 	}
