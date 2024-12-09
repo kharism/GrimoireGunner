@@ -105,6 +105,9 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 			damageableEntity := gridMap[gridPos.Row][gridPos.Col]
 			// damage := mycomponent.Damage.Get(e).Damage
 			onhit := component.OnHit.GetValue(e)
+			if !damageableEntity.HasComponent(component.Health) {
+				continue
+			}
 			invisTime := component.Health.Get(damageableEntity).InvisTime
 			isZero := invisTime.IsZero()
 			before := (!isZero && invisTime.Before(time.Now()))

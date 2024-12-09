@@ -52,18 +52,18 @@ func (c *CombatScene) Update() error {
 		c.sm.ProcessTrigger(TriggerToInventory)
 	}
 	if c.sandboxMode && inpututil.IsKeyJustPressed(ebiten.KeyTab) {
+		defTrigger := TriggerToStageSelect
 		if len(c.data.CurrentLevel.NextNode) == 0 {
 			c.data.Level += 1
 			// generate new level
 			switch c.data.Level {
 			case 2:
 				c.data.LevelLayout = GenerateLayout2()
-
 			}
 
 			c.data.CurrentLevel = nil //c.data.LevelLayout.Root
 		}
-		c.sm.ProcessTrigger(TriggerToStageSelect)
+		c.sm.ProcessTrigger(defTrigger)
 	}
 	if c.debugPause {
 		return nil
@@ -163,7 +163,12 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 				s.sm.ProcessTrigger(TriggerToMain)
 			} else {
 				RegisterCombatClear = false
-				s.sm.ProcessTrigger(TriggerToReward)
+				if len(s.data.CurrentLevel.NextNode) == 0 && s.data.Level == 2 {
+					s.sm.ProcessTrigger(TriggerToClear)
+				} else {
+					s.sm.ProcessTrigger(TriggerToReward)
+				}
+
 			}
 
 		})

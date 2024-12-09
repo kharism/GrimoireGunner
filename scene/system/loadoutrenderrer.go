@@ -195,7 +195,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 				GeoM: transformation,
 			}
 			vv := float32(loadout.SubLoadOut1[0].GetCooldown().Sub(now))
-			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			timeLeftPercentage := 1 - (vv / float32(loadout.SubLoadOut1[0].GetCooldownDuration()))
 			opts2.Images[0] = icon
 			opts2.Uniforms = make(map[string]interface{})
 			opts2.Uniforms["Iter"] = float32(timeLeftPercentage)

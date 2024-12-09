@@ -102,6 +102,9 @@ var bg_opening []byte
 //go:embed images/restbg.png
 var bg_rest []byte
 
+//go:embed images/Gameclear.png
+var bg_clear []byte
+
 //go:embed images/workbench.png
 var bg_workbench []byte
 
@@ -250,6 +253,7 @@ var BgWorkbench *ebiten.Image
 var BgForrest *ebiten.Image
 var BgMountain *ebiten.Image
 var BgCave *ebiten.Image
+var BGClear *ebiten.Image
 var BgOpening *ebiten.Image
 var GameOver *ebiten.Image
 var DoubleDamage *ebiten.Image
@@ -447,6 +451,10 @@ func init() {
 	if BgRest == nil {
 		imgReader := bytes.NewReader(bg_rest)
 		BgRest, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if BGClear == nil {
+		imgReader := bytes.NewReader(bg_clear)
+		BGClear, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if BgOpening == nil {
 		imgReader := bytes.NewReader(bg_opening)

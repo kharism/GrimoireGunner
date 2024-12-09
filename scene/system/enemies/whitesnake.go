@@ -49,7 +49,7 @@ func WhiteSnakeRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	}
 	if memory[CURRENT_STRATEGY] == "WAIT" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
-			i := 3 //rand.Int() % 4
+			i := rand.Int() % 4
 			var el component.Elemental
 			switch i {
 			case 0:

@@ -10,4 +10,5 @@ const (
 	TriggerToRest
 	TriggerToShop
 	TriggerToMain
+	TriggerToClear
 )
