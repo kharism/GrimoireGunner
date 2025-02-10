@@ -40,7 +40,11 @@ const (
 // var AudioContext *audio.Context
 
 func init() {
-	audioContext = audio.NewContext(sampleRate)
+	audioContext = audio.CurrentContext()
+	if audioContext == nil {
+		audioContext = audio.NewContext(sampleRate)
+	}
+
 }
 
 func (p *AudioPlayer) AudioPlayer() *audio.Player {

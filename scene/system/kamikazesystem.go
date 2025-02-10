@@ -1,8 +1,6 @@
 package system
 
 import (
-	"fmt"
-
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/yohamta/donburi"
@@ -45,7 +43,7 @@ func (s *kamikazeSystem) Update(ecs *ecs.ECS) {
 	removeList := []*donburi.Entry{}
 	s.HealthQuery.Each(ecs.World, func(e *donburi.Entry) {
 		gridPos := component.GridPos.Get(e)
-		fmt.Println(component.Health.Get(e).Name)
+		// fmt.Println(component.Health.Get(e).Name)
 		if gridPos.Row < 0 || gridPos.Col < 0 {
 			return
 		}

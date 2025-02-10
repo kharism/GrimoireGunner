@@ -10,8 +10,10 @@ import (
 	"github.com/kharism/grimoiregunner/scene/assets"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
+	"github.com/kharism/hanashi/core"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/joelschutz/stagehand"
 )
 
@@ -32,6 +34,22 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
+}
+
+// return width and height of the scene
+func (g *Game) GetLayout() (width, height int) {
+	return 1024, 600
+}
+
+// return the starting text position where the box containing name of the character appear on the scene
+// return negative number if no such box needed
+func (g *Game) GetNamePosition() (x, y int) {
+	return 128, 600 - 150
+}
+
+// get the starting position of the text
+func (g *Game) GetTextPosition() (x, y int) {
+	return 128, 600 - 120
 }
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
@@ -75,6 +93,10 @@ func main() {
 			// attack.NewHealCaster(),
 		},
 	}
+	openingScene := scene.NewHanashiScene(scene.Scene1(&Game{}))
+	core.DetectKeyboardNext = func() bool {
+		return inpututil.IsKeyJustReleased(ebiten.KeyQ)
+	}
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}
 	ruleSet := map[stagehand.Scene[*scene.SceneData]][]stagehand.Directive[*scene.SceneData]{
@@ -85,8 +107,12 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.GameClearInstance, Trigger: scene.TriggerToClear},
 		},
+		openingScene: {
+			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
+		},
 		scene.MainMenuInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+			stagehand.Directive[*scene.SceneData]{Dest: openingScene, Trigger: scene.TriggerToOpening},
 		},
 		scene.GameClearInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
@@ -110,6 +136,9 @@ func main() {
 		},
 	}
 	manager := stagehand.NewSceneDirector[*scene.SceneData](scene.MainMenuInstance, state, ruleSet)
+	openingScene.SetDoneFunc(func() {
+		manager.ProcessTrigger(scene.TriggerToMain)
+	})
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)
 	}

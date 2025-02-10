@@ -21,10 +21,12 @@ type MainMenuScene struct {
 
 var menus = []string{
 	"New Game",
+	"Story",
 	"Exit",
 }
 var menusFunc = []func(){
 	StartGame,
+	Story,
 	Exit,
 }
 
@@ -33,6 +35,9 @@ func StartGame() {
 }
 func Exit() {
 	os.Exit(0)
+}
+func Story() {
+	MainMenuInstance.sm.ProcessTrigger(TriggerToOpening)
 }
 func (r *MainMenuScene) Update() error {
 	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {

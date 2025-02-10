@@ -9,14 +9,15 @@ import (
 )
 
 type SceneData struct {
-	PlayerHP      int
-	PlayerMaxHP   int
-	PlayerCurrEn  int
-	PlayerMaxEn   int
-	PlayerEnRegen int
-	PlayerRow     int
-	PlayerCol     int
-	World         donburi.World
+	PlayerHP       int
+	PlayerMaxHP    int
+	PlayerCurrEn   int
+	PlayerMaxEn    int
+	PlayerEnRegen  int
+	PlayerRow      int
+	PlayerCol      int
+	World          donburi.World
+	HanashiChoices map[string]any
 
 	MainLoadout []loadout.Caster
 	SubLoadout1 []loadout.Caster

@@ -11,4 +11,5 @@ const (
 	TriggerToShop
 	TriggerToMain
 	TriggerToClear
+	TriggerToOpening
 )
