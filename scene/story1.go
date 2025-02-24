@@ -28,6 +28,8 @@ func Scene1(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			&core.PlayBgmEvent{Audio: &assets.SmoothJazz, Type: core.TypeMP3},
 			core.NewBgChangeEvent(assets.Bedroom, core.MoveParam{Sx: 0, Sy: 0, Tx: 0, Ty: 0, Speed: 3}, nil),
+		}},
+		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
 			&core.DialogueEvent{Name: "Sven", Dialogue: "Rest here. Don't move around too much."},
 		}},
