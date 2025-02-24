@@ -92,6 +92,14 @@ func (r *MainMenuScene) Draw(screen *ebiten.Image) {
 			DrawImageOptions: ebiten.DrawImageOptions{GeoM: pos, ColorScale: textColor},
 		})
 	}
+	pos := ebiten.GeoM{}
+	pos.Translate(0, 550)
+	textGuide := "Up/Down pick option. Q select"
+	textColor.Scale(20, 0, 0, 1)
+	text.Draw(screen, textGuide, assets.UnispaceFace, &text.DrawOptions{
+
+		DrawImageOptions: ebiten.DrawImageOptions{GeoM: pos, ColorScale: textColor},
+	})
 }
 func init() {
 	assets.UnispaceFace = &text.GoTextFace{
