@@ -2,6 +2,7 @@ package scene
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/joelschutz/stagehand"
 	"github.com/kharism/hanashi/core"
 )
@@ -13,6 +14,10 @@ type HanashiScene struct {
 }
 
 func (m *HanashiScene) Update() error {
+	if inpututil.IsKeyJustReleased(ebiten.KeyEscape) {
+		m.director.ProcessTrigger(TriggerToMain)
+		return nil
+	}
 	e := m.scene.Update()
 	if e != nil {
 		return e
