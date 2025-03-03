@@ -16,7 +16,7 @@ func (h *Medkit) GetDescription() string {
 	return "Recover 200HP"
 }
 func (h *Medkit) GetName() string {
-	return "HP UP"
+	return "Medkit"
 }
 func (h *Medkit) OnAquireDo(data *SceneData) {
 	data.PlayerHP += 200

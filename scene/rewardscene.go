@@ -230,9 +230,10 @@ func (r *RewardScene) Load(state *SceneData, manager stagehand.SceneController[*
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
 	if state.rewards == nil {
-		casterPick[0] = GenerateReward()
-		casterPick[1] = GenerateReward()
-		casterPick[2] = GenerateReward()
+		reward1, reward2, reward3 := GenerateTrieReward()
+		casterPick[0] = reward1
+		casterPick[1] = reward2
+		casterPick[2] = reward3
 	} else {
 		casterPick[0] = state.rewards[0]
 		casterPick[1] = state.rewards[1]

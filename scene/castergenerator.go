@@ -36,7 +36,37 @@ func GenerateReward() ItemInterface {
 	rnd := rand.Int() % len(items)
 	return items[rnd]
 }
-
+func GenerateTrieReward() (ItemInterface, ItemInterface, ItemInterface) {
+	items := []ItemInterface{
+		attack.NewBuckshotCaster(),
+		attack.NewFirewallCaster(),
+		attack.NewLongSwordCaster(),
+		attack.NewShockwaveCaster(),
+		attack.NewCannonCaster(),
+		attack.NewWideSwordCaster(),
+		attack.NewShotgunCaster(),
+		attack.NewHealCaster(),
+		attack.NewGatlingCastor(),
+		attack.NewLightningBolCaster(),
+		attack.NewBombConstructCaster(),
+		attack.NewAtkBonusCaster(),
+		attack.NewPushgunCaster(),
+		attack.NewChargeshotCaster(),
+		attack.NewBambooLanceCaster(),
+		attack.NewSporeBombCaster(),
+		attack.NewWallCaster(),
+		attack.NewIcespikeCaster(),
+		attack.NewFlamethrowerCaster(),
+		attack.NewFist(),
+		&Medkit{},
+		&HPUp{},
+		&ENUp{},
+	}
+	rand.Shuffle(len(items), func(i, j int) {
+		items[i], items[j] = items[j], items[i]
+	})
+	return items[0], items[1], items[3]
+}
 func DecorateCaster(caster loadout.Caster) loadout.Caster {
 	rnd := rand.Int() % len(CasterDecorList)
 	return CasterDecorList[rnd](caster)
