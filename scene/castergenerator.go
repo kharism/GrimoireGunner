@@ -51,6 +51,7 @@ func GenerateTrieReward() (ItemInterface, ItemInterface, ItemInterface) {
 		attack.NewBombConstructCaster(),
 		attack.NewAtkBonusCaster(),
 		attack.NewPushgunCaster(),
+		attack.NewPullgunCaster(),
 		attack.NewChargeshotCaster(),
 		attack.NewBambooLanceCaster(),
 		attack.NewSporeBombCaster(),

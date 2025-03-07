@@ -13,7 +13,7 @@ import (
 )
 
 // cost 1 EN and cast hitscan bullet
-type PushgunCaster struct {
+type PullgunCaster struct {
 	Cost         int
 	Damage       int
 	nextCooldown time.Time
@@ -22,10 +22,10 @@ type PushgunCaster struct {
 	OnHit        component.OnAtkHit
 }
 
-func (l *PushgunCaster) GetModifierEntry() *loadout.CasterModifierData {
+func (l *PullgunCaster) GetModifierEntry() *loadout.CasterModifierData {
 	return l.ModEntry
 }
-func (l *PushgunCaster) SetModifier(e *loadout.CasterModifierData) {
+func (l *PullgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	if l.ModEntry != e && e.OnHit != nil {
 		if l.OnHit == nil {
 			l.OnHit = e.OnHit
@@ -35,37 +35,35 @@ func (l *PushgunCaster) SetModifier(e *loadout.CasterModifierData) {
 	}
 	l.ModEntry = e
 }
-func NewPushgunCaster() *PushgunCaster {
-	return &PushgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 3 * time.Second, OnHit: PushbackOnHit}
+func NewPullgunCaster() *PushgunCaster {
+	return &PushgunCaster{Cost: 100, nextCooldown: time.Now(), Damage: 50, CoolDown: 3 * time.Second, OnHit: PullbackOnHit}
 }
-func PushbackOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
+func PullbackOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	damage := component.Damage.Get(projectile).Damage
 	component.Health.Get(receiver).HP -= damage
 	if receiver.HasComponent(component.GridPos) {
 		receiverPos := component.GridPos.Get(receiver)
-		if receiverPos.Col < 7 && validMove(ecs, receiverPos.Row, receiverPos.Col+1) {
-			receiverPos.Col += 1
-			scrPos := component.ScreenPos.Get(receiver)
-			scrPos.X = 0
-			scrPos.Y = 0
-		}
+		receiverPos.Col -= 1
+		scrPos := component.ScreenPos.Get(receiver)
+		scrPos.X = 0
+		scrPos.Y = 0
 	}
 	ecs.World.Remove(projectile.Entity())
 }
-func (l *PushgunCaster) GetDescription() string {
-	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and Push it behind.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
+func (l *PullgunCaster) GetDescription() string {
+	return fmt.Sprintf("Cost:%d EN\n%d Damage 1 target on front and Pull it.\nCooldown %.1fs", l.Cost/100, l.GetDamage(), l.GetCooldownDuration().Seconds())
 }
-func (l *PushgunCaster) GetName() string {
-	return "Pushgun"
+func (l *PullgunCaster) GetName() string {
+	return "Pullgun"
 }
-func (l *PushgunCaster) GetDamage() int {
+func (l *PullgunCaster) GetDamage() int {
 	if l.ModEntry != nil {
 		// mod := component.CasterModifier.Get(l.ModEntry)
 		return l.Damage + l.ModEntry.DamageModifier
 	}
 	return l.Damage
 }
-func (l *PushgunCaster) GetCost() int {
+func (l *PullgunCaster) GetCost() int {
 	if l.ModEntry != nil {
 		// mod := component.CasterModifier.Get(l.ModEntry)
 		if l.Cost+l.ModEntry.CostModifier < 0 {
@@ -75,23 +73,23 @@ func (l *PushgunCaster) GetCost() int {
 	}
 	return l.Cost
 }
-func (l *PushgunCaster) GetIcon() *ebiten.Image {
-	return assets.PushgunIcon
+func (l *PullgunCaster) GetIcon() *ebiten.Image {
+	return assets.PullgunIcon
 }
-func (l *PushgunCaster) GetCooldown() time.Time {
+func (l *PullgunCaster) GetCooldown() time.Time {
 	return l.nextCooldown
 }
-func (l *PushgunCaster) GetCooldownDuration() time.Duration {
+func (l *PullgunCaster) GetCooldownDuration() time.Duration {
 	if l.ModEntry != nil {
 		// mod := component.CasterModifier.Get(l.ModEntry)
 		return l.CoolDown + l.ModEntry.CooldownModifer
 	}
 	return l.CoolDown
 }
-func (l *PushgunCaster) ResetCooldown() {
+func (l *PullgunCaster) ResetCooldown() {
 	l.nextCooldown = time.Now()
 }
-func (l *PushgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
+func (l *PullgunCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 	en := ensource.GetEn()
 	if en >= l.GetCost() {
 		ensource.SetEn(en - l.GetCost())

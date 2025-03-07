@@ -225,6 +225,9 @@ var chargeshot_icon []byte
 //go:embed images/icon_battle.png
 var battle_icon []byte
 
+//go:embed images/icon_pullgun.png
+var pullgun_icon []byte
+
 //go:embed images/icon_rest.png
 var rest_icon []byte
 
@@ -281,6 +284,7 @@ var ShotgunIcon *ebiten.Image
 var FlamethrowerIcon *ebiten.Image
 var IcespikeIcon *ebiten.Image
 var PushgunIcon *ebiten.Image
+var PullgunIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
 var BattleIcon *ebiten.Image
@@ -595,6 +599,10 @@ func init() {
 	if BattleIcon == nil {
 		imgReader := bytes.NewReader(battle_icon)
 		BattleIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if PullgunIcon == nil {
+		imgReader := bytes.NewReader(pullgun_icon)
+		PullgunIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ChargeshotIcon == nil {
 		imgReader := bytes.NewReader(chargeshot_icon)
