@@ -128,6 +128,12 @@ var lightning_imp_1 []byte
 //go:embed images/lightning_imp_2.png
 var lightning_imp_2 []byte
 
+//go:embed images/mage.png
+var mage_1 []byte
+
+//go:embed images/mage_2.png
+var mage_2 []byte
+
 var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
@@ -168,6 +174,8 @@ var YanmaAttack *ebiten.Image
 var YanmaOption *ebiten.Image
 var LightningImp *ebiten.Image
 var LightningImpWarmup *ebiten.Image
+var LightningMage *ebiten.Image
+var LightningMageWarmup *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -321,5 +329,13 @@ func init() {
 	if LightningImpWarmup == nil {
 		imgReader := bytes.NewReader(lightning_imp_2)
 		LightningImpWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningMage == nil {
+		imgReader := bytes.NewReader(mage_1)
+		LightningMage, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LightningMageWarmup == nil {
+		imgReader := bytes.NewReader(mage_2)
+		LightningMageWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 }
