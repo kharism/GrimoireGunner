@@ -52,6 +52,7 @@ func init() {
 		level1Decorator10,
 		level1Decorator11,
 		level1Decorator12,
+		level1Decorator13,
 	}
 	Decorators2 = []CombatSceneDecorator{
 		level1Decorator10,
@@ -195,6 +196,11 @@ func level1Decorator12(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = nil
 	enemies.NewLightningImp(ecs, 4, 1)
+}
+func level1Decorator13(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewGatlingGhoulOmega(ecs, 6, 1)
 }
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
