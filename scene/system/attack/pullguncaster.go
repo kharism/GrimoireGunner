@@ -43,10 +43,13 @@ func PullbackOnHit(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	component.Health.Get(receiver).HP -= damage
 	if receiver.HasComponent(component.GridPos) {
 		receiverPos := component.GridPos.Get(receiver)
-		receiverPos.Col -= 1
-		scrPos := component.ScreenPos.Get(receiver)
-		scrPos.X = 0
-		scrPos.Y = 0
+		if validMove(ecs, receiverPos.Row, receiverPos.Col-1) {
+			receiverPos.Col -= 1
+			scrPos := component.ScreenPos.Get(receiver)
+			scrPos.X = 0
+			scrPos.Y = 0
+		}
+
 	}
 	ecs.World.Remove(projectile.Entity())
 }
