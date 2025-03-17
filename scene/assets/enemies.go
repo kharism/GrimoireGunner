@@ -134,6 +134,15 @@ var mage_1 []byte
 //go:embed images/mage_2.png
 var mage_2 []byte
 
+//go:embed images/molten_snail_1.png
+var molten_snail_1 []byte
+
+//go:embed images/molten_snail_2.png
+var molten_snail_2 []byte
+
+//go:embed images/molten_snail_3.png
+var molten_snail_3 []byte
+
 var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
@@ -176,6 +185,9 @@ var LightningImp *ebiten.Image
 var LightningImpWarmup *ebiten.Image
 var LightningMage *ebiten.Image
 var LightningMageWarmup *ebiten.Image
+var MoltenSlug *ebiten.Image
+var MoltenSlugWarmup *ebiten.Image
+var MoltenSlugCooldown *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -337,5 +349,17 @@ func init() {
 	if LightningMageWarmup == nil {
 		imgReader := bytes.NewReader(mage_2)
 		LightningMageWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if MoltenSlug == nil {
+		imgReader := bytes.NewReader(molten_snail_1)
+		MoltenSlug, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if MoltenSlugWarmup == nil {
+		imgReader := bytes.NewReader(molten_snail_2)
+		MoltenSlugWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if MoltenSlugCooldown == nil {
+		imgReader := bytes.NewReader(molten_snail_3)
+		MoltenSlugCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 }
