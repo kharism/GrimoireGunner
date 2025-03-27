@@ -27,7 +27,10 @@ func (e *enemyAI) Update(ecs *ecs.ECS) {
 		enemyEntries = append(enemyEntries, entry)
 	})
 	for _, e := range enemyEntries {
-		routine := component.EnemyRoutine.Get(e)
-		routine.Routine(ecs, e)
+		if !e.HasComponent(component.Root) {
+			routine := component.EnemyRoutine.Get(e)
+			routine.Routine(ecs, e)
+		}
+
 	}
 }

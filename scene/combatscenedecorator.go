@@ -53,18 +53,21 @@ func init() {
 		level1Decorator11,
 		level1Decorator12,
 		level1Decorator13,
+		level1Decorator14,
 	}
 	Decorators2 = []CombatSceneDecorator{
 		level1Decorator10,
 		level1Decorator11,
 		level1Decorator12,
 		level2Decorator1,
+		level2Decorator2,
 		level2Decorator4,
 		level2Decorator3,
 		level2Decorator5,
 		level2Decorator6,
 		level2Decorator7,
 		level2Decorator8,
+		level2Decorator9,
 	}
 	OptBoss1 = []CombatSceneDecorator{
 		level1OptBoss1,
@@ -210,6 +213,11 @@ func level1Decorator13(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewGatlingGhoulOmega(ecs, 6, 1)
 }
+func level1Decorator14(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgCave
+	combatscene.rewards = nil
+	enemies.NewStunSpider(ecs, 4, 1)
+}
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = []ItemInterface{}
@@ -230,7 +238,7 @@ func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 func level2Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
-	enemies.NewPoacher(ecs, 6, 1)
+	enemies.NewInfernoReaper(ecs, 6, 1)
 }
 func level2Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
@@ -268,6 +276,12 @@ func level2Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
 	enemies.NewLightningMage(ecs, 4, 1)
+}
+func level2Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewInfernoReaper(ecs, 6, 1)
+	enemies.NewPoacher(ecs, 4, 1)
 }
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
