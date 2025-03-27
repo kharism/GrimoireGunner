@@ -23,6 +23,7 @@ func NewMoltenSlug(ecs *ecs.ECS, col, row int) {
 	data[WARM_UP] = nil
 	data[CURRENT_STRATEGY] = ""
 	data["CURRENT_PATTERN"] = 0
+	data["FLAME_TOWER_COUNT"] = 0
 	data[MOVE_COUNT] = 0
 	data[CUR_DMG] = 50
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: MoltenSlugRoutine, Memory: data})
@@ -40,6 +41,7 @@ func MoltenSlugRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			component.Sprite.Get(entity).Image = assets.MoltenSlug
 			if health.HP < 500 {
 				memory[CURRENT_STRATEGY] = "MOVE2"
+				memory["FLAME_TOWER_COUNT"] = 0
 			} else {
 				memory[CURRENT_STRATEGY] = "MOVE1"
 			}
@@ -132,6 +134,7 @@ func MoltenSlugRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 				}
 				memory[WARM_UP] = time.Now().Add(2500 * time.Millisecond)
 				memory["CURRENT_PATTERN"] = 1
+				memory["FLAME_TOWER_COUNT"] = memory["FLAME_TOWER_COUNT"].(int) + 1
 			case 1:
 				now := time.Now()
 				for i := range 4 {
@@ -144,8 +147,13 @@ func MoltenSlugRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					component.EventQueue.AddEvent(v3)
 					component.EventQueue.AddEvent(v4)
 				}
-				memory[WARM_UP] = time.Now().Add(2500 * time.Millisecond)
-				memory["CURRENT_PATTERN"] = 0
+				memory["FLAME_TOWER_COUNT"] = memory["FLAME_TOWER_COUNT"].(int) + 1
+				if memory["FLAME_TOWER_COUNT"].(int) == 2 {
+					memory[CURRENT_STRATEGY] = "MOVE1"
+				} else {
+					memory[WARM_UP] = time.Now().Add(2500 * time.Millisecond)
+					memory["CURRENT_PATTERN"] = 0
+				}
 			}
 		}
 	}

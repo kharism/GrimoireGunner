@@ -78,6 +78,12 @@ var wall []byte
 //go:embed images/lightning_bolt.png
 var lightningbolt []byte
 
+//go:embed images/elec_web.png
+var elec_web []byte
+
+//go:embed images/web.png
+var web []byte
+
 //go:embed fonts/PixelOperator8-bold.ttf
 var PixelFontTTF []byte
 
@@ -268,6 +274,8 @@ var Projectile2 *ebiten.Image
 var ElecSphere *ebiten.Image
 var Icicle *ebiten.Image
 var LightningBolt *ebiten.Image
+var ElecWeb *ebiten.Image
+var Web *ebiten.Image
 var Fist *ebiten.Image
 var Boulder *ebiten.Image
 
@@ -518,6 +526,14 @@ func init() {
 	if LightningBolt == nil {
 		imgReader := bytes.NewReader(lightningbolt)
 		LightningBolt, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if ElecWeb == nil {
+		imgReader := bytes.NewReader(elec_web)
+		ElecWeb, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Web == nil {
+		imgReader := bytes.NewReader(web)
+		Web, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Boulder == nil {
 		imgReader := bytes.NewReader(boulder)

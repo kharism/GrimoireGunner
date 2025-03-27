@@ -107,6 +107,15 @@ var yanma1 []byte
 //go:embed images/yanma_2.png
 var yanma2 []byte
 
+//go:embed images/stun_spider_1.png
+var stun_spider_1 []byte
+
+//go:embed images/stun_spider_2.png
+var stun_spider_2 []byte
+
+//go:embed images/stun_spider_3.png
+var stun_spider_3 []byte
+
 //go:embed images/yanma_option.png
 var yanma_option []byte
 
@@ -188,6 +197,9 @@ var LightningMageWarmup *ebiten.Image
 var MoltenSlug *ebiten.Image
 var MoltenSlugWarmup *ebiten.Image
 var MoltenSlugCooldown *ebiten.Image
+var StunSpider *ebiten.Image
+var StunSpiderWarmup *ebiten.Image
+var StunSpiderWarmup2 *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -361,5 +373,17 @@ func init() {
 	if MoltenSlugCooldown == nil {
 		imgReader := bytes.NewReader(molten_snail_3)
 		MoltenSlugCooldown, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if StunSpider == nil {
+		imgReader := bytes.NewReader(stun_spider_1)
+		StunSpider, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if StunSpiderWarmup == nil {
+		imgReader := bytes.NewReader(stun_spider_2)
+		StunSpiderWarmup, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if StunSpiderWarmup2 == nil {
+		imgReader := bytes.NewReader(stun_spider_3)
+		StunSpiderWarmup2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 }
