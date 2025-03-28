@@ -111,6 +111,7 @@ func (r *MainMenuScene) Load(state *SceneData, manager stagehand.SceneController
 	r.sm = manager.(*stagehand.SceneDirector[*SceneData]) // This type assertion is important
 	r.data = state
 	r.loopMusic = false
+	ShuffleLevellayout()
 	if r.musicPlayer == nil {
 		var err error
 		r.musicPlayer, err = assets.NewAudioPlayer(assets.Menumusic, assets.TypeMP3)

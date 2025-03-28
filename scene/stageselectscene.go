@@ -117,8 +117,8 @@ func GenerateLayout2() *Level {
 		CurNode1, CurNode2,
 	}
 	for i := 0; i < 5; i++ {
-		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
-		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}}
+		NewNodeA := &LevelNode{Id: fmt.Sprintf("%d", 2*i+3), Icon: assets.BattleIcon, Tier: CurNode1.Tier + 1, SelectedStage: NewCombatNextStage(RandCombatDecorator2()), NextNode: []*LevelNode{}}
+		NewNodeB := &LevelNode{Id: fmt.Sprintf("%d", 2*i+4), Icon: assets.BattleIcon, Tier: CurNode2.Tier + 1, SelectedStage: NewCombatNextStage(RandCombatDecorator2()), NextNode: []*LevelNode{}}
 		CurNode1.NextNode = append(CurNode1.NextNode, NewNodeA)
 		CurNode2.NextNode = append(CurNode2.NextNode, NewNodeB)
 		if i == 2 {

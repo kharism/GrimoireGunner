@@ -68,6 +68,7 @@ func init() {
 		level2Decorator7,
 		level2Decorator8,
 		level2Decorator9,
+		level2Decorator10,
 	}
 	OptBoss1 = []CombatSceneDecorator{
 		level1OptBoss1,
@@ -82,14 +83,36 @@ func init() {
 		"Morty",
 	}
 }
+
+var lv1Idx = -1
+var lv2Idx = -1
+
+func init() {
+	rand.Shuffle(len(Decorators1), func(i, j int) {
+		Decorators1[i], Decorators1[j] = Decorators1[j], Decorators1[i]
+	})
+	rand.Shuffle(len(Decorators2), func(i, j int) {
+		Decorators2[i], Decorators2[j] = Decorators2[j], Decorators2[i]
+	})
+}
+func ShuffleLevellayout() {
+	rand.Shuffle(len(Decorators1), func(i, j int) {
+		Decorators1[i], Decorators1[j] = Decorators1[j], Decorators1[i]
+	})
+	rand.Shuffle(len(Decorators2), func(i, j int) {
+		Decorators2[i], Decorators2[j] = Decorators2[j], Decorators2[i]
+	})
+	lv1Idx = -1
+	lv2Idx = -1
+}
 func RandCombatDecorator1() CombatSceneDecorator {
-	i := rand.Int() % len(Decorators1)
-	return Decorators1[i]
+	lv1Idx += 1
+	return Decorators1[lv1Idx]
 }
 
 func RandCombatDecorator2() CombatSceneDecorator {
-	i := rand.Int() % len(Decorators2)
-	return Decorators2[i]
+	lv2Idx += 1
+	return Decorators2[lv2Idx]
 }
 
 func RandBossDecorator1() (CombatSceneDecorator, string) {
@@ -282,6 +305,12 @@ func level2Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewInfernoReaper(ecs, 6, 1)
 	enemies.NewPoacher(ecs, 4, 1)
+}
+func level2Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewHealslime(ecs, 6, 1)
+	enemies.NewStunSpider(ecs, 4, 1)
 }
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
