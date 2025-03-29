@@ -141,6 +141,9 @@ var buckshot_fx []byte
 //go:embed images/fx/flametower.png
 var flametower_fx []byte
 
+//go:embed images/fx/blow.png
+var blow_fx []byte
+
 //go:embed images/fx/spore.png
 var spore_fx []byte
 
@@ -328,6 +331,8 @@ var SporeRaw *ebiten.Image
 var HealFx *ebiten.Image
 var ChargeshotRaw *ebiten.Image
 var ChargeshotFx *ebiten.Image
+var BlowRaw *ebiten.Image
+var BlowFx *ebiten.Image
 
 var StageClear *ebiten.Image
 var CardTemplate *ebiten.Image
@@ -755,6 +760,10 @@ func init() {
 		// }
 
 	}
+	if BlowRaw == nil {
+		imgReader := bytes.NewReader(blow_fx)
+		BlowRaw, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 }
 
 type SpriteParam struct {
@@ -790,6 +799,21 @@ func NewSporeAnim(param SpriteParam) *core.AnimatedImage {
 		SubImageHeight: 100,
 		Modulo:         param.Modulo,
 		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
+func NewBlowAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(BlowRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX, Sy: param.ScreenY}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  50,
+		SubImageHeight: 100,
+		Modulo:         param.Modulo,
+		FrameCount:     3,
 		Done:           param.Done,
 	}
 }

@@ -17,6 +17,12 @@ var gatlingghoul []byte
 //go:embed images/gatlingghoul_atk.png
 var gatlingghoul_atk []byte
 
+//go:embed images/blower_1.png
+var blower1 []byte
+
+//go:embed images/blower_2.png
+var blower2 []byte
+
 //go:embed images/cannoneer_atk.png
 var cannoneer_atk []byte
 
@@ -158,6 +164,8 @@ var BloombomberAtk *ebiten.Image
 var Bloombomber *ebiten.Image
 var Buzzer1 *ebiten.Image
 var Buzzer2 *ebiten.Image
+var Blower1 *ebiten.Image
+var Blower2 *ebiten.Image
 var GatlingghoulAtk *ebiten.Image
 var Gatlingghoul *ebiten.Image
 var Reaper *ebiten.Image
@@ -217,6 +225,14 @@ func init() {
 	if BloombomberAtk == nil {
 		imgReader := bytes.NewReader(bloombomber_atk)
 		BloombomberAtk, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Blower1 == nil {
+		imgReader := bytes.NewReader(blower1)
+		Blower1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Blower2 == nil {
+		imgReader := bytes.NewReader(blower2)
+		Blower2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if Slime == nil {
 		imgReader := bytes.NewReader(slime)
