@@ -8,6 +8,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
+	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
 
@@ -23,13 +24,13 @@ func DecorateWithHeal(caster loadout.Caster) loadout.Caster {
 		} else {
 			mod = &loadout.CasterModifierData{}
 		}
-		if mod.PostAtk != nil {
-			mod.PostAtk = func(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
-				mod.PostAtk(ecs, ensource)
-				AddHeal(ecs, ensource)
+		if mod.OnHit != nil {
+			mod.OnHit = func(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
+				mod.OnHit(ecs, projectile, receiver)
+				AddHeal(ecs, projectile, receiver)
 			}
 		} else {
-			mod.PostAtk = AddHeal
+			mod.OnHit = AddHeal
 		}
 		cc.SetModifier(mod)
 		return &HealDecor{caster}
@@ -40,7 +41,7 @@ func DecorateWithHeal(caster loadout.Caster) loadout.Caster {
 }
 
 // this is a test
-func AddHeal(ecs *ecs.ECS, ensource loadout.ENSetGetter) {
+func AddHeal(ecs *ecs.ECS, projectile, receiver *donburi.Entry) {
 	gridPos, playerEnt := GetPlayerGridPos(ecs)
 	healthComp := component.Health.Get(playerEnt)
 	AtkSfxQueue.QueueSFX(assets.HealsFx)
@@ -101,7 +102,7 @@ func (h *HealDecor) ResetCooldown() {
 }
 
 func (h *HealDecor) GetDescription() string {
-	return h.caster.GetDescription() + "\nHeal 5HP on cast"
+	return h.caster.GetDescription() + "\nHeal 5HP on hit"
 }
 func (h *HealDecor) GetName() string {
 	return h.caster.GetName() + " +Heal"
