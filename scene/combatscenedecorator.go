@@ -238,7 +238,7 @@ func level1Decorator13(ecs *ecs.ECS, combatscene *CombatScene) {
 	enemies.NewGatlingGhoulOmega(ecs, 6, 1)
 }
 func level1Decorator14(ecs *ecs.ECS, combatscene *CombatScene) {
-	combatscene.data.Bg = assets.BgCave
+	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewStunSpider(ecs, 4, 1)
 }
