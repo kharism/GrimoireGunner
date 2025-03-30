@@ -30,6 +30,7 @@ var loadoutIdx int //index for loadout
 var itemIdx int //index for item
 var ItemSlot []*core.MovableImage
 var inventoryDesc string
+var inventoryName string
 
 type positionSwap struct {
 	itemCursorYPos int
@@ -142,6 +143,7 @@ func MoveCursorLeftRightLoadout(data *SceneData, LR int) {
 		return
 	}
 	inventoryDesc = GetDescOfLoadout(data)
+	inventoryName = GetNameOfLoadout(data)
 	targetX := float64(ArrXposLoadout[loadoutIdx]) - 4
 	cardPickInventory.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
 		Tx: targetX, Ty: targetY, Speed: 6,
@@ -159,6 +161,7 @@ func MoveCursorLeftRightInv(data *SceneData, LR int) {
 		return
 	}
 	inventoryDesc = GetDescOfItem(data)
+	inventoryName = GetNameOfItem(data)
 	for _, j := range ItemSlot {
 		posX, Ty := j.GetPos()
 		width, _ := j.GetSize()
@@ -202,8 +205,41 @@ func GetDescOfLoadout(data *SceneData) string {
 	return ""
 
 }
+func GetNameOfLoadout(data *SceneData) string {
+	switch loadoutIdx {
+	case 0:
+		if data.MainLoadout[0] != nil {
+			return data.MainLoadout[0].GetName()
+		}
+	case 1:
+		if data.MainLoadout[1] != nil {
+			return data.MainLoadout[1].GetName()
+		}
+	case 2:
+		if data.SubLoadout1[0] != nil {
+			return data.SubLoadout1[0].GetName()
+		}
+	case 3:
+		if data.SubLoadout1[1] != nil {
+			return data.SubLoadout1[1].GetName()
+		}
+	case 4:
+		if data.SubLoadout2[0] != nil {
+			return data.SubLoadout2[0].GetName()
+		}
+	case 5:
+		if data.SubLoadout2[1] != nil {
+			return data.SubLoadout2[1].GetName()
+		}
+	}
+	return ""
+
+}
 func GetDescOfItem(data *SceneData) string {
 	return data.Inventory[itemIdx].GetDescription()
+}
+func GetNameOfItem(data *SceneData) string {
+	return data.Inventory[itemIdx].GetName()
 }
 
 func (r *InventoryScene) Update() error {
@@ -272,6 +308,7 @@ func (r *InventoryScene) Update() error {
 			}
 			cardPickInventory.AddAnimation(anim)
 			inventoryDesc = GetDescOfLoadout(r.data)
+			inventoryName = GetNameOfLoadout(r.data)
 			r.moveLR = MoveCursorLeftRightLoadout
 		}
 	}
@@ -294,6 +331,7 @@ func (r *InventoryScene) Update() error {
 			}
 			cardPickInventory.AddAnimation(anim)
 			inventoryDesc = GetDescOfItem(r.data)
+			inventoryName = GetNameOfItem(r.data)
 			r.moveLR = MoveCursorLeftRightInv
 		}
 	}
@@ -526,6 +564,16 @@ func (r *InventoryScene) Draw(screen *ebiten.Image) {
 	}
 	Geom.Reset()
 	Geom.Translate(10, 435)
+	text.Draw(screen, inventoryName, assets.FontFace, &text.DrawOptions{
+		DrawImageOptions: ebiten.DrawImageOptions{
+			GeoM: Geom,
+		},
+		LayoutOptions: text.LayoutOptions{
+			PrimaryAlign: text.AlignStart,
+			LineSpacing:  15,
+		},
+	})
+	Geom.Translate(0, 15)
 	text.Draw(screen, inventoryDesc, assets.FontFace, &text.DrawOptions{
 		DrawImageOptions: ebiten.DrawImageOptions{
 			GeoM: Geom,
