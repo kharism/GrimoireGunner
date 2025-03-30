@@ -133,7 +133,7 @@ func RenderLoadOut(ecs *ecs.ECS, screen *ebiten.Image) {
 			opts.Uniforms = make(map[string]interface{})
 			opts.Images[0] = icon
 			vv := float32(loadout.CurLoadOut[1].GetCooldown().Sub(now))
-			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[0].GetCooldownDuration()))
+			timeLeftPercentage := 1 - (vv / float32(loadout.CurLoadOut[1].GetCooldownDuration()))
 			// fmt.Println(timeLeftPercentage)
 			opts.Uniforms["Iter"] = float32(timeLeftPercentage)
 			// bounds := .Bounds()
