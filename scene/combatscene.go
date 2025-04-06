@@ -13,6 +13,7 @@ import (
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/enemies"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
+	"github.com/kharism/hanashi/core"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -27,6 +28,7 @@ type CombatScene struct {
 	sm         *stagehand.SceneDirector[*SceneData]
 	world      donburi.World
 	ecs        *ecs.ECS
+	waves      []func(*ecs.ECS, *CombatScene)
 	debugPause bool
 
 	sandboxMode bool
@@ -141,10 +143,41 @@ var RegisterCombatClear bool
 
 // play fanfare
 func (s *CombatScene) OnCombatClear() {
-	s.musicPlayer.AudioPlayer().Pause()
-	s.musicPlayer, _ = assets.NewAudioPlayer(assets.Fanfare, assets.TypeMP3)
-	s.loopMusic = false
-	s.musicPlayer.AudioPlayer().Play()
+	if len(s.waves) == 0 {
+		s.musicPlayer.AudioPlayer().Pause()
+		s.musicPlayer, _ = assets.NewAudioPlayer(assets.Fanfare, assets.TypeMP3)
+		s.loopMusic = false
+		s.musicPlayer.AudioPlayer().Play()
+		stgClrDim := assets.StageClear.Bounds()
+		movableImg := core.NewMovableImage(assets.StageClear,
+			core.NewMovableImageParams().WithMoveParam(core.MoveParam{
+				Sx:    float64(-stgClrDim.Dx()),
+				Sy:    float64(300 + stgClrDim.Dy()/2),
+				Speed: 10}))
+		movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
+			Tx:    float64(600 - stgClrDim.Dx()/2 - 60),
+			Ty:    float64(300 + stgClrDim.Dy()/2),
+			Speed: 10,
+		}))
+		movableImg.Done = func() {
+			system.PlayerAttackSystem.State = system.CombatClearState
+		}
+		//turn off attack system
+		system.PlayerAttackSystem.State = system.DoNothingState
+		//attach the stageclear to fx system
+		stgDone := s.ecs.World.Create(component.Anouncement)
+		component.Anouncement.Set(s.ecs.World.Entry(stgDone), &component.FxData{
+			Animation: movableImg,
+		})
+	} else {
+		// a hack to keep the rewards/BG intact
+		realReward := s.rewards
+		realBg := s.data.Bg
+		s.waves[0](s.ecs, s)
+		s.waves = s.waves[1:]
+		s.rewards = realReward
+		s.data.Bg = realBg
+	}
 }
 func (s *CombatScene) OnGameOver() {
 

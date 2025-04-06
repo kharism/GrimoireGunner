@@ -52,7 +52,7 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(nil),
+			SelectedStage: NewCombatNextStage(level1WavesDecor1),
 			Icon:          assets.BattleIcon,
 		},
 	}
