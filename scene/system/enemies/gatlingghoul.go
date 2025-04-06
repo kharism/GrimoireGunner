@@ -201,7 +201,7 @@ func GatlinghoulOmegaRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 				memory[WARM_UP] = time.Now().Add(time.Second)
 				if curIdx < 15 {
 					memory["CurTarget"] = curIdx + 1
-					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget)
+					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget, component.Transient)
 					entry2 := ecs_.World.Entry(targetGrid2)
 					// memory["TargetEntity"] = targetGrid2
 					component.Transient.Set(entry2, &component.TransientData{
