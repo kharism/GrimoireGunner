@@ -41,19 +41,19 @@ var OptBoss1Name = []string{}
 
 func init() {
 	Decorators1 = []CombatSceneDecorator{
-		level1Decorator1,
-		level1Decorator2,
+		// level1Decorator1,
+		// level1Decorator2,
 		level1Decorator3,
 		level1Decorator4,
-		level1Decorator5,
-		level1Decorator6,
-		level1Decorator7,
 		level1Decorator8,
-		level1Decorator10,
-		level1Decorator11,
+		// level1Decorator10,
+		// level1Decorator11,
 		level1Decorator12,
-		level1Decorator13,
 		level1Decorator14,
+		level1Decorator16,
+		level1Decorator17,
+		level2Decorator4,
+		// level1WavesDecor2,
 	}
 	Decorators2 = []CombatSceneDecorator{
 		level1Decorator10,
@@ -121,6 +121,56 @@ func RandBossDecorator1() (CombatSceneDecorator, string) {
 	return OptBoss1[i], OptBoss1Name[i]
 }
 
+func level1WavesDecor1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	LoadBoulder(ecs.World, BoulderParam{
+		Col: 5,
+		Row: 0,
+	})
+	enemies.NewGatlingGhoul(ecs, 4, 3)
+	combatscene.waves = append(combatscene.waves,
+		level1Decorator5,
+		level1Decorator15,
+		level1Decorator6,
+		level1Decorator7,
+		level1Decorator13,
+	)
+}
+
+func level1WavesDecor2(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	LoadBoulder(ecs.World, BoulderParam{
+		Col: 5,
+		Row: 0,
+	})
+	enemies.NewGatlingGhoul(ecs, 4, 3)
+	combatscene.waves = append(combatscene.waves,
+		level1Decorator1,
+		level1Decorator2,
+		level2Decorator4,
+		level2Decorator6,
+		level1Decorator10,
+	)
+}
+func level1WavesDecor3(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	LoadBoulder(ecs.World, BoulderParam{
+		Col: 5,
+		Row: 0,
+	})
+	enemies.NewGatlingGhoul(ecs, 4, 3)
+	combatscene.waves = append(combatscene.waves,
+		level1Decorator1,
+		level1Decorator2,
+		level1Decorator14,
+		level2Decorator2,
+		level1Decorator10,
+	)
+}
+
 // put in 1 rock and 1 cannoneer and 1 rock
 func level1Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
@@ -149,6 +199,7 @@ func level1Decorator3(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewGatlingGhoul(ecs, 4, 3)
+	enemies.NewStunSpider(ecs, 5, 2)
 }
 
 // put 1 gatlinghoul and 1 reaper
@@ -241,6 +292,23 @@ func level1Decorator14(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewStunSpider(ecs, 4, 1)
+}
+func level1Decorator15(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewBuzzer(ecs, 6, 1)
+}
+func level1Decorator16(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewPoacher(ecs, 6, 2)
+	enemies.NewInfernoReaper(ecs, 6, 1)
+}
+func level1Decorator17(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	enemies.NewStunSpider(ecs, 6, 2)
+	enemies.NewHealslime(ecs, 6, 1)
 }
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain

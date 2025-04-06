@@ -52,9 +52,13 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 			memory["CurTarget"] = 0
 
 			memory[WARM_UP] = time.Now().Add(1000 * time.Millisecond)
-			targetGrid := ecs_.World.Create(component.GridPos, component.GridTarget)
+			targetGrid := ecs_.World.Create(component.GridPos, component.GridTarget, component.Transient)
 			entry := ecs_.World.Entry(targetGrid)
-			memory["TargetEntity"] = targetGrid
+			// memory["TargetEntity"] = targetGrid
+			component.Transient.Set(entry, &component.TransientData{
+				Start:    time.Now(),
+				Duration: 1000 * time.Millisecond,
+			})
 			component.GridPos.Set(entry, &component.GridPosComponentData{Row: scanOrder1[0][0], Col: scanOrder1[0][1]})
 		}
 	}
@@ -77,16 +81,19 @@ func GatlinghoulRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 					Modulo:  2,
 					Done:    func() {},
 				}
-				kk := memory["TargetEntity"].(donburi.Entity)
-				ecs_.World.Remove(kk)
+				// kk := memory["TargetEntity"].(donburi.Entity)
+				// ecs_.World.Remove(kk)
 				component.Fx.Set(entry, &component.FxData{Animation: assets.NewDustAnim(dustAnimParam)})
 				memory[WARM_UP] = time.Now().Add(time.Second)
 				if curIdx < 15 {
 					memory["CurTarget"] = curIdx + 1
-					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget)
+					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget, component.Transient)
 					entry2 := ecs_.World.Entry(targetGrid2)
-					memory["TargetEntity"] = targetGrid2
-
+					// memory["TargetEntity"] = targetGrid2
+					component.Transient.Set(entry2, &component.TransientData{
+						Start:    time.Now(),
+						Duration: 1000 * time.Millisecond,
+					})
 					component.GridPos.Set(entry2, &component.GridPosComponentData{Row: scanOrder1[curIdx+1][0], Col: scanOrder1[curIdx+1][1]})
 				} else {
 					memory[CURRENT_STRATEGY] = ""
@@ -159,9 +166,13 @@ func GatlinghoulOmegaRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 			memory["CurTarget"] = 0
 
 			memory[WARM_UP] = time.Now().Add(1000 * time.Millisecond)
-			targetGrid := ecs_.World.Create(component.GridPos, component.GridTarget)
+			targetGrid := ecs_.World.Create(component.GridPos, component.GridTarget, component.Transient)
 			entry := ecs_.World.Entry(targetGrid)
-			memory["TargetEntity"] = targetGrid
+			// memory["TargetEntity"] = targetGrid
+			component.Transient.Set(entry, &component.TransientData{
+				Start:    time.Now(),
+				Duration: 1000 * time.Millisecond,
+			})
 			component.GridPos.Set(entry, &component.GridPosComponentData{Row: curScanOrder[0][0], Col: curScanOrder[0][1]})
 		}
 	}
@@ -184,15 +195,19 @@ func GatlinghoulOmegaRoutine(ecs_ *ecs.ECS, entity *donburi.Entry) {
 					Modulo:  2,
 					Done:    func() {},
 				}
-				kk := memory["TargetEntity"].(donburi.Entity)
-				ecs_.World.Remove(kk)
+				// kk := memory["TargetEntity"].(donburi.Entity)
+				// ecs_.World.Remove(kk)
 				component.Fx.Set(entry, &component.FxData{Animation: assets.NewDustAnim(dustAnimParam)})
 				memory[WARM_UP] = time.Now().Add(time.Second)
 				if curIdx < 15 {
 					memory["CurTarget"] = curIdx + 1
-					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget)
+					targetGrid2 := ecs_.World.Create(component.GridPos, component.GridTarget, component.Transient)
 					entry2 := ecs_.World.Entry(targetGrid2)
-					memory["TargetEntity"] = targetGrid2
+					// memory["TargetEntity"] = targetGrid2
+					component.Transient.Set(entry2, &component.TransientData{
+						Start:    time.Now(),
+						Duration: 1000 * time.Millisecond,
+					})
 
 					component.GridPos.Set(entry2, &component.GridPosComponentData{Row: curScanOrder[curIdx+1][0], Col: curScanOrder[curIdx+1][1]})
 				} else {

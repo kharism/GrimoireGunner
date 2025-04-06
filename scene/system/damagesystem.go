@@ -202,27 +202,6 @@ func (s *damageSystem) Update(ecs *ecs.ECS) {
 					if s.DamageEventConsumer != nil {
 						s.DamageEventConsumer.OnCombatClear()
 					}
-					stgClrDim := assets.StageClear.Bounds()
-					movableImg := core.NewMovableImage(assets.StageClear,
-						core.NewMovableImageParams().WithMoveParam(core.MoveParam{
-							Sx:    float64(-stgClrDim.Dx()),
-							Sy:    float64(300 + stgClrDim.Dy()/2),
-							Speed: 10}))
-					movableImg.AddAnimation(core.NewMoveAnimationFromParam(core.MoveParam{
-						Tx:    float64(600 - stgClrDim.Dx()/2 - 60),
-						Ty:    float64(300 + stgClrDim.Dy()/2),
-						Speed: 10,
-					}))
-					movableImg.Done = func() {
-						PlayerAttackSystem.State = CombatClearState
-					}
-					//turn off attack system
-					PlayerAttackSystem.State = DoNothingState
-					//attach the stageclear to fx system
-					stgDone := ecs.World.Create(component.Anouncement)
-					component.Anouncement.Set(ecs.World.Entry(stgDone), &component.FxData{
-						Animation: movableImg,
-					})
 
 				}
 			}

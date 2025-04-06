@@ -52,12 +52,16 @@ func GenerateLayout1() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(nil),
+			SelectedStage: NewCombatNextStage(level1WavesDecor1),
 			Icon:          assets.BattleIcon,
 		},
 	}
-	CurNode1 := &LevelNode{Id: "1", Tier: 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
-	CurNode2 := &LevelNode{Id: "2", Tier: 1, SelectedStage: NewCombatNextStage(nil), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	hh := []CombatSceneDecorator{level1WavesDecor2, level1WavesDecor3}
+	rand.Shuffle(2, func(i, j int) {
+		hh[i], hh[j] = hh[j], hh[i]
+	})
+	CurNode1 := &LevelNode{Id: "1", Tier: 1, SelectedStage: NewCombatNextStage(hh[0]), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
+	CurNode2 := &LevelNode{Id: "2", Tier: 1, SelectedStage: NewCombatNextStage(hh[1]), NextNode: []*LevelNode{}, Icon: assets.BattleIcon}
 	LevelLayout1.Root.NextNode = []*LevelNode{
 		CurNode1, CurNode2,
 	}
