@@ -93,7 +93,7 @@ var UnispaceBdTTF []byte
 //go:embed fonts/monogram.ttf
 var MonogramTTF []byte
 
-//go:embed images/forrest_path_bg.png
+//go:embed images/new_forest_path.png
 var bg_forest []byte
 
 //go:embed images/bg_mountain.png
