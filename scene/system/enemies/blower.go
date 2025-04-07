@@ -15,9 +15,11 @@ func NewBlower(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.Blower1)
 	entry := ecs.World.Entry(*entity)
 	entry.AddComponent(component.EnemyTag)
+	entry.AddComponent(component.OnDestroy)
 	component.Health.Set(entry, &component.HealthData{HP: 500, MaxHP: 500, Name: "Buzzer", Element: component.WOOD})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
+	component.OnDestroy.SetValue(entry, onBlowerRemove)
 	data := map[string]any{}
 	data[ALREADY_FIRED] = false
 	data[WARM_UP] = nil
@@ -26,6 +28,13 @@ func NewBlower(ecs *ecs.ECS, col, row int) {
 	data[CUR_DMG] = 50
 	data[OPTION_LIST] = []donburi.Entity{}
 	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: BlowerRoutine, Memory: data})
+}
+func onBlowerRemove(ecs *ecs.ECS, self *donburi.Entry) {
+	memory := component.EnemyRoutine.Get(self).Memory
+	if blowFx, ok := memory["BLOWFX"].(*donburi.Entry); ok {
+		ecs.World.Remove(blowFx.Entity())
+	}
+
 }
 func BlowerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
@@ -47,6 +56,7 @@ func BlowerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		})
 		jj := ecs.World.Create(component.Fx)
 		pp := ecs.World.Entry(jj)
+		memory["BLOWFX"] = pp
 		component.Fx.Set(pp, &component.FxData{Animation: blowAnim})
 	}
 	playerPos, _ := attack.GetPlayerGridPos(ecs)
