@@ -49,10 +49,11 @@ func init() {
 		// level1Decorator10,
 		// level1Decorator11,
 		level1Decorator12,
-		level1Decorator14,
+		// level1Decorator14,
 		level1Decorator16,
 		level1Decorator17,
 		level2Decorator4,
+		level2Decorator11,
 		// level1WavesDecor2,
 	}
 	Decorators2 = []CombatSceneDecorator{
