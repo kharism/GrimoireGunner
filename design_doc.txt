@@ -12,3 +12,53 @@ any damage is done by component.OnAtkHit. If something must be done to attack ta
 
 to encourage players to juggle their weapon make sure to make the cooldown of initial weapon takes longer than the EN recovery.
 We also encourage players to finish fast by putting stake and increase difficulties the longer the battle takes
+
+
+Developer's note
+
+To add more combat encounter, create CombatSceneDecorator function on combatscenedecorator.go
+the signature is func(*ecs.ECS, *CombatScene)
+
+then edit the stageselectscene.go file, on function GenerateLayout1 change
+
+```
+var LevelLayout1 = &Level{
+		Root: &LevelNode{
+			Id:            "0",
+			Tier:          0,
+			SelectedStage: NewCombatNextStage(nil),
+			Icon:          assets.BattleIcon,
+		},
+	}
+```
+
+into
+
+```
+var LevelLayout1 = &Level{
+		Root: &LevelNode{
+			Id:            "0",
+			Tier:          0,
+			SelectedStage: NewCombatNextStage(<new function name>),
+			Icon:          assets.BattleIcon,
+		},
+	}
+```
+
+Level1
+Level 1 node 0,1,2 should be wave encounter each encounter has at most 1 enemy.
+The rest of the node should be encounter with 2 enemies
+The final boss shold be alone
+
+at the end of level1 show some cutscene where jack and sven have a conversation about some revival of weird group
+
+Level2
+Level 2 node 0 should be wave encounter, starts with a wave encounter. Node 1 and 2 have either heal or upgrade
+The rest of the node should be encounter with 2 enemies with sometimes wave encounter and hazard.
+The final boss is recycle from prev boss. But put anohter enemies
+
+at the end of level2 show some cutscene
+
+Level3
+...
+Last node should be wave encounter with jade wyrm as final boss
