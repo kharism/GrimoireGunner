@@ -198,7 +198,7 @@ func level1Decorator2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	LoadBoulder(ecs.World, BoulderParam{
-		Col: 5,
+		Col: 4,
 		Row: 0,
 	})
 	enemies.NewBloombomber(ecs, 6, 0)
