@@ -5,7 +5,9 @@ import (
 
 	"github.com/kharism/grimoiregunner/scene/archetype"
 	"github.com/kharism/grimoiregunner/scene/assets"
+	"github.com/kharism/grimoiregunner/scene/component"
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
+	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/enemies"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
@@ -30,6 +32,19 @@ func LoadBoulder(world donburi.World, param BoulderParam) *donburi.Entity {
 	mycomponent.GridPos.Set(entry, &mycomponent.GridPosComponentData{Col: param.Col, Row: param.Row})
 	return &entity
 }
+func LoadBomb(world donburi.World, param BoulderParam) *donburi.Entity {
+	bombEntity := archetype.NewConstruct(world, assets.Bomb2)
+	bombEntry := world.Entry(*bombEntity)
+	bombEntry.AddComponent(component.OnDestroy)
+	bombEntry.AddComponent(component.OnHit)
+
+	bombGridPos := component.GridPos.Get(bombEntry)
+	bombGridPos.Col = param.Col
+	bombGridPos.Row = param.Row
+	component.OnDestroy.SetValue(bombEntry, attack.OnBombDestroyed)
+	component.OnHit.SetValue(bombEntry, attack.SingleHitProjectile)
+	return bombEntity
+}
 
 type CombatSceneDecorator func(*ecs.ECS, *CombatScene)
 
@@ -52,6 +67,7 @@ func init() {
 		// level1Decorator14,
 		level1Decorator16,
 		level1Decorator17,
+		level1Decorator18,
 		level2Decorator4,
 		level2Decorator11,
 		// level1WavesDecor2,
@@ -125,10 +141,7 @@ func RandBossDecorator1() (CombatSceneDecorator, string) {
 func level1WavesDecor1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
-	LoadBoulder(ecs.World, BoulderParam{
-		Col: 5,
-		Row: 0,
-	})
+
 	enemies.NewGatlingGhoul(ecs, 4, 3)
 	combatscene.waves = append(combatscene.waves,
 		level1Decorator5,
@@ -142,11 +155,8 @@ func level1WavesDecor1(ecs *ecs.ECS, combatscene *CombatScene) {
 func level1WavesDecor2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
-	LoadBoulder(ecs.World, BoulderParam{
-		Col: 5,
-		Row: 0,
-	})
-	enemies.NewGatlingGhoul(ecs, 4, 3)
+
+	enemies.NewYeti(ecs, 4, 3)
 	combatscene.waves = append(combatscene.waves,
 		level1Decorator1,
 		level1Decorator2,
@@ -310,6 +320,13 @@ func level1Decorator17(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewStunSpider(ecs, 6, 2)
 	enemies.NewHealslime(ecs, 6, 1)
+}
+func level1Decorator18(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	LoadBomb(ecs.World, BoulderParam{Col: 5, Row: 0})
+	LoadBomb(ecs.World, BoulderParam{Col: 2, Row: 2})
+	enemies.NewPyroEyes(ecs, 6, 1)
 }
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain

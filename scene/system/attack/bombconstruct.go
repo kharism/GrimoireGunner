@@ -68,12 +68,12 @@ func (l *BombConstructCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		bombGridPos := component.GridPos.Get(bombEntry)
 		bombGridPos.Col = playerGridPos.Col + 4
 		bombGridPos.Row = playerGridPos.Row
-		component.OnDestroy.SetValue(bombEntry, onBombDestroyed)
+		component.OnDestroy.SetValue(bombEntry, OnBombDestroyed)
 		component.OnHit.SetValue(bombEntry, SingleHitProjectile)
 	}
 
 }
-func onBombDestroyed(ecs *ecs.ECS, entry *donburi.Entry) {
+func OnBombDestroyed(ecs *ecs.ECS, entry *donburi.Entry) {
 	gridPOs := component.GridPos.Get(entry)
 	onHit := component.OnHit.Get(entry)
 	AtkSfxQueue.QueueSFX(assets.ExplosionFx)

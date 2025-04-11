@@ -165,6 +165,9 @@ var longsword_icon []byte
 //go:embed images/icon_widesword.png
 var widesword_icon []byte
 
+//go:embed images/icon_seeksword.png
+var seeksword_icon []byte
+
 //go:embed images/icon_gatling.png
 var gatling_icon []byte
 
@@ -285,6 +288,7 @@ var Boulder *ebiten.Image
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
 var WideSwordIcon *ebiten.Image
+var SeekSwordIcon *ebiten.Image
 var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
 var BombIcon *ebiten.Image
@@ -568,6 +572,10 @@ func init() {
 	if LongSwordIcon == nil {
 		imgReader := bytes.NewReader(longsword_icon)
 		LongSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SeekSwordIcon == nil {
+		imgReader := bytes.NewReader(seeksword_icon)
+		SeekSwordIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if PushgunIcon == nil {
 		imgReader := bytes.NewReader(pushgun_icon)

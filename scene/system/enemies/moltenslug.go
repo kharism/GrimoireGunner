@@ -15,6 +15,7 @@ import (
 func NewMoltenSlug(ecs *ecs.ECS, col, row int) {
 	entity := archetype.NewNPC(ecs.World, assets.MoltenSlug)
 	entry := ecs.World.Entry(*entity)
+	entry.AddComponent(component.EnemyTag)
 	component.Health.Set(entry, &component.HealthData{HP: 800, Name: "MoltenSlug", Element: component.FIRE})
 	component.GridPos.Set(entry, &component.GridPosComponentData{Row: row, Col: col})
 	component.ScreenPos.Set(entry, &component.ScreenPosComponentData{})
