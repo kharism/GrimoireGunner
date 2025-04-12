@@ -73,6 +73,11 @@ func BuzzerRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 				component.Sprite.Get(entity).Image = assets.Buzzer2
 				memory[WARM_UP] = time.Now().Add(800 * time.Millisecond)
 
+			} else if gridPos.Col == newCol && gridPos.Row == newRow {
+				// buzzer is already in front of player
+				memory[CURRENT_STRATEGY] = "ATTACK_MELEE"
+				component.Sprite.Get(entity).Image = assets.Buzzer2
+				memory[WARM_UP] = time.Now().Add(800 * time.Millisecond)
 			}
 		}
 	}

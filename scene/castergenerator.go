@@ -93,6 +93,7 @@ func GenerateCaster() loadout.Caster {
 		attack.NewSporeBombCaster(),
 		attack.NewWallCaster(),
 		attack.NewFist(),
+		attack.NewDrillCaster(),
 		attack.NewSeekswordCaster(),
 		attack.NewIcespikeCaster(),
 		attack.NewFlamethrowerCaster(),

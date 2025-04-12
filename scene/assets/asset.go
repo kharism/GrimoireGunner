@@ -75,6 +75,9 @@ var boulder []byte
 //go:embed images/wall.png
 var wall []byte
 
+//go:embed images/drill_construct.png
+var drill []byte
+
 //go:embed images/lightning_bolt.png
 var lightningbolt []byte
 
@@ -219,6 +222,9 @@ var hpup_icon []byte
 //go:embed images/icon_enup.png
 var enup_icon []byte
 
+//go:embed images/icon_drill.png
+var drill_icon []byte
+
 //go:embed images/icon_medkit.png
 var medkit_icon []byte
 
@@ -284,6 +290,7 @@ var ElecWeb *ebiten.Image
 var Web *ebiten.Image
 var Fist *ebiten.Image
 var Boulder *ebiten.Image
+var Drill *ebiten.Image
 
 var LightningIcon *ebiten.Image
 var LongSwordIcon *ebiten.Image
@@ -300,6 +307,7 @@ var FlamethrowerIcon *ebiten.Image
 var IcespikeIcon *ebiten.Image
 var PushgunIcon *ebiten.Image
 var PullgunIcon *ebiten.Image
+var DrillIcon *ebiten.Image
 var NAIcon *ebiten.Image
 var WallIcon *ebiten.Image
 var BattleIcon *ebiten.Image
@@ -548,6 +556,10 @@ func init() {
 		imgReader := bytes.NewReader(boulder)
 		Boulder, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Drill == nil {
+		imgReader := bytes.NewReader(drill)
+		Drill, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
 	if BgForrest == nil {
 		imgReader := bytes.NewReader(bg_forest)
 		BgForrest, _, _ = ebitenutil.NewImageFromReader(imgReader)
@@ -657,6 +669,10 @@ func init() {
 	if BuckshotIcon == nil {
 		imgReader := bytes.NewReader(buckshot_icon)
 		BuckshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if DrillIcon == nil {
+		imgReader := bytes.NewReader(drill_icon)
+		DrillIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if ShockwaveIcon == nil {
 		imgReader := bytes.NewReader(shockwave_icon)
