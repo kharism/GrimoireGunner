@@ -111,7 +111,7 @@ func GenerateLayout2() *Level {
 		Root: &LevelNode{
 			Id:            "0",
 			Tier:          0,
-			SelectedStage: NewCombatNextStage(RandCombatDecorator2()),
+			SelectedStage: NewCombatNextStage(level2WaveDecor1),
 			Icon:          assets.BattleIcon,
 		},
 	}

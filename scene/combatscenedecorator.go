@@ -9,6 +9,7 @@ import (
 	mycomponent "github.com/kharism/grimoiregunner/scene/component"
 	"github.com/kharism/grimoiregunner/scene/system/attack"
 	"github.com/kharism/grimoiregunner/scene/system/enemies"
+	"github.com/kharism/grimoiregunner/scene/system/hazard"
 	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -398,6 +399,34 @@ func level2Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewHealslime(ecs, 6, 1)
 	enemies.NewStunSpider(ecs, 4, 1)
+}
+func level2WaveDecor1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = []ItemInterface{
+		&Medkit{},
+	}
+	for i := 0; i < 2; i++ {
+		var temp loadout.Caster
+		for {
+			temp = DecorateCaster(GenerateCaster())
+			if temp != nil {
+				break
+			}
+		}
+		combatscene.rewards = append(combatscene.rewards, temp)
+	}
+
+	hazard.NewRotatingFlame(ecs, 0, 0)
+	hazard.NewRotatingFlame(ecs, 7, 3)
+	enemies.NewBlizzBuzzer(ecs, 5, 1)
+	enemies.NewReaper(ecs, 6, 1)
+	combatscene.waves = append(combatscene.waves,
+		level1Decorator1,
+		level1Decorator2,
+		level1Decorator14,
+		level2Decorator2,
+		level1Decorator10,
+	)
 }
 func level2Decorator11(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
