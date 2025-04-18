@@ -78,7 +78,7 @@ func init() {
 		level1Decorator11,
 		level1Decorator12,
 		level2Decorator1,
-		level2Decorator2,
+		// level2Decorator2,
 		level2Decorator4,
 		level2Decorator3,
 		level2Decorator5,
@@ -88,6 +88,7 @@ func init() {
 		level2Decorator9,
 		level2Decorator10,
 		level2Decorator11,
+		level2Decorator12,
 	}
 	OptBoss1 = []CombatSceneDecorator{
 		level1OptBoss1,
@@ -284,16 +285,19 @@ func level1Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewPoacher(ecs, 6, 1)
+	enemies.NewIceslime(ecs, 3, 2)
 }
 func level1Decorator11(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = nil
 	enemies.NewPyroEyes(ecs, 4, 1)
+	enemies.NewPoacher(ecs, 5, 3)
 }
 func level1Decorator12(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
 	combatscene.rewards = nil
 	enemies.NewLightningImp(ecs, 4, 1)
+	enemies.NewBuzzer(ecs, 4, 1)
 }
 func level1Decorator13(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
@@ -360,6 +364,7 @@ func level2Decorator4(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
 	enemies.NewIceslime(ecs, 6, 1)
+	enemies.NewBlazeBuzzer(ecs, 4, 2)
 }
 func level2Decorator5(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
@@ -387,6 +392,7 @@ func level2Decorator8(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
 	enemies.NewLightningMage(ecs, 4, 1)
+	enemies.NewGatlingGhoulOmega(ecs, 6, 2)
 }
 func level2Decorator9(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
@@ -433,6 +439,13 @@ func level2Decorator11(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewBlower(ecs, 6, 1)
 	enemies.NewPoacher(ecs, 4, 1)
+}
+func level2Decorator12(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	hazard.NewRotatingFlame(ecs, 7, 1)
+	hazard.NewRotatingFlame(ecs, 0, 0)
+	enemies.NewInfernoReaper(ecs, 6, 1)
 }
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
