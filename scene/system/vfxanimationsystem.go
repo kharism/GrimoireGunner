@@ -11,7 +11,7 @@ import (
 
 func UpdateFx(ecs *ecs.ECS) {
 	component.Fx.Each(ecs.World, func(e *donburi.Entry) {
-		if e.HasComponent(component.Fx) {
+		if e.HasComponent(component.Fx) && ecs.World.Valid(e.Entity()) {
 			fx := component.Fx.GetValue(e)
 			fx.Animation.Update()
 		}
