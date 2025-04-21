@@ -174,13 +174,13 @@ func level1WavesDecor3(ecs *ecs.ECS, combatscene *CombatScene) {
 		Col: 5,
 		Row: 0,
 	})
-	enemies.NewGatlingGhoul(ecs, 4, 3)
+	enemies.NewLightningImp(ecs, 4, 1)
 	combatscene.waves = append(combatscene.waves,
 		level1Decorator1,
 		level1Decorator2,
-		level1Decorator14,
+		level1Decorator19,
 		level2Decorator2,
-		level1Decorator10,
+		level1Decorator20,
 	)
 }
 
@@ -285,7 +285,7 @@ func level1Decorator10(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewPoacher(ecs, 6, 1)
-	enemies.NewIceslime(ecs, 3, 2)
+	enemies.NewIceslime(ecs, 4, 2)
 }
 func level1Decorator11(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
@@ -332,6 +332,19 @@ func level1Decorator18(ecs *ecs.ECS, combatscene *CombatScene) {
 	LoadBomb(ecs.World, BoulderParam{Col: 5, Row: 0})
 	LoadBomb(ecs.World, BoulderParam{Col: 2, Row: 2})
 	enemies.NewPyroEyes(ecs, 6, 1)
+}
+func level1Decorator19(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	// LoadBomb(ecs.World, BoulderParam{Col: 5, Row: 0})
+	// LoadBomb(ecs.World, BoulderParam{Col: 2, Row: 2})
+	enemies.NewIceslime(ecs, 6, 1)
+}
+func level1Decorator20(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgMountain
+	combatscene.rewards = nil
+	LoadBomb(ecs.World, BoulderParam{Col: 2, Row: 2})
+	enemies.NewLightningMage(ecs, 5, 3)
 }
 func level2Decorator1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgMountain
