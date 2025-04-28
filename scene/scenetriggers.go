@@ -12,4 +12,5 @@ const (
 	TriggerToMain
 	TriggerToClear
 	TriggerToOpening
+	TriggerToPostLv1Story
 )

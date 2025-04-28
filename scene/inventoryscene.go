@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -297,10 +298,15 @@ func (r *InventoryScene) Update() error {
 			targetY := 100.0 - 4
 			scaleX := float64(40.0 / 195.0)
 			scaleY := float64(40.0 / 250.0)
+			time := 5.0
+			posX, posY := cardPickInventory.GetPos()
+			xSpeed := (targetX - posX) / time
+			ySpeed := (targetY - posY) / time
+			varSpeed := math.Sqrt(xSpeed*xSpeed + ySpeed*ySpeed)
 			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: -0.02, SpeedY: -0.03}
 			scaleAnimation.Apply(cardPickInventory)
 			anim := core.NewMoveAnimationFromParam(core.MoveParam{
-				Tx: targetX, Ty: targetY, Speed: 6,
+				Tx: targetX, Ty: targetY, Sx: xSpeed, Sy: ySpeed, Speed: varSpeed,
 			})
 			r.cursorIsMoving = true
 			cardPickInventory.Done = func() {
@@ -322,8 +328,13 @@ func (r *InventoryScene) Update() error {
 			scaleY := 1.0 //float64(32.0 / 250.0)
 			scaleAnimation := core.ScaleAnimation{Tsx: scaleX, Tsy: scaleY, SpeedX: 0.02, SpeedY: 0.03}
 			scaleAnimation.Apply(cardPickInventory)
+			time := 5.0
+			posX, posY := cardPickInventory.GetPos()
+			xSpeed := (targetX - posX) / time
+			ySpeed := (targetY - posY) / time
+			varSpeed := math.Sqrt(xSpeed*xSpeed + ySpeed*ySpeed)
 			anim := core.NewMoveAnimationFromParam(core.MoveParam{
-				Tx: targetX, Ty: targetY, Speed: 6,
+				Tx: targetX, Ty: targetY, Sx: xSpeed, Sy: ySpeed, Speed: varSpeed,
 			})
 			r.cursorIsMoving = true
 			cardPickInventory.Done = func() {

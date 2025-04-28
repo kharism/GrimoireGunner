@@ -365,8 +365,14 @@ var BattleMusic2 []byte
 //go:embed bgm/chiptune-grooving-142242.mp3
 var BattleMusic3 []byte
 
+//go:embed bgm/dnb1.mp3
+var BattleMusic4 []byte
+
 //go:embed bgm/smooth_jazz.mp3
 var SmoothJazz []byte
+
+//go:embed bgm/sax.mp3
+var Sax []byte
 
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte

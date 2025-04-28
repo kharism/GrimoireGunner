@@ -39,6 +39,11 @@ var shizuku []byte
 
 var Shizuku *ebiten.Image
 
+//go:embed images/portrait/overlay.png
+var overlay []byte
+
+var Overlay *ebiten.Image
+
 //go:embed images/bedroom.png
 var bedroom []byte
 
@@ -58,6 +63,11 @@ var Workshop1 *ebiten.Image
 var workshop_2 []byte
 
 var Workshop2 *ebiten.Image
+
+//go:embed images/portal1.png
+var portal1 []byte
+
+var Portal1 *ebiten.Image
 
 func init() {
 	Sven = ReadAndFillBg(sven)
@@ -82,4 +92,13 @@ func init() {
 		imgReader := bytes.NewReader(workshop_2)
 		Workshop2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
+	if Overlay == nil {
+		imgReader := bytes.NewReader(overlay)
+		Overlay, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Portal1 == nil {
+		imgReader := bytes.NewReader(portal1)
+		Portal1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+
 }

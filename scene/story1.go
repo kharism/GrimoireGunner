@@ -20,7 +20,7 @@ func Scene1(layouter core.GetLayouter) *core.Scene {
 		core.NewCharacterImage("Jack", assets.Jack),
 	}
 	scene.FontFace = assets.FontFace
-	portraitMoveParam := core.MoveParam{Sx: 10, Sy: 450}
+	portraitMoveParam := core.MoveParam{Sx: 10, Sy: 450, Tx: 10, Ty: 450}
 	portraitScaleParam := &core.ScaleParam{Sx: 2, Sy: 2}
 	sceneWidth, sceneHeight := layouter.GetLayout()
 	blackBg := ebiten.NewImage(sceneWidth, sceneHeight)
@@ -123,6 +123,8 @@ func Scene1(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewBgChangeEvent(blackBg, core.MoveParam{Sx: 0, Sy: 0, Tx: 0, Ty: 0, Speed: 3}, nil),
 			core.NewCharacterRemoveEvent("Sven"),
+			&core.StopBgmEvent{},
+			&core.PlayBgmEvent{Audio: &assets.Sax, Type: core.TypeMP3},
 			&core.DialogueEvent{Name: "", Dialogue: "Next Morning"},
 		}},
 		&core.ComplexEvent{Events: []core.Event{

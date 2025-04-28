@@ -94,9 +94,11 @@ func main() {
 		},
 	}
 	openingScene := scene.NewHanashiScene(scene.Scene1(&Game{}))
+	endLevel1Scene := scene.NewHanashiScene(scene.Scene2(&Game{}))
 	core.DetectKeyboardNext = func() bool {
 		return inpututil.IsKeyJustReleased(ebiten.KeyQ)
 	}
+
 	combatScene := &scene.CombatScene{}
 	// rewardScene := &scene.RewardScene{}
 	ruleSet := map[stagehand.Scene[*scene.SceneData]][]stagehand.Directive[*scene.SceneData]{
@@ -106,9 +108,13 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.StageSelectInstance, Trigger: scene.TriggerToStageSelect},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.GameClearInstance, Trigger: scene.TriggerToClear},
+			stagehand.Directive[*scene.SceneData]{Dest: endLevel1Scene, Trigger: scene.TriggerToPostLv1Story},
 		},
 		openingScene: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
+		},
+		endLevel1Scene: {
+			stagehand.Directive[*scene.SceneData]{Dest: scene.StageSelectInstance, Trigger: scene.TriggerToStageSelect},
 		},
 		scene.MainMenuInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
@@ -138,6 +144,9 @@ func main() {
 	manager := stagehand.NewSceneDirector[*scene.SceneData](scene.MainMenuInstance, state, ruleSet)
 	openingScene.SetDoneFunc(func() {
 		manager.ProcessTrigger(scene.TriggerToMain)
+	})
+	endLevel1Scene.SetDoneFunc(func() {
+		manager.ProcessTrigger(scene.TriggerToStageSelect)
 	})
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)

@@ -61,6 +61,7 @@ func (c *CombatScene) Update() error {
 			switch c.data.Level {
 			case 2:
 				c.data.LevelLayout = GenerateLayout2()
+				defTrigger = TriggerToPostLv1Story
 			}
 
 			c.data.CurrentLevel = nil //c.data.LevelLayout.Root
@@ -255,7 +256,7 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 			s.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
 			s.musicPlayer.AudioPlayer().SetPosition(s.data.MusicSeek)
 		} else {
-			jj := rand.Int() % 3
+			jj := rand.Int() % 4
 			switch jj {
 			case 0:
 				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic1, assets.TypeMP3)
@@ -263,6 +264,8 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic2, assets.TypeMP3)
 			case 2:
 				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic3, assets.TypeMP3)
+			case 3:
+				s.musicPlayer, err = assets.NewAudioPlayer(assets.BattleMusic4, assets.TypeMP3)
 			}
 
 		}
