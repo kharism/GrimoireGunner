@@ -1,13 +1,14 @@
 module github.com/kharism/grimoiregunner
 
-go 1.22.0
+go 1.23.0
 
 // replace github.com/kharism/hanashi => ../hanashi
+
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.8.5
 	github.com/joelschutz/stagehand v1.1.1
 	github.com/kharism/golang-csg v0.0.0-20220829085131-457731c503f8
-	github.com/yohamta/donburi v1.4.4
+	github.com/yohamta/donburi v1.15.7
 )
 
 require (
@@ -24,7 +25,7 @@ require (
 	github.com/ebitengine/purego v0.8.1 // indirect
 	github.com/go-text/typesetting v0.2.0 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
-	github.com/kharism/hanashi v0.0.0-20250210015156-5a8ba94076dd
+	github.com/kharism/hanashi v0.0.1
 	golang.org/x/image v0.23.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
