@@ -11,11 +11,13 @@ type HanashiScene struct {
 	scene    *core.Scene
 	State    *SceneData
 	director *stagehand.SceneDirector[*SceneData]
+	// what to trigger when the player press escape
+	EscapeTrigger stagehand.SceneTransitionTrigger
 }
 
 func (m *HanashiScene) Update() error {
 	if inpututil.IsKeyJustReleased(ebiten.KeyEscape) {
-		m.director.ProcessTrigger(TriggerToMain)
+		m.director.ProcessTrigger(m.EscapeTrigger)
 		return nil
 	}
 	e := m.scene.Update()

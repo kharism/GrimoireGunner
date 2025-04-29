@@ -94,7 +94,9 @@ func main() {
 		},
 	}
 	openingScene := scene.NewHanashiScene(scene.Scene1(&Game{}))
+	openingScene.EscapeTrigger = scene.TriggerToMain
 	endLevel1Scene := scene.NewHanashiScene(scene.Scene2(&Game{}))
+	endLevel1Scene.EscapeTrigger = scene.TriggerToStageSelect
 	core.DetectKeyboardNext = func() bool {
 		return inpututil.IsKeyJustReleased(ebiten.KeyQ)
 	}
