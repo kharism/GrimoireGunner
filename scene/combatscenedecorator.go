@@ -170,10 +170,7 @@ func level1WavesDecor2(ecs *ecs.ECS, combatscene *CombatScene) {
 func level1WavesDecor3(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
-	LoadBoulder(ecs.World, BoulderParam{
-		Col: 5,
-		Row: 0,
-	})
+
 	enemies.NewLightningImp(ecs, 4, 1)
 	combatscene.waves = append(combatscene.waves,
 		level1Decorator1,
