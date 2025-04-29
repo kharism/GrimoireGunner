@@ -68,7 +68,7 @@ func Scene2(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Sven"),
 			core.NewCharacterAddEvent("Jack", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Jack", Dialogue: "That's fallen knight of crimson king", FontFace: assets.FontFace},
+			&core.DialogueEvent{Name: "Jack", Dialogue: "Assuming that was a unicorn and not rhino\nIt's probably fallen knight of crimson king", FontFace: assets.FontFace},
 		}},
 		&core.DialogueEvent{Name: "Jack", Dialogue: "It's been a long time since I cleaned them up", FontFace: assets.FontFace},
 		&core.ComplexEvent{Events: []core.Event{
@@ -79,7 +79,7 @@ func Scene2(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Sven"),
 			core.NewCharacterAddEvent("Jack", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Jack", Dialogue: "I remember you crapped on my hand when I bathed you\the day after I cleaned them up", FontFace: assets.FontFace},
+			&core.DialogueEvent{Name: "Jack", Dialogue: "I remember you crapped on my hand when I bathed you\nthe day after I cleaned them up", FontFace: assets.FontFace},
 		}},
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Jack"),
