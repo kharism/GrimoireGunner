@@ -377,6 +377,9 @@ var Sax []byte
 //go:embed bgm/upbeat.mp3
 var IntermissionMusic []byte
 
+//go:embed bgm/midpoint_ghostboy.mp3
+var MidMusic []byte
+
 //go:embed bgm/fanfare3.mp3
 var Fanfare []byte
 

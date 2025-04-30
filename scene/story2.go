@@ -1,7 +1,9 @@
 package scene
 
 import (
+	"fmt"
 	"image/color"
+	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kharism/grimoiregunner/scene/assets"
@@ -28,7 +30,7 @@ func Scene2(layouter core.GetLayouter) *core.Scene {
 	}
 	scene.Events = []core.Event{
 		&core.ComplexEvent{Events: []core.Event{
-			// &core.PlayBgmEvent{Audio: &assets.SmoothJazz, Type: core.TypeMP3},
+			&core.PlayBgmEvent{Audio: &assets.MidMusic, Type: core.TypeMP3},
 			core.NewBgChangeEvent(assets.Portal1, core.MoveParam{Sx: 0, Sy: 0, Tx: 0, Ty: 0, Speed: 3}, nil),
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
 			&core.DialogueEvent{Name: "Sven", Dialogue: "I'm near the first portal", FontFace: assets.FontFace},
@@ -145,12 +147,12 @@ func Scene2(layouter core.GetLayouter) *core.Scene {
 	}
 	scene.TxtBg = ebiten.NewImage(1024-128, 128)
 	scene.TxtBg.Fill(color.RGBA{R: 0x4f, G: 0x8f, B: 0xba, A: 255})
-	// pp, err := core.NewDefaultAudioInterfacer()
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	os.Exit(-1)
-	// }
-	scene.AudioInterface = nil
+	pp, err := core.NewDefaultAudioInterfacer()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(-1)
+	}
+	scene.AudioInterface = pp
 	// scene.Events[0].Execute(scene)
 	return scene
 }
