@@ -122,7 +122,14 @@ func YetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			// punchAnim := core.NewMovableImage(assets.Fist, core.NewMovableImageParams())
 			// punchAnim.ScaleParam = &core.ScaleParam{Sx: -1, Sy: 1}
 			// punchAnim.
+			memory[CURRENT_STRATEGY] = "COOLDOWN_MELEE"
+			memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
+		}
+	}
+	if memory[CURRENT_STRATEGY] == "COOLDOWN_MELEE" {
+		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			memory[CURRENT_STRATEGY] = "WAIT"
+			component.Sprite.Get(entity).Image = assets.Yeti
 			memory[WARM_UP] = time.Now().Add(500 * time.Millisecond)
 		}
 	}

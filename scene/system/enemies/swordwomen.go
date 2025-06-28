@@ -76,6 +76,7 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					memory[CURRENT_STRATEGY] = "ATTACK_MELEE"
 					component.Sprite.Set(entity, &component.SpriteData{Image: assets.SwordswomenWarmup})
 				}
+				memory[WARM_UP] = time.Now().Add(300 * time.Millisecond)
 
 			}
 		}
@@ -127,6 +128,7 @@ func SwordwomenRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	if memory[CURRENT_STRATEGY] == "ATTACK_MELEE" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			if moveCount < 4 {
+				component.Sprite.Set(entity, &component.SpriteData{Image: assets.SwordswomenWarmup})
 				scrPos := component.ScreenPos.Get(entity)
 				newCol := playerPos.Col + 1
 				newRow := playerPos.Row

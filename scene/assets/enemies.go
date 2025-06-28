@@ -86,16 +86,16 @@ var hammerghoul_warmup []byte
 //go:embed images/hammerghoul_atk2.png
 var hammerghoul_cooldown []byte
 
-//go:embed images/swordsman.png
+//go:embed images/nyaaito.png
 var swordswomen []byte
 
-//go:embed images/swordsman2.png
+//go:embed images/nyaaito2.png
 var swordswomen2 []byte
 
-//go:embed images/swordsman3.png
+//go:embed images/nyaaito3.png
 var swordswomen3 []byte
 
-//go:embed images/swordsman_atk1.png
+//go:embed images/nyaaito2.png
 var swordswomen4 []byte
 
 //go:embed images/poacher.png
