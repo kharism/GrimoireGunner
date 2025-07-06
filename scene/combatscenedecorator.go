@@ -457,6 +457,11 @@ func level2Decorator12(ecs *ecs.ECS, combatscene *CombatScene) {
 	hazard.NewRotatingFlame(ecs, 0, 0)
 	enemies.NewInfernoReaper(ecs, 6, 1)
 }
+func level2OptBoss1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewNyaaito(ecs, 6, 1)
+}
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil

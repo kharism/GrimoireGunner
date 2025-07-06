@@ -10,6 +10,7 @@ import (
 	"github.com/kharism/hanashi/core"
 )
 
+// this executed at the end of level1. Describe sven's journey so far
 func Scene2(layouter core.GetLayouter) *core.Scene {
 	scene := core.NewScene()
 	scene.SetLayouter(layouter)

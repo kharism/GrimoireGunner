@@ -10,6 +10,7 @@ import (
 	"github.com/kharism/hanashi/core"
 )
 
+// intro. Set up the characters and their motivation
 func Scene1(layouter core.GetLayouter) *core.Scene {
 	scene := core.NewScene()
 	scene.SetLayouter(layouter)

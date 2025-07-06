@@ -95,7 +95,7 @@ var swordswomen2 []byte
 //go:embed images/nyaaito3.png
 var swordswomen3 []byte
 
-//go:embed images/nyaaito2.png
+//go:embed images/nyaaito4.png
 var swordswomen4 []byte
 
 //go:embed images/poacher.png

@@ -24,6 +24,9 @@ var cooldownShader []byte
 //go:embed shader/shocky.kage
 var shockyShader []byte
 
+//go:embed shader/shocky2.kage
+var shocky2Shader []byte
+
 //go:embed shader/woody.kage
 var woodyShader []byte
 
@@ -33,6 +36,7 @@ var IcyShader *ebiten.Shader
 var CooldownShader *ebiten.Shader
 var WoodyShader *ebiten.Shader
 var ShockyShader *ebiten.Shader
+var Shocky2Shader *ebiten.Shader
 
 func Element2Shader(el component.Elemental) *ebiten.Shader {
 	switch el {
@@ -62,6 +66,9 @@ func init() {
 	}
 	if ShockyShader == nil {
 		ShockyShader, _ = ebiten.NewShader(shockyShader)
+	}
+	if Shocky2Shader == nil {
+		Shocky2Shader, _ = ebiten.NewShader(shocky2Shader)
 	}
 	if CooldownShader == nil {
 		var err error
