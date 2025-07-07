@@ -177,6 +177,9 @@ var gatling_icon []byte
 //go:embed images/icon_buckshot.png
 var buckshot_icon []byte
 
+//go:embed images/icon_seedshot.png
+var seedshot_icon []byte
+
 //go:embed images/icon_lightning.png
 var lightning_icon []byte
 
@@ -298,6 +301,7 @@ var WideSwordIcon *ebiten.Image
 var SeekSwordIcon *ebiten.Image
 var ShockwaveIcon *ebiten.Image
 var BuckshotIcon *ebiten.Image
+var SeedshotIcon *ebiten.Image
 var BombIcon *ebiten.Image
 var FirewallIcon *ebiten.Image
 var GatlingIcon *ebiten.Image
@@ -678,6 +682,10 @@ func init() {
 	if BuckshotIcon == nil {
 		imgReader := bytes.NewReader(buckshot_icon)
 		BuckshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if SeedshotIcon == nil {
+		imgReader := bytes.NewReader(seedshot_icon)
+		SeedshotIcon, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if DrillIcon == nil {
 		imgReader := bytes.NewReader(drill_icon)
