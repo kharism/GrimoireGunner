@@ -918,6 +918,22 @@ func NewHitAnim(param SpriteParam) *core.AnimatedImage {
 		Done:           param.Done,
 	}
 }
+func NewWiderSlashAtkAnim(param SpriteParam) *core.AnimatedImage {
+	return &core.AnimatedImage{
+		MovableImage: core.NewMovableImage(WideslashRaw,
+			core.NewMovableImageParams().
+				WithMoveParam(core.MoveParam{Sx: param.ScreenX - 100, Sy: param.ScreenY}).
+				WithScale(&core.ScaleParam{Sx: 2, Sy: 1}),
+		),
+		SubImageStartX: 0,
+		SubImageStartY: 0,
+		SubImageWidth:  100,
+		SubImageHeight: 150,
+		Modulo:         param.Modulo,
+		FrameCount:     5,
+		Done:           param.Done,
+	}
+}
 func NewWideSlashAtkAnim(param SpriteParam) *core.AnimatedImage {
 	return &core.AnimatedImage{
 		MovableImage: core.NewMovableImage(WideslashRaw,

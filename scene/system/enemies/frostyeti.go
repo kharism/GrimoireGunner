@@ -29,9 +29,9 @@ func NewFrostYeti(ecs *ecs.ECS, col, row int) {
 	data[CURRENT_STRATEGY] = ""
 	data[MOVE_COUNT] = 0
 	data[CUR_DMG] = 50
-	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: FYetiRoutine, Memory: data})
+	component.EnemyRoutine.Set(entry, &component.EnemyRoutineData{Routine: FrostYetiRoutine, Memory: data})
 }
-func FYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
+func FrostYetiRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	memory := component.EnemyRoutine.Get(entity).Memory
 	dmg := memory[CUR_DMG].(int)
 	if memory[CURRENT_STRATEGY] == "" {

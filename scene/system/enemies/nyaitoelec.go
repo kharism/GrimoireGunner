@@ -88,7 +88,7 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	if playerPos == nil {
 		return
 	}
-	health := component.Health.Get(entity)
+	// health := component.Health.Get(entity)
 	if memory[CURRENT_STRATEGY] == "ATTACK_RANGED" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			if playerPos.Row == gridPos.Row {
@@ -141,7 +141,7 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					scrPos.Y = 0
 					scrPos.X = 0
 					memory[MOVE_COUNT] = moveCount + 1
-					if health.HP < 200 {
+					if true { //health.HP < 200 {
 						memory[CURRENT_STRATEGY] = "ATTACK_MELEE_2"
 						now := time.Now()
 						startGridPosX := gridPos.Col - 2
