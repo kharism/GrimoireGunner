@@ -88,6 +88,7 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 	if playerPos == nil {
 		return
 	}
+	health := component.Health.Get(entity)
 	if memory[CURRENT_STRATEGY] == "ATTACK_RANGED" {
 		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
 			if playerPos.Row == gridPos.Row {
@@ -140,25 +141,48 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					scrPos.Y = 0
 					scrPos.X = 0
 					memory[MOVE_COUNT] = moveCount + 1
-					memory[CURRENT_STRATEGY] = "ATTACK_MELEE_1"
-					memory[WARM_UP] = time.Now().Add(750 * time.Millisecond)
-					now := time.Now()
-					if gridPos.Row > 1 {
-						target1 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
-						entry1 := ecs.World.Entry(target1)
-						component.Transient.Set(entry1, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
-						component.GridPos.Set(entry1, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row - 1})
+					if health.HP < 200 {
+						memory[CURRENT_STRATEGY] = "ATTACK_MELEE_2"
+						now := time.Now()
+						startGridPosX := gridPos.Col - 2
+						startGridPosY := gridPos.Row - 1
+
+						for i := 0; i < 2; i++ {
+							if startGridPosX+i < 0 {
+								continue
+							}
+							for j := 0; j < 3; j++ {
+								if startGridPosY+j < 0 || startGridPosY+j > 3 {
+									continue
+								}
+								target2 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
+								entry2 := ecs.World.Entry(target2)
+								component.Transient.Set(entry2, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
+								component.GridPos.Set(entry2, &component.GridPosComponentData{Row: startGridPosY + j, Col: startGridPosX + i})
+							}
+						}
+					} else {
+						memory[CURRENT_STRATEGY] = "ATTACK_MELEE_1"
+						now := time.Now()
+						if gridPos.Row > 1 {
+							target1 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
+							entry1 := ecs.World.Entry(target1)
+							component.Transient.Set(entry1, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
+							component.GridPos.Set(entry1, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row - 1})
+						}
+						target2 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
+						entry2 := ecs.World.Entry(target2)
+						component.Transient.Set(entry2, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
+						component.GridPos.Set(entry2, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row})
+						if gridPos.Row < 3 {
+							target3 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
+							entry3 := ecs.World.Entry(target3)
+							component.Transient.Set(entry3, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
+							component.GridPos.Set(entry3, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row + 1})
+						}
 					}
-					target2 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
-					entry2 := ecs.World.Entry(target2)
-					component.Transient.Set(entry2, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
-					component.GridPos.Set(entry2, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row})
-					if gridPos.Row < 3 {
-						target3 := ecs.World.Create(component.GridPos, component.GridTarget, component.Transient)
-						entry3 := ecs.World.Entry(target3)
-						component.Transient.Set(entry3, &component.TransientData{Start: now, Duration: 745 * time.Millisecond})
-						component.GridPos.Set(entry3, &component.GridPosComponentData{Col: gridPos.Col - 1, Row: gridPos.Row + 1})
-					}
+
+					memory[WARM_UP] = time.Now().Add(600 * time.Millisecond)
 
 				}
 
@@ -188,14 +212,14 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			hitbox2 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Elements)
 			entry2 = ecs.World.Entry(hitbox2)
 			component.Damage.Set(entry2, &component.DamageData{Damage: dmg + 20})
-			component.Elements.SetValue(entry1, component.ELEC)
+			component.Elements.SetValue(entry2, component.ELEC)
 			component.GridPos.Set(entry2, &component.GridPosComponentData{Row: gridPos.Row, Col: gridPos.Col - 1})
 			component.OnHit.SetValue(entry2, onReaperHit)
 			if gridPos.Row < 3 {
 				hitbox3 := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Elements)
 				entry3 = ecs.World.Entry(hitbox3)
 				component.Damage.Set(entry3, &component.DamageData{Damage: dmg + 20})
-				component.Elements.SetValue(entry1, component.ELEC)
+				component.Elements.SetValue(entry3, component.ELEC)
 				component.GridPos.Set(entry3, &component.GridPosComponentData{Row: gridPos.Row + 1, Col: gridPos.Col - 1})
 				component.OnHit.SetValue(entry3, onReaperHit)
 			}
@@ -212,6 +236,51 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					ecs.World.Remove(entry2.Entity())
 					if entry3 != nil {
 						ecs.World.Remove(entry3.Entity())
+					}
+					ecs.World.Remove(fx)
+				},
+				Modulo: 3,
+			})
+			component.Fx.Set(fxEntry, &component.FxData{Animation: wideSlash})
+			memory[CURRENT_STRATEGY] = "ATTACK_MELEE"
+			memory[WARM_UP] = time.Now().Add(time.Second)
+		}
+	}
+	if memory[CURRENT_STRATEGY] == "ATTACK_MELEE_2" {
+		if waitTime, ok := memory[WARM_UP].(time.Time); ok && waitTime.Before(time.Now()) {
+			component.Sprite.Set(entity, &component.SpriteData{Image: assets.SwordswomenCooldown})
+			reaperScreenX, reaperScreenY := assets.GridCoord2Screen(gridPos.Row, gridPos.Col)
+			component.Sprite.Get(entity).Image = assets.SwordswomenCooldown
+			startGridPosX := gridPos.Col - 2
+			startGridPosY := gridPos.Row - 1
+			damageGrids := []donburi.Entity{}
+			for i := 0; i < 2; i++ {
+				if startGridPosX+i < 0 {
+					continue
+				}
+				for j := 0; j < 3; j++ {
+					if startGridPosY+j < 0 || startGridPosY+j > 3 {
+						continue
+					}
+					hitbox := ecs.World.Create(component.Damage, component.GridPos, component.OnHit, component.Elements)
+					entry := ecs.World.Entry(hitbox)
+					component.Damage.Set(entry, &component.DamageData{Damage: dmg + 20})
+					component.Elements.SetValue(entry, component.ELEC)
+					// fmt.Println("DMG", gridPos.Row+i, gridPos.Col+j)
+					component.GridPos.Set(entry, &component.GridPosComponentData{Row: startGridPosY + j, Col: startGridPosX + i})
+					component.OnHit.SetValue(entry, onReaperHit)
+					damageGrids = append(damageGrids, hitbox)
+				}
+			}
+			// fmt.Println("=====")
+			fx := ecs.World.Create(component.Fx)
+			fxEntry := ecs.World.Entry(fx)
+			wideSlash := assets.NewWiderSlashAtkAnim(assets.SpriteParam{
+				ScreenX: reaperScreenX - float64(assets.TileWidth)*1.5,
+				ScreenY: reaperScreenY - float64(assets.TileHeight)*2,
+				Done: func() {
+					for _, d := range damageGrids {
+						ecs.World.Remove(d)
 					}
 					ecs.World.Remove(fx)
 				},
