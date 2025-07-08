@@ -69,7 +69,7 @@ func NyaitoRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 				// warmup for attack
 				memory[MOVE_COUNT] = 0
 				moveCount = 0
-				ii := 1 //rand.Int() % 2
+				ii := rand.Int() % 2
 				if ii == 0 {
 					memory[CURRENT_STRATEGY] = "ATTACK_RANGED"
 					component.Sprite.Set(entity, &component.SpriteData{Image: assets.SwordswomenShoot})
