@@ -61,10 +61,22 @@ func (a *AnimFromCharacterEntry) Draw(screen *ebiten.Image) {
 		return
 	}
 	sprite := component.Sprite.Get(a.entry).Image
+	scaleParam := component.Sprite.Get(a.entry).Scale
 	bound := sprite.Bounds()
 	translate := ebiten.GeoM{}
+	if scaleParam != nil {
+		translate.Scale(scaleParam.Sx, scaleParam.Sy)
+		if scaleParam.Sx < 0 {
+			translate.Translate(float64(bound.Dx()), 0)
+		}
+		if scaleParam.Sy < 0 {
+			translate.Translate(0, -float64(bound.Dy()))
+		}
+		// translate.Translate(-float64(bound.Dx())/2, -float64(bound.Dy()))
+	}
 	translate.Translate(-float64(bound.Dx())/2, -float64(bound.Dy()))
 	translate.Translate(screenPos.X, screenPos.Y)
+
 	if a.entry.HasComponent(component.Shader) {
 		opts := &ebiten.DrawRectShaderOptions{
 			GeoM: translate,

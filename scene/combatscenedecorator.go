@@ -462,6 +462,11 @@ func level2OptBoss1(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.rewards = nil
 	enemies.NewNyaaito(ecs, 6, 1)
 }
+func level2OptBoss2(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewFlameYeti(ecs, 6, 1)
+}
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil

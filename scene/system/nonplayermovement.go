@@ -65,6 +65,9 @@ func (s *npMoveSystem) Update(ecs *ecs.ECS) {
 		comp.Col = col
 		comp.Row = row
 		if col < 0 || col > 7 || row < 0 || row > 3 {
+			if e.HasComponent(component.Preremove) {
+				component.Preremove.GetValue(e)(ecs, e)
+			}
 			ecs.World.Remove(e.Entity())
 		}
 	})
