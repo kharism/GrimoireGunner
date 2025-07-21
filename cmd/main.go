@@ -97,6 +97,8 @@ func main() {
 	openingScene.EscapeTrigger = scene.TriggerToMain
 	endLevel1Scene := scene.NewHanashiScene(scene.Scene2(&Game{}))
 	endLevel1Scene.EscapeTrigger = scene.TriggerToStageSelect
+	endLevel2Scene := scene.NewHanashiScene(scene.Scene3(&Game{}))
+	endLevel2Scene.EscapeTrigger = scene.TriggerToStageSelect
 	core.DetectKeyboardNext = func() bool {
 		return inpututil.IsKeyJustReleased(ebiten.KeyQ)
 	}
@@ -111,6 +113,7 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
 			stagehand.Directive[*scene.SceneData]{Dest: scene.GameClearInstance, Trigger: scene.TriggerToClear},
 			stagehand.Directive[*scene.SceneData]{Dest: endLevel1Scene, Trigger: scene.TriggerToPostLv1Story},
+			stagehand.Directive[*scene.SceneData]{Dest: endLevel2Scene, Trigger: scene.TriggerToPostLv2Story},
 		},
 		openingScene: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},

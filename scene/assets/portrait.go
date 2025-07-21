@@ -69,6 +69,11 @@ var portal1 []byte
 
 var Portal1 *ebiten.Image
 
+//go:embed images/cave_bg2.png
+var cave []byte
+
+var Cave *ebiten.Image
+
 func init() {
 	Sven = ReadAndFillBg(sven)
 	Sven2 = ReadAndFillBg(sven2)
@@ -99,6 +104,10 @@ func init() {
 	if Portal1 == nil {
 		imgReader := bytes.NewReader(portal1)
 		Portal1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Cave == nil {
+		imgReader := bytes.NewReader(cave)
+		Cave, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 
 }
