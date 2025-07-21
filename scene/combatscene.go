@@ -62,6 +62,11 @@ func (c *CombatScene) Update() error {
 			case 2:
 				c.data.LevelLayout = GenerateLayout2()
 				defTrigger = TriggerToPostLv1Story
+			case 3:
+				c.data.LevelLayout = GenerateLayout3()
+				defTrigger = TriggerToPostLv2Story
+			case 4:
+				defTrigger = TriggerToPostLv3Story
 			}
 
 			c.data.CurrentLevel = nil //c.data.LevelLayout.Root

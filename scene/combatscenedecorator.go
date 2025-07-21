@@ -55,6 +55,9 @@ var Decorators2 = []CombatSceneDecorator{}
 var OptBoss1 = []CombatSceneDecorator{}
 var OptBoss1Name = []string{}
 
+var OptBoss2 = []CombatSceneDecorator{}
+var OptBoss2Name = []string{}
+
 func init() {
 	Decorators1 = []CombatSceneDecorator{
 		// level1Decorator1,
@@ -102,6 +105,14 @@ func init() {
 		"Joji",
 		"Morty",
 	}
+	OptBoss2 = []CombatSceneDecorator{
+		level2OptBoss1,
+		level2OptBoss2,
+	}
+	OptBoss2Name = []string{
+		"Ellone",
+		"Joji",
+	}
 }
 
 var lv1Idx = -1
@@ -138,6 +149,11 @@ func RandCombatDecorator2() CombatSceneDecorator {
 func RandBossDecorator1() (CombatSceneDecorator, string) {
 	i := rand.Int() % len(OptBoss1)
 	return OptBoss1[i], OptBoss1Name[i]
+}
+
+func RandBossDecorator2() (CombatSceneDecorator, string) {
+	i := rand.Int() % len(OptBoss2)
+	return OptBoss2[i], OptBoss2Name[i]
 }
 
 func level1WavesDecor1(ecs *ecs.ECS, combatscene *CombatScene) {
@@ -466,6 +482,15 @@ func level2OptBoss2(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgForrest
 	combatscene.rewards = nil
 	enemies.NewFlameYeti(ecs, 6, 1)
+}
+func level3BossRush1(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+
+	enemies.NewFrostYeti(ecs, 4, 1)
+	combatscene.waves = append(combatscene.waves,
+		level1OptBoss2,
+	)
 }
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave

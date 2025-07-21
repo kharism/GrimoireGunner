@@ -151,13 +151,40 @@ func GenerateLayout2() *Level {
 		CurNode1 = NewNodeA
 		CurNode2 = NewNodeB
 	}
-	bossDecorator, bossName := finalBoss, "WhiteSnake"
+	bossDecorator, bossName := RandBossDecorator2()
 	BossNode := LevelNode{Id: "AA", Tier: CurNode1.Tier + 1, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(bossDecorator)}
 	CurNode1.NextNode = append(CurNode1.NextNode, &BossNode)
 	CurNode2.NextNode = append(CurNode2.NextNode, &BossNode)
 	LevelLayout1.BossLevel = &BossNode
 	LevelLayout1.BossName = bossName
 	//upLine :=
+	return LevelLayout1
+}
+func GenerateLayout3() *Level {
+	var LevelLayout1 = &Level{
+		Root: &LevelNode{
+			Id:            "0",
+			Tier:          0,
+			SelectedStage: NewCombatNextStage(level2WaveDecor1),
+			Icon:          assets.BattleIcon,
+		},
+	}
+	CurNode1 := &LevelNode{Id: "1", Tier: 1, SelectedStage: &RestSceneNextStage{}, NextNode: []*LevelNode{}, Icon: assets.RestIcon}
+	CurNode2 := &LevelNode{Id: "2", Tier: 2, SelectedStage: &WorkshopSceneNextStage{}, NextNode: []*LevelNode{}, Icon: assets.WorkbenchIcon}
+	LevelLayout1.Root.NextNode = []*LevelNode{
+		CurNode1,
+	}
+	CurNode1.NextNode = []*LevelNode{
+		CurNode2,
+	}
+
+	bossDecorator := finalBoss
+	LevelLayout1.BossName = "Jade wyrm"
+
+	BossNode := &LevelNode{Id: "AA", Tier: 3, Icon: assets.BattleIcon, SelectedStage: NewCombatNextStage(bossDecorator)}
+	CurNode2.NextNode = []*LevelNode{
+		BossNode,
+	}
 	return LevelLayout1
 }
 func contains(haystack []*LevelNode, needle *LevelNode) bool {
