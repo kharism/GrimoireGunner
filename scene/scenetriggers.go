@@ -13,4 +13,6 @@ const (
 	TriggerToClear
 	TriggerToOpening
 	TriggerToPostLv1Story
+	TriggerToPostLv2Story
+	TriggerToPostLv3Story
 )
