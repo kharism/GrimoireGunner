@@ -137,11 +137,12 @@ func NewAudioPlayer(audioByte []byte, musicType musicType) (*AudioPlayer, error)
 		audioContext: audioContext,
 		audioPlayer:  p,
 		total:        time.Second * time.Duration(s.Length()) / bytesPerSample / sampleRate,
-		volume128:    2,
+		volume128:    50,
 		seCh:         make(chan []byte, 100),
 		seBytes:      []byte{},
 		musicType:    musicType,
 	}
+	player.audioPlayer.SetVolume(float64(player.volume128) / 128)
 	if player.total == 0 {
 		player.total = 1
 	}

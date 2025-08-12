@@ -17,7 +17,12 @@ type HanashiScene struct {
 
 func (m *HanashiScene) Update() error {
 	if inpututil.IsKeyJustReleased(ebiten.KeyEscape) {
-		m.director.ProcessTrigger(m.EscapeTrigger)
+		if m.scene.Done != nil {
+			m.scene.Done()
+		} else {
+			m.director.ProcessTrigger(m.EscapeTrigger)
+		}
+
 		return nil
 	}
 	e := m.scene.Update()

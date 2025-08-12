@@ -44,6 +44,16 @@ var overlay []byte
 
 var Overlay *ebiten.Image
 
+//go:embed images/portrait/landon.png
+var landon []byte
+
+var Landon *ebiten.Image
+
+//go:embed images/portrait/lupus.png
+var lupus []byte
+
+var Lupus *ebiten.Image
+
 //go:embed images/bedroom.png
 var bedroom []byte
 
@@ -79,6 +89,8 @@ func init() {
 	Sven2 = ReadAndFillBg(sven2)
 	Shizuku = ReadAndFillBg(shizuku)
 	Jack = ReadAndFillBg(jack)
+	Landon = ReadAndFillBg(landon)
+	Lupus = ReadAndFillBg(lupus)
 
 	if Bedroom == nil {
 		imgReader := bytes.NewReader(bedroom)

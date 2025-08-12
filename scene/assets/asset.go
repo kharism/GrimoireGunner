@@ -387,6 +387,12 @@ var MidMusic []byte
 //go:embed bgm/fanfare3.mp3
 var Fanfare []byte
 
+//go:embed bgm/unease1.mp3
+var Unease1 []byte
+
+//go:embed bgm/unease2.mp3
+var Unease2 []byte
+
 // SFX
 
 //go:embed sfx/menu.mp3
@@ -395,11 +401,17 @@ var MenuMove []byte
 //go:embed sfx/magibullet.mp3
 var MagibulletFx []byte
 
+//go:embed sfx/magibullet_triple.mp3
+var MagibulletFx3x []byte
+
 //go:embed sfx/impact.mp3
 var ImpactFx []byte
 
 //go:embed sfx/explosion.mp3
 var ExplosionFx []byte
+
+//go:embed sfx/growl.mp3
+var GrowlFx []byte
 
 //go:embed sfx/swosh.mp3
 var SlashFx []byte

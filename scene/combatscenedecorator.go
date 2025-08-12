@@ -492,6 +492,11 @@ func level3BossRush1(ecs *ecs.ECS, combatscene *CombatScene) {
 		level1OptBoss2,
 	)
 }
+func Landon(ecs *ecs.ECS, combatscene *CombatScene) {
+	combatscene.data.Bg = assets.BgForrest
+	combatscene.rewards = nil
+	enemies.NewNyaaito(ecs, 6, 1)
+}
 func finalBoss(ecs *ecs.ECS, combatscene *CombatScene) {
 	combatscene.data.Bg = assets.BgCave
 	combatscene.rewards = nil
