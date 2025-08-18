@@ -158,6 +158,24 @@ var molten_snail_2 []byte
 //go:embed images/molten_snail_3.png
 var molten_snail_3 []byte
 
+//go:embed images/landon1.png
+var landon1 []byte
+
+//go:embed images/landon2.png
+var landon2 []byte
+
+//go:embed images/landon3.png
+var landon3 []byte
+
+//go:embed images/landon4.png
+var landon4 []byte
+
+//go:embed images/landon5.png
+var landon5 []byte
+
+//go:embed images/landon6.png
+var landon6 []byte
+
 var Cannoneer *ebiten.Image
 var CannoneerAtk *ebiten.Image
 var BloombomberAtk *ebiten.Image
@@ -208,6 +226,13 @@ var MoltenSlugCooldown *ebiten.Image
 var StunSpider *ebiten.Image
 var StunSpiderWarmup *ebiten.Image
 var StunSpiderWarmup2 *ebiten.Image
+
+var Landon1 *ebiten.Image
+var LandonShoot *ebiten.Image
+var LandonWarmup1 *ebiten.Image
+var LandonCooldown1 *ebiten.Image
+var LandonWarmup2 *ebiten.Image
+var LandonCooldown2 *ebiten.Image
 
 func init() {
 	if Cannoneer == nil {
@@ -357,6 +382,30 @@ func init() {
 	if PyroEyes == nil {
 		imgReader := bytes.NewReader(pyro_eyes)
 		PyroEyes, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if Landon1 == nil {
+		imgReader := bytes.NewReader(landon1)
+		Landon1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LandonShoot == nil {
+		imgReader := bytes.NewReader(landon2)
+		LandonShoot, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LandonWarmup1 == nil {
+		imgReader := bytes.NewReader(landon3)
+		LandonWarmup1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LandonCooldown1 == nil {
+		imgReader := bytes.NewReader(landon4)
+		LandonCooldown1, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LandonWarmup2 == nil {
+		imgReader := bytes.NewReader(landon4)
+		LandonWarmup2, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+	if LandonCooldown2 == nil {
+		imgReader := bytes.NewReader(landon5)
+		LandonCooldown2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if PyroEyesWarmup == nil {
 		imgReader := bytes.NewReader(pyro_eyes_2)
