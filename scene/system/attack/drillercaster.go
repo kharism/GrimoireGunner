@@ -169,7 +169,7 @@ func DrillRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 		}
 	}
 	if memory["CURRENT_STRATEGY"] == "MOVE" {
-		if dmgGrid.HasComponent(component.GridPos) {
+		if dmgGrid.Valid() && dmgGrid.HasComponent(component.GridPos) {
 			cc := component.GridPos.Get(dmgGrid)
 			cc.Col = gridPos.Col + 1
 		}

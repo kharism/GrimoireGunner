@@ -400,11 +400,11 @@ func init() {
 		LandonCooldown1, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if LandonWarmup2 == nil {
-		imgReader := bytes.NewReader(landon4)
+		imgReader := bytes.NewReader(landon5)
 		LandonWarmup2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if LandonCooldown2 == nil {
-		imgReader := bytes.NewReader(landon5)
+		imgReader := bytes.NewReader(landon6)
 		LandonCooldown2, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 	if PyroEyesWarmup == nil {
