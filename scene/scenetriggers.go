@@ -15,4 +15,5 @@ const (
 	TriggerToPostLv1Story
 	TriggerToPostLv2Story
 	TriggerToPostLv3Story
+	TriggerToEnding
 )
