@@ -64,6 +64,11 @@ var bedroomdoor []byte
 
 var BedroomDoor *ebiten.Image
 
+//go:embed images/kitchen.png
+var kitchen []byte
+
+var Kitchen *ebiten.Image
+
 //go:embed images/workshop.png
 var workshop_1 []byte
 
@@ -120,6 +125,11 @@ func init() {
 	if Cave == nil {
 		imgReader := bytes.NewReader(cave)
 		Cave, _, _ = ebitenutil.NewImageFromReader(imgReader)
+	}
+
+	if Kitchen == nil {
+		imgReader := bytes.NewReader(kitchen)
+		Kitchen, _, _ = ebitenutil.NewImageFromReader(imgReader)
 	}
 
 }

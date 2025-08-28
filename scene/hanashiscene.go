@@ -18,6 +18,7 @@ type HanashiScene struct {
 func (m *HanashiScene) Update() error {
 	if inpututil.IsKeyJustReleased(ebiten.KeyEscape) {
 		if m.scene.Done != nil {
+			m.scene.AudioInterface.StopBgm()
 			m.scene.Done()
 		} else {
 			m.director.ProcessTrigger(m.EscapeTrigger)

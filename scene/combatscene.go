@@ -62,14 +62,18 @@ func (c *CombatScene) Update() error {
 			case 2:
 				c.data.LevelLayout = GenerateLayout2()
 				defTrigger = TriggerToPostLv1Story
+				c.data.CurrentLevel = nil
 			case 3:
 				c.data.LevelLayout = GenerateLayout3()
 				defTrigger = TriggerToPostLv2Story
+				c.data.CurrentLevel = nil
 			case 4:
 				defTrigger = TriggerToPostLv3Story
+			case 5:
+				defTrigger = TriggerToEnding
 			}
 
-			c.data.CurrentLevel = nil //c.data.LevelLayout.Root
+			//c.data.LevelLayout.Root
 		}
 		c.sm.ProcessTrigger(defTrigger)
 	}
@@ -202,8 +206,11 @@ func (s *CombatScene) Load(state *SceneData, manager stagehand.SceneController[*
 				s.sm.ProcessTrigger(TriggerToMain)
 			} else {
 				RegisterCombatClear = false
-				if len(s.data.CurrentLevel.NextNode) == 0 && s.data.Level == 2 {
-					s.sm.ProcessTrigger(TriggerToClear)
+				if len(s.data.CurrentLevel.NextNode) == 0 && s.data.Level == 3 {
+					s.sm.ProcessTrigger(TriggerToPostLv3Story)
+					s.data.Level += 1
+				} else if len(s.data.CurrentLevel.NextNode) == 0 && s.data.Level == 4 {
+					s.sm.ProcessTrigger(TriggerToEnding)
 				} else {
 					s.sm.ProcessTrigger(TriggerToReward)
 				}

@@ -101,6 +101,8 @@ func main() {
 	endLevel2Scene.EscapeTrigger = scene.TriggerToStageSelect
 	endLevel3Scene := scene.NewHanashiScene(scene.Scene4(&Game{}))
 	endLevel3Scene.EscapeTrigger = scene.TriggerToCombat
+	endingScene := scene.NewHanashiScene(scene.Scene5(&Game{}))
+	endLevel3Scene.EscapeTrigger = scene.TriggerToClear
 
 	core.DetectKeyboardNext = func() bool {
 		return inpututil.IsKeyJustReleased(ebiten.KeyQ)
@@ -118,6 +120,7 @@ func main() {
 			stagehand.Directive[*scene.SceneData]{Dest: endLevel1Scene, Trigger: scene.TriggerToPostLv1Story},
 			stagehand.Directive[*scene.SceneData]{Dest: endLevel2Scene, Trigger: scene.TriggerToPostLv2Story},
 			stagehand.Directive[*scene.SceneData]{Dest: endLevel3Scene, Trigger: scene.TriggerToPostLv3Story},
+			stagehand.Directive[*scene.SceneData]{Dest: endingScene, Trigger: scene.TriggerToEnding},
 		},
 		openingScene: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.MainMenuInstance, Trigger: scene.TriggerToMain},
@@ -125,8 +128,14 @@ func main() {
 		endLevel1Scene: {
 			stagehand.Directive[*scene.SceneData]{Dest: scene.StageSelectInstance, Trigger: scene.TriggerToStageSelect},
 		},
+		endLevel2Scene: {
+			stagehand.Directive[*scene.SceneData]{Dest: scene.StageSelectInstance, Trigger: scene.TriggerToStageSelect},
+		},
 		endLevel3Scene: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
+		},
+		endingScene: {
+			stagehand.Directive[*scene.SceneData]{Dest: scene.GameClearInstance, Trigger: scene.TriggerToClear},
 		},
 		scene.MainMenuInstance: {
 			stagehand.Directive[*scene.SceneData]{Dest: combatScene, Trigger: scene.TriggerToCombat},
@@ -163,6 +172,11 @@ func main() {
 	endLevel3Scene.SetDoneFunc(func() {
 		endLevel3Scene.State.CurrentLevel.SelectedStage = scene.NewCombatNextStage(scene.Landon)
 		manager.ProcessTrigger(scene.TriggerToCombat)
+	})
+	endingScene.SetDoneFunc(func() {
+		endingScene.State.LevelLayout = scene.GenerateLayout1()
+		endingScene.State.CurrentLevel = endingScene.State.LevelLayout.Root
+		manager.ProcessTrigger(scene.TriggerToClear)
 	})
 	if err := ebiten.RunGame(manager); err != nil {
 		log.Fatal(err)

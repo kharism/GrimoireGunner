@@ -91,7 +91,7 @@ func LandonRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 			} else {
 				memory[MOVE_COUNT] = 0
 				moveCount = 0
-				ii := 2 //rand.Int() % 2
+				ii := rand.Int() % 3
 				if ii == 0 {
 					memory[CURRENT_STRATEGY] = "ATTACK_RANGED"
 					component.Sprite.Set(entity, &component.SpriteData{Image: assets.LandonShoot})
