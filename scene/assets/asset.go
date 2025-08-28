@@ -375,6 +375,9 @@ var BattleMusic4 []byte
 //go:embed bgm/smooth_jazz.mp3
 var SmoothJazz []byte
 
+//go:embed bgm/downtime.mp3
+var Downtimemusic []byte
+
 //go:embed bgm/sax.mp3
 var Sax []byte
 

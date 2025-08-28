@@ -107,19 +107,22 @@ func Scene4(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("<unknown spirit beast>"),
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Sven", Dialogue: "What the??"},
+			&core.DialogueEvent{Name: "Sven", Dialogue: "What the??", FontFace: assets.FontFace},
 		}},
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Sven"),
 			core.NewCharacterAddEvent("Jack", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Jack", Dialogue: "It appears the partially absorbed spirit has become its own things"},
+			&core.DialogueEvent{Name: "Jack", Dialogue: "It appears the partially absorbed spirit has become its own things", FontFace: assets.FontFace},
 		}},
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Jack"),
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Sven", Dialogue: "And it coming out of the suit makes the spirit flow in the suit\nnormal again"},
+			&core.DialogueEvent{Name: "Sven", Dialogue: "And it coming out of the suit makes the spirit flow in the suit\nnormal again", FontFace: assets.FontFace},
 		}},
-		&core.DialogueEvent{Name: "Sven", Dialogue: "Time to get serious!!!"},
+		&core.ComplexEvent{Events: []core.Event{
+			&core.DialogueEvent{Name: "Sven", Dialogue: "Time to get serious!!!", FontFace: assets.FontFace},
+			&core.StopBgmEvent{},
+		}},
 	}
 
 	scene.TxtBg = ebiten.NewImage(1024-128, 128)
