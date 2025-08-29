@@ -169,6 +169,9 @@ func main() {
 	endLevel1Scene.SetDoneFunc(func() {
 		manager.ProcessTrigger(scene.TriggerToStageSelect)
 	})
+	endLevel2Scene.SetDoneFunc(func() {
+		manager.ProcessTrigger(scene.TriggerToStageSelect)
+	})
 	endLevel3Scene.SetDoneFunc(func() {
 		endLevel3Scene.State.CurrentLevel.SelectedStage = scene.NewCombatNextStage(scene.Landon)
 		manager.ProcessTrigger(scene.TriggerToCombat)
