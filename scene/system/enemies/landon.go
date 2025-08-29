@@ -185,7 +185,7 @@ func LandonRoutine(ecs *ecs.ECS, entity *donburi.Entry) {
 					if startGridPosY+j < 0 || startGridPosY+j > 3 {
 						continue
 					}
-					hitbox := ecs.World.Create(component.Damage, component.Elements, component.GridPos, component.OnHit, component.Elements)
+					hitbox := ecs.World.Create(component.Damage, component.Elements, component.GridPos, component.OnHit)
 					entry := ecs.World.Entry(hitbox)
 					component.Elements.SetValue(entry, component.FIRE)
 					component.Damage.Set(entry, &component.DamageData{Damage: dmg + 20})
