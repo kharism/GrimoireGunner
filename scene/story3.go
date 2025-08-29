@@ -101,7 +101,10 @@ func Scene3(layouter core.GetLayouter) *core.Scene {
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
 			&core.DialogueEvent{Name: "Sven", Dialogue: "...", FontFace: assets.FontFace},
 		}},
-		&core.DialogueEvent{Name: "Sven", Dialogue: "Understood", FontFace: assets.FontFace},
+		&core.ComplexEvent{Events: []core.Event{
+			&core.StopBgmEvent{},
+			&core.DialogueEvent{Name: "Sven", Dialogue: "Understood", FontFace: assets.FontFace},
+		}},
 	}
 	scene.TxtBg = ebiten.NewImage(1024-128, 128)
 	scene.TxtBg.Fill(color.RGBA{R: 0x4f, G: 0x8f, B: 0xba, A: 255})

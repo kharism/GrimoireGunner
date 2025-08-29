@@ -144,7 +144,10 @@ func Scene2(layouter core.GetLayouter) *core.Scene {
 			&core.DialogueEvent{Name: "Sven", Dialogue: "Or not. We'll decide on how to process the meat later then", FontFace: assets.FontFace},
 		}},
 		&core.DialogueEvent{Name: "Sven", Dialogue: "I'll get going", FontFace: assets.FontFace},
-		&core.DialogueEvent{Name: "Sven", Dialogue: "I leave shizuku to you dad", FontFace: assets.FontFace},
+		&core.ComplexEvent{Events: []core.Event{
+			&core.StopBgmEvent{},
+			&core.DialogueEvent{Name: "Sven", Dialogue: "I leave shizuku to you dad", FontFace: assets.FontFace},
+		}},
 	}
 	scene.TxtBg = ebiten.NewImage(1024-128, 128)
 	scene.TxtBg.Fill(color.RGBA{R: 0x4f, G: 0x8f, B: 0xba, A: 255})
