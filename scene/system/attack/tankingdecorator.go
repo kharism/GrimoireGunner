@@ -78,7 +78,7 @@ func (h *TankingCastDecor) ResetCooldown() {
 }
 
 func (h *TankingCastDecor) GetDescription() string {
-	return h.caster.GetDescription()
+	return h.caster.GetDescription() + "\nadd damage and cooldown"
 }
 func (h *TankingCastDecor) GetName() string {
 	return h.caster.GetName() + " +T"

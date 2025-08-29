@@ -1,7 +1,9 @@
 package scene
 
 import (
+	"fmt"
 	"image/color"
+	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -20,6 +22,8 @@ type WorkshopScene struct {
 	cursorIsMoving bool
 	moveLR         MoveCursorState
 	curstate       string
+	musicPlayer    *assets.AudioPlayer
+	loopMusic      bool
 }
 
 var WorkshopSceneInstance = &WorkshopScene{}
@@ -27,6 +31,13 @@ var WORKSHOP_STATE_INVENTORY = "INV"
 var WORKSHOP_STATE_UPGRADE = "UPGRADE"
 
 func (r *WorkshopScene) Update() error {
+	if r.loopMusic && !r.musicPlayer.AudioPlayer().IsPlaying() {
+		r.musicPlayer.AudioPlayer().Rewind()
+		r.musicPlayer.AudioPlayer().Play()
+	}
+	if r.musicPlayer != nil {
+		r.musicPlayer.Update()
+	}
 	switch r.curstate {
 	case WORKSHOP_STATE_INVENTORY:
 		UpdateInventory(r)
@@ -50,7 +61,8 @@ func UpdateUpgrade(r *WorkshopScene) {
 
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-		selectedCaster := decoratedCaster[currentPick]
+		caster := GetItem2(swapPayloadInstance.source, r.data)
+		selectedCaster := CasterDecorList[currentPick](caster.(loadout.Caster)) //decoratedCaster[currentPick]
 		SetItem2(swapPayloadInstance.source, r.data, selectedCaster)
 		swapPayloadInstance.source = nil
 		r.sm.ProcessTrigger(TriggerToCombat)
@@ -139,13 +151,24 @@ func UpdateInventory(r *WorkshopScene) {
 		caster := GetItem2(swapPayloadInstance.source, r.data)
 		cards = []*core.MovableImage{nil, nil, nil}
 		decoratedCaster = []loadout.Caster{}
-		// rand.Shuffle(len(CasterDecorList), func(i, j int) {
-		// 	CasterDecorList[i], CasterDecorList[j] = CasterDecorList[j], CasterDecorList[i]
-		// })
+		rand.Shuffle(len(CasterDecorList), func(i, j int) {
+			CasterDecorList[i], CasterDecorList[j] = CasterDecorList[j], CasterDecorList[i]
+		})
 		for i := 0; i < 3; i++ {
+			cc := caster.(loadout.ModifierGetSetter)
+			modData := cc.GetModifierEntry()
+			wasNil := false
+			if modData == nil {
+				wasNil = true
+			}
 			newCaster := CasterDecorList[i](caster.(loadout.Caster))
 			decoratedCaster = append(decoratedCaster, newCaster)
 			card1 := GenerateCard(newCaster)
+			if !wasNil {
+				cc.SetModifier(modData)
+			} else {
+				cc.SetModifier(&loadout.CasterModifierData{})
+			}
 			cards[i] = core.NewMovableImage(card1, core.NewMovableImageParams().WithMoveParam(core.MoveParam{Sx: CardStartX + CardDistX*float64(i), Sy: CardPicStartY}))
 		}
 		r.curstate = WORKSHOP_STATE_UPGRADE
@@ -463,14 +486,16 @@ func (r *WorkshopScene) Load(state *SceneData, manager stagehand.SceneController
 	r.curstate = WORKSHOP_STATE_INVENTORY
 	ItemSlot = []*core.MovableImage{}
 	casterSlot = []loadout.Caster{}
-	for inventoryIdx, j := range r.data.Inventory {
+	jj := 0
+	for _, j := range r.data.Inventory {
 		if vv, ok := j.(loadout.Caster); ok {
 			c := GenerateCard(vv)
 			dim := c.Bounds()
 			newMvImage := core.NewMovableImage(c, core.NewMovableImageParams().WithMoveParam(core.MoveParam{
-				Sx: 23 + float64(inventoryIdx*(dim.Dx()+30)),
+				Sx: 23 + float64(jj*(dim.Dx()+30)),
 				Sy: CardStartY + 2,
 			}))
+			jj += 1
 			casterSlot = append(casterSlot, vv)
 			ItemSlot = append(ItemSlot, newMvImage)
 			// dim := c.Bounds()
@@ -482,11 +507,24 @@ func (r *WorkshopScene) Load(state *SceneData, manager stagehand.SceneController
 		}
 		// GenerateCard()
 	}
+	r.loopMusic = true
+	var err error
+	if r.musicPlayer == nil {
+		r.musicPlayer, err = assets.NewAudioPlayer(assets.IntermissionMusic, assets.TypeMP3)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		r.musicPlayer.AudioPlayer().Play()
+	}
 }
 
 func (s *WorkshopScene) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 1024, 600
 }
 func (s *WorkshopScene) Unload() *SceneData {
+	s.loopMusic = false
+	s.data.MusicSeek = s.musicPlayer.AudioPlayer().Position()
+	s.musicPlayer.AudioPlayer().Rewind()
+	s.musicPlayer.AudioPlayer().Pause()
 	return s.data
 }
