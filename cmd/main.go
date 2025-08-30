@@ -7,9 +7,6 @@ import (
 	"runtime/pprof"
 
 	"github.com/kharism/grimoiregunner/scene"
-	"github.com/kharism/grimoiregunner/scene/assets"
-	"github.com/kharism/grimoiregunner/scene/system/attack"
-	"github.com/kharism/grimoiregunner/scene/system/loadout"
 	"github.com/kharism/hanashi/core"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -66,33 +63,9 @@ func main() {
 	}
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("GrimoireGunner")
-	Level := scene.GenerateLayout1()
+	//Level := scene.GenerateLayout1()
 
-	state := &scene.SceneData{
-		Bg:            assets.BgMountain,
-		PlayerHP:      1000,
-		PlayerMaxHP:   1000,
-		PlayerCurrEn:  300,
-		PlayerMaxEn:   300,
-		PlayerEnRegen: 20,
-		MainLoadout: []loadout.Caster{
-			attack.NewShotgunCaster(),
-			attack.NewCannonCaster(),
-		},
-		PlayerRow:    1,
-		PlayerCol:    1,
-		Level:        1,
-		World:        nil,
-		LevelLayout:  Level,
-		CurrentLevel: Level.Root,
-		// SceneDecor:   scene.,
-		SubLoadout1: []loadout.Caster{nil, nil},
-		SubLoadout2: []loadout.Caster{nil, nil},
-		Inventory:   []scene.ItemInterface{
-			// attack.NewCannonCaster(),
-			// attack.NewHealCaster(),
-		},
-	}
+	state := scene.NewSceneData()
 	openingScene := scene.NewHanashiScene(scene.Scene1(&Game{}))
 	openingScene.EscapeTrigger = scene.TriggerToMain
 	endLevel1Scene := scene.NewHanashiScene(scene.Scene2(&Game{}))
