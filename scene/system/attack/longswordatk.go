@@ -77,6 +77,9 @@ func (l *LongSwordCaster) Cast(ensource loadout.ENSetGetter, ecs *ecs.ECS) {
 		}
 		playerScrLoc := component.ScreenPos.GetValue(playerEntry)
 		playerGridLoc := component.GridPos.GetValue(playerEntry)
+		if playerScrLoc.X == 0 && playerScrLoc.Y == 0 {
+			playerScrLoc.X, playerScrLoc.Y = assets.GridCoord2Screen(playerGridLoc.Row, playerGridLoc.Col)
+		}
 		// newLongSwordAttack(ecs, playerScrLoc, playerGridLoc, l.GetDamage())
 		param := DamageGridParam{}
 		loc1 := &component.GridPosComponentData{Row: playerGridLoc.Row, Col: playerGridLoc.Col + 1}
