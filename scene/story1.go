@@ -85,8 +85,13 @@ func Scene1(layouter core.GetLayouter) *core.Scene {
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Jack"),
 			core.NewCharacterAddEvent("Sven", portraitMoveParam, portraitScaleParam),
-			&core.DialogueEvent{Name: "Sven", Dialogue: "Worse than we expect. We're expecting twins and each\nhave different" +
-				"elemental affinity than their mother's, significantly\nincreasing risk of miscarriage. " + "Not much the doctor can do for now.", FontFace: assets.FontFace},
+			&core.DialogueEvent{Name: "Sven", Dialogue: "Worse than we expect.", FontFace: assets.FontFace},
+		}},
+		&core.ComplexEvent{Events: []core.Event{
+			&core.DialogueEvent{Name: "Sven", Dialogue: "We're expecting twins and each\n baby have different elemental affinity than their mother's,", FontFace: assets.FontFace},
+		}},
+		&core.ComplexEvent{Events: []core.Event{
+			&core.DialogueEvent{Name: "Sven", Dialogue: "significantly increasing risk of miscarriage. ", FontFace: assets.FontFace},
 		}},
 		&core.ComplexEvent{Events: []core.Event{
 			core.NewCharacterRemoveEvent("Sven"),
